@@ -134,7 +134,7 @@
 <div id="loadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden"><div class="bg-white p-6 rounded-2xl text-center"><i class="fas fa-spinner fa-spin fa-3x text-purple-600"></i><p class="mt-3">Menyimpan...</p></div></div>
 
 <script>
-  // Senarai item untuk Perancangan (21 item)
+  // ==================== DATA ITEMS ====================
   const itemsPerancangan = [
     "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan daripada Ketua Jabatan Akademik / Penyelaras Pentaksiran Berterusan",
     "JST yang disediakan mengikut format yang ditetapkan",
@@ -176,6 +176,7 @@
 
   function renderItems(containerId, items, prefix) {
     const container = document.getElementById(containerId);
+    if (!container) return;
     container.innerHTML = '';
     items.forEach((item, idx) => {
       const div = document.createElement('div');
@@ -205,6 +206,7 @@
     const area = document.getElementById(areaId);
     const input = document.getElementById(inputId);
     const listDiv = document.getElementById(listId);
+    if (!area || !input || !listDiv) return;
     area.addEventListener('click', () => input.click());
     area.addEventListener('dragover', e => e.preventDefault());
     area.addEventListener('drop', e => {
@@ -227,18 +229,41 @@
   let currentTab = 'perancangan';
   function switchTab(tab) {
     currentTab = tab;
-    document.getElementById('perancanganTab').classList.toggle('hidden', tab !== 'perancangan');
-    document.getElementById('selepasModerasiTab').classList.toggle('hidden', tab !== 'selepasmoderasi');
+    const perancanganDiv = document.getElementById('perancanganTab');
+    const selepasDiv = document.getElementById('selepasModerasiTab');
+    if (perancanganDiv && selepasDiv) {
+      perancanganDiv.classList.toggle('hidden', tab !== 'perancangan');
+      selepasDiv.classList.toggle('hidden', tab !== 'selepasmoderasi');
+    }
     const btnPer = document.getElementById('tabPerancanganBtn');
     const btnSel = document.getElementById('tabSelepasBtn');
-    if (tab === 'perancangan') { btnPer.classList.add('tab-active'); btnSel.classList.remove('tab-active'); }
-    else { btnSel.classList.add('tab-active'); btnPer.classList.remove('tab-active'); }
+    if (btnPer && btnSel) {
+      if (tab === 'perancangan') { btnPer.classList.add('tab-active'); btnSel.classList.remove('tab-active'); }
+      else { btnSel.classList.add('tab-active'); btnPer.classList.remove('tab-active'); }
+    }
   }
-  document.getElementById('tabPerancanganBtn').onclick = () => switchTab('perancangan');
-  document.getElementById('tabSelepasBtn').onclick = () => switchTab('selepasmoderasi');
+  const tabPerBtn = document.getElementById('tabPerancanganBtn');
+  const tabSelBtn = document.getElementById('tabSelepasBtn');
+  if (tabPerBtn) tabPerBtn.onclick = () => switchTab('perancangan');
+  if (tabSelBtn) tabSelBtn.onclick = () => switchTab('selepasmoderasi');
   switchTab('perancangan');
 
   function printCurrentTab() { window.print(); }
+
+  // ========== FUNGSI UNTUK PANGGIL BACKEND DENGAN CEK KEWUJUDAN google ==========
+  async function callServer(functionName, ...args) {
+    return new Promise((resolve, reject) => {
+      // Pastikan objek google wujud
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        reject(new Error('❌ Ralat: Objek "google" tidak dijumpai. Pastikan anda mengakses aplikasi ini melalui URL Web App yang betul (bukan fail tempatan). Sila deploy semula web app dan gunakan pautan yang diberikan.'));
+        return;
+      }
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(reject)
+        [functionName](...args);
+    });
+  }
 
   // Submit form
   async function submitForm(formElement, formType) {
@@ -258,20 +283,22 @@
     }
     document.getElementById('loadingOverlay').classList.remove('hidden');
     try {
-      const result = await google.script.run.withSuccessHandler(() => {}).withFailureHandler(err => { throw err; }).saveFormData(dataObj, filesData, formType);
+      const result = await callServer('saveFormData', dataObj, filesData, formType);
       alert('✅ Data berjaya disimpan!');
       formElement.reset();
       currentFiles[formType] = [];
       updateFileList(document.getElementById(formType === 'perancangan' ? 'fileListPerancangan' : 'fileListSelepas'), []);
     } catch (err) {
-      alert('❌ Ralat: ' + err.message);
+      alert('❌ Ralat: ' + (err.message || err));
     } finally {
       document.getElementById('loadingOverlay').classList.add('hidden');
     }
   }
 
-  document.getElementById('formPerancangan').addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'perancangan'); });
-  document.getElementById('formSelepasModerasi').addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'selepasmoderasi'); });
+  const formPerancangan = document.getElementById('formPerancangan');
+  const formSelepas = document.getElementById('formSelepasModerasi');
+  if (formPerancangan) formPerancangan.addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'perancangan'); });
+  if (formSelepas) formSelepas.addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'selepasmoderasi'); });
 </script>
 </body>
 </html>
