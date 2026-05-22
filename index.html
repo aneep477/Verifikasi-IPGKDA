@@ -20,11 +20,7 @@
             --highlight: rgba(0, 240, 255, 0.08);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -39,9 +35,7 @@
             line-height: 1.6;
         }
 
-        h1, h2, h3, h4 {
-            font-family: 'Outfit', sans-serif;
-        }
+        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
 
         .glass-container {
             max-width: 1300px;
@@ -79,13 +73,7 @@
             letter-spacing: 2px;
         }
 
-        /* Tabs */
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            justify-content: center;
-        }
+        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; }
 
         .tab-btn {
             background: rgba(255, 255, 255, 0.05);
@@ -100,299 +88,98 @@
             transition: all 0.3s ease;
         }
 
-        .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
+        .tab-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
 
         .tab-btn.active {
             background: linear-gradient(135deg, rgba(112,0,255,0.4), rgba(0,240,255,0.4));
-            border-color: var(--primary);
-            color: #fff;
+            border-color: var(--primary); color: #fff;
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
         }
 
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
+        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Form Grid */
         .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-            background: rgba(0,0,0,0.2);
-            padding: 2rem;
-            border-radius: 16px;
-            border: 1px solid var(--glass-border);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem; margin-bottom: 3rem; background: rgba(0,0,0,0.2);
+            padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border);
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        label { font-size: 0.9rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; }
+
+        input[type="text"], input[type="url"], input[type="date"], select, textarea {
+            width: 100%; background: rgba(255, 255, 255, 0.05); border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2); padding: 0.8rem;
+            color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s ease; border-radius: 4px 4px 0 0;
         }
 
-        label {
-            font-size: 0.9rem;
-            color: var(--primary);
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
+        input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
+        textarea { resize: vertical; min-height: 80px; }
 
-        input[type="text"], 
-        input[type="url"],
-        input[type="date"], 
-        select, 
-        textarea {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: none;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
-            padding: 0.8rem;
-            color: #fff;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: all 0.3s ease;
-            border-radius: 4px 4px 0 0;
-        }
+        .table-responsive { overflow-x: auto; margin-bottom: 2rem; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 1rem; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--glass-border); vertical-align: top; }
+        th { font-family: 'Outfit', sans-serif; color: var(--primary); font-weight: 600; background: rgba(0,0,0,0.3); }
+        th:first-child { border-top-left-radius: 12px; } th:last-child { border-top-right-radius: 12px; }
+        tr:hover td { background: rgba(255, 255, 255, 0.03); }
+        .row-highlight { background: var(--highlight); border-left: 3px solid var(--primary); }
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-bottom-color: var(--primary);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        /* Tables */
-        .table-responsive {
-            overflow-x: auto;
-            margin-bottom: 2rem;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin-top: 1rem;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid var(--glass-border);
-            vertical-align: top;
-        }
-
-        th {
-            font-family: 'Outfit', sans-serif;
-            color: var(--primary);
-            font-weight: 600;
-            background: rgba(0,0,0,0.3);
-        }
-
-        th:first-child { border-top-left-radius: 12px; }
-        th:last-child { border-top-right-radius: 12px; }
-
-        tr:hover td {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .row-highlight {
-            background: var(--highlight);
-            border-left: 3px solid var(--primary);
-        }
-
-        /* Custom Radio Buttons */
-        .radio-group {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .radio-label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
+        .radio-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .radio-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; color: var(--text-muted); }
         .radio-label input[type="radio"] {
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--text-muted);
-            border-radius: 50%;
-            outline: none;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            appearance: none; width: 16px; height: 16px; border: 2px solid var(--text-muted);
+            border-radius: 50%; outline: none; position: relative; cursor: pointer; transition: all 0.2s ease;
         }
-
-        .radio-label input[type="radio"]:checked {
-            border-color: var(--primary);
-        }
-
+        .radio-label input[type="radio"]:checked { border-color: var(--primary); }
         .radio-label input[type="radio"]:checked::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
-            border-radius: 50%;
-            box-shadow: 0 0 8px var(--primary);
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary);
         }
 
-        /* File & Link Upload Section */
         .bahan-sokongan {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px dashed var(--glass-border);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
+            margin-top: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.2);
+            border: 1px dashed var(--glass-border); border-radius: 8px; display: flex; flex-direction: column; gap: 0.8rem;
         }
-        
-        .bahan-sokongan label {
-            font-size: 0.8rem;
-            color: var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .file-sm {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-        
+        .bahan-sokongan label { font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .file-sm { font-size: 0.85rem; color: var(--text-muted); }
         .file-sm::file-selector-button {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            color: #fff;
-            cursor: pointer;
-            margin-right: 1rem;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); padding: 0.4rem 0.8rem;
+            border-radius: 4px; color: #fff; cursor: pointer; margin-right: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s;
         }
-        .file-sm::file-selector-button:hover {
-            background: var(--primary);
-            color: #000;
-        }
+        .file-sm::file-selector-button:hover { background: var(--primary); color: #000; }
 
-        /* Action Buttons */
-        .action-area {
-            display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--glass-border);
-        }
-
+        .action-area { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); }
+        
         .btn {
-            padding: 1rem 2.5rem;
-            border-radius: 8px;
-            border: none;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 1rem 2.5rem; border-radius: 8px; border: none; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;
         }
+        .btn-submit { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3); }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5); }
 
-        .btn-print {
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: 1px solid var(--glass-border);
-        }
-
-        .btn-print:hover { background: rgba(255, 255, 255, 0.2); }
-
-        .btn-submit {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
-        }
-
-        /* Loading Overlay */
         .loader-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-            gap: 1rem;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; gap: 1rem;
         }
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(255,255,255,0.1);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.1); border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Print Media Query */
-        @media print {
-            body { background: #fff; color: #000; padding: 0; }
-            .glass-container { 
-                background: none; border: none; box-shadow: none; padding: 0; 
-                backdrop-filter: none; -webkit-backdrop-filter: none;
-            }
-            .header-section h1, label, th { color: #000 !important; -webkit-text-fill-color: #000; }
-            .tabs, .action-area, .bahan-sokongan { display: none !important; }
-            input, select, textarea { 
-                border: 1px solid #ccc !important; 
-                color: #000 !important; 
-                background: transparent !important;
-            }
-            .tab-content { display: block !important; page-break-before: always; }
-            .tab-content:first-of-type { page-break-before: avoid; }
-            th { background: #f0f0f0 !important; }
-        }
     </style>
 </head>
 <body>
 
     <div class="loader-overlay" id="loader">
         <div class="spinner"></div>
-        <h3 style="color: #fff; font-family: 'Outfit';">Sedang Menghantar Data & Fail...<br><span style="font-size:0.8rem; font-weight:normal;">Sila tunggu sebentar, proses ini mungkin mengambil masa.</span></h3>
+        <h3 style="color: #fff; font-family: 'Outfit'; text-align:center;">
+            Sedang Menjana Dokumen Cetakan...<br>
+            <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Mengekstrak templat dari Google Drive. Sila tunggu.</span>
+        </h3>
     </div>
 
     <div class="glass-container">
@@ -453,8 +240,7 @@
                             <th width="40%">Catatan & Bahan Sokongan</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-perancangan">
-                        </tbody>
+                    <tbody id="tbody-perancangan"></tbody>
                 </table>
             </div>
         </div>
@@ -477,8 +263,7 @@
                             <th width="40%">Catatan & Bahan Sokongan</th>
                         </tr>
                     </thead>
-                    <tbody id="tbody-moderasi">
-                        </tbody>
+                    <tbody id="tbody-moderasi"></tbody>
                 </table>
             </div>
         </div>
@@ -499,19 +284,16 @@
         </div>
 
         <div class="action-area">
-            <button class="btn btn-print" onclick="window.print()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                Cetak
-            </button>
             <button class="btn btn-submit" onclick="submitData()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                Hantar Data
+                Hantar & Jana Dokumen Rasmi
             </button>
         </div>
 
     </div>
 
     <script>
+        // MASUKKAN URL NEW DEPLOYMENT ANDA DI SINI
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxERLzqWfS5xjhVHp0fCU0WfldhVwotSQQZHKNrBlfMv7YYj2t_--0f7QkymlHwi-LO/exec';
 
         const soalanPerancangan = [
@@ -537,7 +319,6 @@
             "Skema/Rubrik mengukur domain afektif",
             "Skema/Rubrik mengukur domain kemahiran insaniah"
         ];
-        // Index berasaskan nombor Item untuk diletakkan fungsi Upload/Link
         const ulasanKhususPerancangan = [2, 10, 16, 17]; 
 
         const soalanModerasi = [
@@ -554,10 +335,8 @@
             "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap",
             "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
         ];
-        // Index berasaskan nombor Item untuk diletakkan fungsi Upload/Link
         const ulasanKhususModerasi = [7, 9, 10, 12];
 
-        // Fungsi Menjana Jadual Dinamik dengan Ruangan Upload Khas
         function generateTable(tableId, dataArray, prefix, specialItems) {
             const tbody = document.getElementById(tableId);
             let html = '';
@@ -567,16 +346,13 @@
                 const isSpecial = specialItems.includes(num);
                 const rowClass = isSpecial ? 'row-highlight' : '';
 
-                let uploadArea = '';
-                if (isSpecial) {
-                    uploadArea = `
-                        <div class="bahan-sokongan">
-                            <label>Bahan Sokongan Item Ini:</label>
-                            <input type="file" id="${prefix}_${num}_file" class="file-sm">
-                            <input type="url" id="${prefix}_${num}_link" placeholder="Atau Pautan URL (Google Drive/Docs)...">
-                        </div>
-                    `;
-                }
+                let uploadArea = isSpecial ? `
+                    <div class="bahan-sokongan">
+                        <label>Bahan Sokongan Item Ini:</label>
+                        <input type="file" id="${prefix}_${num}_file" class="file-sm">
+                        <input type="url" id="${prefix}_${num}_link" placeholder="Atau Pautan URL...">
+                    </div>
+                ` : '';
 
                 html += `
                 <tr class="${rowClass}">
@@ -584,15 +360,9 @@
                     <td>${item}</td>
                     <td>
                         <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="${prefix}_${num}_status" value="TB"> TB
-                            </label>
+                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya</label>
+                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak</label>
+                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="TB"> TB</label>
                         </div>
                     </td>
                     <td>
@@ -604,23 +374,19 @@
             tbody.innerHTML = html;
         }
 
-        // Initialize Tables
         generateTable('tbody-perancangan', soalanPerancangan, 'perancangan', ulasanKhususPerancangan);
         generateTable('tbody-moderasi', soalanModerasi, 'moderasi', ulasanKhususModerasi);
 
         let currentFasa = 'perancangan';
 
-        // Tab Switcher
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
             event.target.classList.add('active');
             document.getElementById(`tab-${tab}`).classList.add('active');
             currentFasa = tab;
         }
 
-        // Fungsi Convert File ke Base64 (Untuk Google Drive)
         function getBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -630,7 +396,6 @@
             });
         }
 
-        // Fungsi Utama Hantar Data
         async function submitData() {
             if(!document.getElementById('ipgKampus').value || !document.getElementById('kodKursus').value) {
                 alert("Sila isi maklumat IPG Kampus dan Kod Kursus terlebih dahulu.");
@@ -652,24 +417,19 @@
                 namaPenilai: document.getElementById('namaPenilai').value
             };
 
-            if(currentFasa === 'moderasi') {
-                payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
-            }
+            if(currentFasa === 'moderasi') payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
 
             const limit = currentFasa === 'perancangan' ? 21 : 12;
             const specialItemsList = currentFasa === 'perancangan' ? ulasanKhususPerancangan : ulasanKhususModerasi;
 
             for(let i = 1; i <= limit; i++) {
-                // Status dan Catatan
                 const radios = document.getElementsByName(`${currentFasa}_${i}_status`);
                 let selectedValue = "";
-                for (const radio of radios) {
-                    if (radio.checked) selectedValue = radio.value;
-                }
+                for (const radio of radios) { if (radio.checked) selectedValue = radio.value; }
+                
                 payload[`item_${i}_status`] = selectedValue;
                 payload[`item_${i}_catatan`] = document.getElementById(`${currentFasa}_${i}_catatan`).value;
 
-                // Proses File dan Link untuk item spesifik
                 if (specialItemsList.includes(i)) {
                     const fileInput = document.getElementById(`${currentFasa}_${i}_file`);
                     if (fileInput && fileInput.files.length > 0) {
@@ -678,15 +438,11 @@
                         payload[`item_${i}_mimeType`] = file.type;
                         payload[`item_${i}_fileData`] = await getBase64(file);
                     }
-
                     const linkInput = document.getElementById(`${currentFasa}_${i}_link`);
-                    if (linkInput && linkInput.value) {
-                        payload[`item_${i}_link`] = linkInput.value;
-                    }
+                    if (linkInput && linkInput.value) payload[`item_${i}_link`] = linkInput.value;
                 }
             }
 
-            // Hantar API Request
             try {
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -695,9 +451,13 @@
                 const result = await response.json();
                 
                 document.getElementById('loader').style.display = 'none';
+                
                 if(result.status === 'success') {
-                    alert('Tahniah! Data dan fail sokongan berjaya disimpan ke sistem.');
-                    // window.location.reload(); 
+                    // DOKUMEN BERJAYA DIJANA. BUKA URL TEMPLAT BARU.
+                    alert('Berjaya! Dokumen anda sedang dibuka di tab baharu untuk dicetak.');
+                    if(result.docUrl) {
+                        window.open(result.docUrl, '_blank'); 
+                    }
                 } else {
                     alert('Ralat sistem: ' + result.message);
                 }
