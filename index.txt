@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Sistem Verifikasi Pentaksiran Berterusan</title>
+  <!-- TailwindCSS + Font Awesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Custom CSS for glassmorphism & print -->
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+    .glass-input, .glass-select, .glass-textarea {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      padding: 10px 14px;
+      color: white;
+      transition: all 0.3s;
+    }
+    .glass-input:focus, .glass-select:focus, .glass-textarea:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.25);
+      border-color: #c084fc;
+    }
+    .glass-input::placeholder, .glass-textarea::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+    label {
+      font-weight: 500;
+      color: #f3e8ff;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      border: none;
+      border-radius: 40px;
+      padding: 12px 28px;
+      font-weight: bold;
+      color: white;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      transform: scale(1.02);
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+    }
+    .tab-active {
+      background: rgba(255,255,255,0.3);
+      border-bottom: 3px solid white;
+    }
+    @media print {
+      body {
+        background: white;
+        margin: 0;
+        padding: 0;
+      }
+      .no-print, .tab-buttons, .btn, .print\:hidden, button, .glass-card, .backdrop-blur, .bg-opacity-20 {
+        display: none !important;
+      }
+      .glass-card {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        backdrop-filter: none !important;
+      }
+      .glass-input, .glass-select, .glass-textarea {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #aaa !important;
+      }
+      input, textarea, select {
+        color: black !important;
+      }
+      label {
+        color: black !important;
+      }
+    }
+    /* Custom file upload styling */
+    .file-drop-area {
+      border: 2px dashed rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .file-drop-area:hover {
+      background: rgba(255,255,255,0.1);
+    }
+  </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+
+<div class="max-w-6xl mx-auto">
+  <!-- Header -->
+  <div class="text-center mb-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">📋 Verifikasi Pentaksiran Berterusan</h1>
+    <p class="text-purple-100 mt-2">IPG Malaysia - Fasa Perancangan & Selepas Moderasi</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex justify-center gap-2 mb-8 no-print">
+    <button id="tabPerancanganBtn" class="tab-btn px-6 py-3 rounded-t-2xl font-semibold text-white transition-all bg-white/20 backdrop-blur-sm">📝 Verifikasi Perancangan</button>
+    <button id="tabSelepasBtn" class="tab-btn px-6 py-3 rounded-t-2xl font-semibold text-white transition-all bg-white/10">✅ Verifikasi Selepas Moderasi</button>
+  </div>
+
+  <!-- ============================= TAB PERANCANGAN ============================= -->
+  <div id="perancanganTab" class="tab-content glass-card p-6 md:p-8 transition-all">
+    <form id="formPerancangan">
+      <!-- Maklumat Asas -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div><label><i class="fas fa-university mr-2"></i> IPG Kampus</label><input type="text" name="ipg_kampus" class="glass-input w-full" placeholder="Contoh: IPG Kampus Darulaman" required></div>
+        <div><label><i class="fas fa-code mr-2"></i> Kod Kursus</label><input type="text" name="kod_kursus" class="glass-input w-full" placeholder="Contoh: TSLB3103" required></div>
+        <div><label><i class="fas fa-book mr-2"></i> Nama Kursus</label><input type="text" name="nama_kursus" class="glass-input w-full" placeholder="Pentaksiran dalam Pendidikan" required></div>
+        <div><label><i class="fas fa-graduation-cap mr-2"></i> Program</label>
+          <select name="program" class="glass-select w-full">
+            <option>PPISMP</option><option>PISMP</option><option>PDPM</option><option>PDPP</option><option>PITO</option>
+          </select>
+        </div>
+        <div><label><i class="fas fa-calendar-alt mr-2"></i> Semester/Tahun</label><input type="text" name="semester_tahun" class="glass-input w-full" placeholder="Sem 3 Tahun 2"></div>
+        <div><label><i class="fas fa-calendar-check mr-2"></i> Tarikh Verifikasi</label><input type="date" name="tarikh_verifikasi" class="glass-input w-full" required></div>
+      </div>
+
+      <!-- 21 Item Semakan Perancangan (dinamik) -->
+      <div id="itemsPerancanganContainer" class="space-y-5 mb-8"></div>
+
+      <!-- Ulasan & Cadangan -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div><label><i class="fas fa-comment-dots mr-2"></i> Ulasan Keseluruhan</label><textarea name="ulasan_keseluruhan" rows="3" class="glass-textarea w-full"></textarea></div>
+        <div><label><i class="fas fa-lightbulb mr-2"></i> Cadangan Penambahbaikan</label><textarea name="cadangan_penambahbaikan" rows="3" class="glass-textarea w-full"></textarea></div>
+      </div>
+
+      <!-- Lampiran -->
+      <div class="mb-6">
+        <label><i class="fas fa-paperclip mr-2"></i> Muat Naik Lampiran (JST, Rubrik, dll.)</label>
+        <div id="dropAreaPerancangan" class="file-drop-area">
+          <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+          <p class="text-white">Seret & lepas fail atau klik untuk pilih</p>
+          <input type="file" id="fileInputPerancangan" multiple style="display:none">
+          <div id="fileListPerancangan" class="mt-3 text-sm"></div>
+        </div>
+      </div>
+
+      <div class="flex justify-between gap-4 no-print">
+        <button type="button" onclick="printCurrentTab()" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-full"><i class="fas fa-print"></i> Cetak Borang</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Hantar & Simpan Data</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ============================= TAB SELEPAS MODERASI ============================= -->
+  <div id="selepasModerasiTab" class="tab-content glass-card p-6 md:p-8 hidden transition-all">
+    <form id="formSelepasModerasi">
+      <!-- Maklumat Asas (sama) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div><label>IPG Kampus</label><input type="text" name="ipg_kampus" class="glass-input w-full" required></div>
+        <div><label>Kod Kursus</label><input type="text" name="kod_kursus" class="glass-input w-full" required></div>
+        <div><label>Nama Kursus</label><input type="text" name="nama_kursus" class="glass-input w-full" required></div>
+        <div><label>Program</label><select name="program" class="glass-select w-full"><option>PPISMP</option><option>PISMP</option><option>PDPM</option><option>PDPP</option><option>PITO</option></select></div>
+        <div><label>Semester/Tahun</label><input type="text" name="semester_tahun" class="glass-input w-full"></div>
+        <div><label>Tarikh Verifikasi</label><input type="date" name="tarikh_verifikasi" class="glass-input w-full" required></div>
+        <div><label><i class="fas fa-clock"></i> Tarikh Taklimat PB</label><input type="date" name="tarikh_taklimat_pb" class="glass-input w-full"></div>
+      </div>
+
+      <!-- 12 Item Semakan Selepas Moderasi -->
+      <div id="itemsSelepasContainer" class="space-y-5 mb-8"></div>
+
+      <!-- Ulasan & Cadangan -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div><label>Ulasan Keseluruhan</label><textarea name="ulasan_keseluruhan" rows="3" class="glass-textarea w-full"></textarea></div>
+        <div><label>Cadangan Penambahbaikan</label><textarea name="cadangan_penambahbaikan" rows="3" class="glass-textarea w-full"></textarea></div>
+      </div>
+
+      <!-- Lampiran -->
+      <div class="mb-6">
+        <label>Muat Naik Lampiran (Borang moderasi, laporan, dll.)</label>
+        <div id="dropAreaSelepas" class="file-drop-area">
+          <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+          <p class="text-white">Seret & lepas fail atau klik untuk pilih</p>
+          <input type="file" id="fileInputSelepas" multiple style="display:none">
+          <div id="fileListSelepas" class="mt-3 text-sm"></div>
+        </div>
+      </div>
+
+      <div class="flex justify-between gap-4 no-print">
+        <button type="button" onclick="printCurrentTab()" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-full"><i class="fas fa-print"></i> Cetak Borang</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Hantar & Simpan Data</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+    <div class="bg-white p-6 rounded-2xl shadow-xl text-center"><i class="fas fa-spinner fa-spin fa-3x text-purple-600"></i><p class="mt-3">Menyimpan data...</p></div>
+  </div>
+</div>
+
+<script>
+  // ==================== DATA ITEMS ====================
+  const itemsPerancangan = [
+    "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan daripada Ketua Jabatan Akademik / Penyelaras Pentaksiran Berterusan",
+    "JST yang disediakan mengikut format yang ditetapkan",
+    "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan dan selaras dengan RMK/MK",
+    "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK",
+    "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK",
+    "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK) yang telah ditetapkan dalam RMK/MK",
+    "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
+    "Aspek/ Kriteria penilaian dinyatakan dengan jelas untuk mentaksir tugasan yang diberikan",
+    "Tugasan mempunyai elemen-elemen berikut: Rangsangan, Soalan tugasan, Arahan pentadbiran",
+    "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, Merangkai Standard, Backward Design, Pelan Pembelajaran Bermakna - 6C, MPP, MRP, 3E & 3R)",
+    "Tugasan yang disediakan mencapai Kemahiran Berfikir Aras Tinggi (KBAT) seperti yang dinyatakan dalam HPK",
+    "Domain kognitif yang dinyatakan dalam HPK diuji dalam tugasan",
+    "Domain psikomotor yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
+    "Domain afektif yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
+    "Domain kemahiran insaniah yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
+    "Soalan tugasan telah disemak oleh Pakar Bidang / Penyelaras Kursus / Pensyarah Kanan",
+    "Rubrik pemarkahan secara holistik / analitik disediakan selari dengan Jadual Spesifikasi Tugasan (JST) dan tugasan",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain kognitif",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain psikomotor (jika berkenaan)",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain afektif (jika berkenaan)",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain kemahiran insaniah (jika berkenaan)"
+  ];
+
+  const itemsSelepasModerasi = [
+    "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
+    "Pemilihan sampel dan penyelarasan skema pemarkahan dan rubrik dilaksanakan (sekiranya 2 @ lebih pemeriksa)",
+    "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan dan rubrik pemarkahan yang disediakan",
+    "Pemeriksa memberi komen/ ulasan dalam hasil tugasan pelajar",
+    "Borang penyelarasan markah sebelum pemeriksaan diisi dengan lengkap (jika berkenaan)",
+    "Pemeriksaan dan proses moderasi markah pentaksiran berterusan dijalankan mengikut prosedur",
+    "Borang Moderasi (LAM PT04-02) diisi oleh panel moderasi dan ditandatangani oleh Ketua Pemeriksa",
+    "Penentuan markah akhir dibuat berdasarkan prosedur (Rujuk Buku Panduan Pentaksiran)",
+    "Borang markah pentaksiran berterusan (LAM PT04-01) diisi dengan lengkap dan tepat serta disemak oleh Ketua Jabatan Akademik",
+    "Taburan markah pentaksiran berterusan mestilah sekurang-kurangnya terdiri daripada tiga gred merentasi dua kategori gred (A,A-,B) dan tidak terlalu terpencong. Jika sebaliknya perlu justifikasi dalam Laporan Panel Pemeriksa",
+    "Laporan Panel Pemeriksa Pentaksiran Berterusan (LAM PT04-03) disediakan dengan lengkap",
+    "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
+  ];
+
+  // Fungsi render item ke dalam container
+  function renderItems(containerId, items, prefix) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach((item, idx) => {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'border-b border-white/20 pb-4';
+      itemDiv.innerHTML = `
+        <div class="flex flex-wrap items-start gap-3 mb-2">
+          <span class="font-bold text-white bg-purple-800/40 px-2 py-1 rounded-full text-sm">${idx+1}</span>
+          <span class="text-white flex-1">${item}</span>
+        </div>
+        <div class="flex flex-wrap gap-4 items-center ml-6">
+          <label class="inline-flex items-center gap-1"><input type="radio" name="${prefix}_${idx}" value="Ya" class="accent-purple-500"> <span class="text-white">Ya</span></label>
+          <label class="inline-flex items-center gap-1"><input type="radio" name="${prefix}_${idx}" value="Tidak" class="accent-red-500"> <span class="text-white">Tidak</span></label>
+          <label class="inline-flex items-center gap-1"><input type="radio" name="${prefix}_${idx}" value="Tidak Berkaitan" class="accent-gray-500"> <span class="text-white">Tidak Berkaitan</span></label>
+          <input type="text" name="${prefix}_${idx}_catatan" class="glass-input w-full md:w-64 text-sm" placeholder="Catatan (jika ada)">
+        </div>
+      `;
+      container.appendChild(itemDiv);
+    });
+  }
+
+  // Render kedua-dua tab
+  renderItems('itemsPerancanganContainer', itemsPerancangan, 'item');
+  renderItems('itemsSelepasContainer', itemsSelepasModerasi, 'item');
+
+  // ========== UPLOAD FILES LOGIC ==========
+  let currentFiles = { perancangan: [], selepas: [] };
+
+  function setupFileUpload(areaId, inputId, listId, type) {
+    const area = document.getElementById(areaId);
+    const fileInput = document.getElementById(inputId);
+    const listDiv = document.getElementById(listId);
+
+    area.addEventListener('click', () => fileInput.click());
+    area.addEventListener('dragover', (e) => { e.preventDefault(); area.style.background = 'rgba(255,255,255,0.2)'; });
+    area.addEventListener('dragleave', () => area.style.background = '');
+    area.addEventListener('drop', (e) => {
+      e.preventDefault();
+      area.style.background = '';
+      handleFiles(e.dataTransfer.files, type, listDiv);
+    });
+    fileInput.addEventListener('change', () => handleFiles(fileInput.files, type, listDiv));
+  }
+
+  function handleFiles(files, type, listDiv) {
+    for (let file of files) {
+      currentFiles[type].push(file);
+    }
+    updateFileList(listDiv, currentFiles[type]);
+  }
+
+  function updateFileList(listDiv, files) {
+    listDiv.innerHTML = files.map(f => `<div class="bg-white/20 rounded-full px-3 py-1 inline-block mr-2 mb-2">📄 ${f.name}</div>`).join('');
+  }
+
+  setupFileUpload('dropAreaPerancangan', 'fileInputPerancangan', 'fileListPerancangan', 'perancangan');
+  setupFileUpload('dropAreaSelepas', 'fileInputSelepas', 'fileListSelepas', 'selepas');
+
+  // ========== TAB SWITCHING ==========
+  let currentTab = 'perancangan';
+  function switchTab(tab) {
+    currentTab = tab;
+    const perancanganDiv = document.getElementById('perancanganTab');
+    const selepasDiv = document.getElementById('selepasModerasiTab');
+    const btnPer = document.getElementById('tabPerancanganBtn');
+    const btnSel = document.getElementById('tabSelepasBtn');
+    if (tab === 'perancangan') {
+      perancanganDiv.classList.remove('hidden');
+      selepasDiv.classList.add('hidden');
+      btnPer.classList.add('tab-active');
+      btnSel.classList.remove('tab-active');
+    } else {
+      perancanganDiv.classList.add('hidden');
+      selepasDiv.classList.remove('hidden');
+      btnSel.classList.add('tab-active');
+      btnPer.classList.remove('tab-active');
+    }
+  }
+  document.getElementById('tabPerancanganBtn').addEventListener('click', () => switchTab('perancangan'));
+  document.getElementById('tabSelepasBtn').addEventListener('click', () => switchTab('selepasmoderasi'));
+  switchTab('perancangan');
+
+  // ========== PRINT CURRENT TAB ==========
+  function printCurrentTab() {
+    window.print();
+  }
+
+  // ========== SUBMIT FORM ==========
+  async function submitForm(formElement, formType) {
+    const formData = new FormData(formElement);
+    const dataObj = {};
+    for (let [key, value] of formData.entries()) {
+      dataObj[key] = value;
+    }
+    // Tambah item radio yang mungkin tidak terhantar jika tidak dipilih (default kosong)
+    const itemCount = formType === 'perancangan' ? 21 : 12;
+    for (let i = 0; i < itemCount; i++) {
+      const radioName = `item_${i}`;
+      if (!dataObj[radioName]) dataObj[radioName] = '';
+    }
+
+    // Sediakan fail untuk dimuat naik
+    const files = currentFiles[formType];
+    const filesData = [];
+    for (let file of files) {
+      const reader = new FileReader();
+      const base64 = await new Promise((resolve) => {
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+      filesData.push({ data: base64, name: file.name, mimeType: file.type });
+    }
+
+    document.getElementById('loadingOverlay').classList.remove('hidden');
+    try {
+      const result = await google.script.run.withSuccessHandler(() => {}).withFailureHandler((err) => { throw err; }).saveFormData(dataObj, filesData, formType);
+      alert('✅ Data berjaya disimpan!');
+      // Reset form & files
+      formElement.reset();
+      currentFiles[formType] = [];
+      updateFileList(document.getElementById(formType === 'perancangan' ? 'fileListPerancangan' : 'fileListSelepas'), []);
+      // Optional: reset radio buttons
+    } catch (err) {
+      alert('❌ Ralat: ' + err.message);
+    } finally {
+      document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+  }
+
+  document.getElementById('formPerancangan').addEventListener('submit', (e) => {
+    e.preventDefault();
+    submitForm(e.target, 'perancangan');
+  });
+  document.getElementById('formSelepasModerasi').addEventListener('submit', (e) => {
+    e.preventDefault();
+    submitForm(e.target, 'selepasmoderasi');
+  });
+</script>
+</body>
+</html>
