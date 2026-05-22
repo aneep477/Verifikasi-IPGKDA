@@ -17,6 +17,7 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --text-main: #ffffff;
             --text-muted: rgba(255, 255, 255, 0.7);
+            --highlight: rgba(0, 240, 255, 0.08);
         }
 
         * {
@@ -43,7 +44,7 @@
         }
 
         .glass-container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -172,18 +173,6 @@
             background: rgba(255, 255, 255, 0.1);
         }
 
-        .link-input {
-            border: 1px solid var(--glass-border) !important;
-            border-radius: 8px !important;
-            font-size: 0.85rem;
-            padding: 0.6rem !important;
-        }
-        
-        .link-input:focus {
-            border-color: var(--primary) !important;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
-        }
-
         textarea {
             resize: vertical;
             min-height: 80px;
@@ -223,10 +212,16 @@
             background: rgba(255, 255, 255, 0.03);
         }
 
+        .row-highlight {
+            background: var(--highlight);
+            border-left: 3px solid var(--primary);
+        }
+
         /* Custom Radio Buttons */
         .radio-group {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
 
         .radio-label {
@@ -265,6 +260,46 @@
             background: var(--primary);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--primary);
+        }
+
+        /* File & Link Upload Section */
+        .bahan-sokongan {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px dashed var(--glass-border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .bahan-sokongan label {
+            font-size: 0.8rem;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .file-sm {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .file-sm::file-selector-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            margin-right: 1rem;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s;
+        }
+        .file-sm::file-selector-button:hover {
+            background: var(--primary);
+            color: #000;
         }
 
         /* Action Buttons */
@@ -310,19 +345,6 @@
             box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
         }
 
-        .file-upload {
-            margin-top: 1rem;
-        }
-        .file-upload input[type="file"] {
-            border: 1px dashed var(--glass-border);
-            padding: 1rem;
-            background: rgba(0,0,0,0.2);
-            border-radius: 8px;
-            cursor: pointer;
-            width: 100%;
-            color: #fff;
-        }
-
         /* Loading Overlay */
         .loader-overlay {
             position: fixed;
@@ -352,10 +374,9 @@
             .glass-container { 
                 background: none; border: none; box-shadow: none; padding: 0; 
                 backdrop-filter: none; -webkit-backdrop-filter: none;
-                max-width: 100%;
             }
             .header-section h1, label, th { color: #000 !important; -webkit-text-fill-color: #000; }
-            .tabs, .action-area, .file-upload { display: none !important; }
+            .tabs, .action-area, .bahan-sokongan { display: none !important; }
             input, select, textarea { 
                 border: 1px solid #ccc !important; 
                 color: #000 !important; 
@@ -371,7 +392,7 @@
 
     <div class="loader-overlay" id="loader">
         <div class="spinner"></div>
-        <h3 style="color: #fff; font-family: 'Outfit';">Sedang Menyimpan Data...</h3>
+        <h3 style="color: #fff; font-family: 'Outfit';">Sedang Menghantar Data & Fail...<br><span style="font-size:0.8rem; font-weight:normal;">Sila tunggu sebentar, proses ini mungkin mengambil masa.</span></h3>
     </div>
 
     <div class="glass-container">
@@ -429,8 +450,7 @@
                             <th width="5%">Bil.</th>
                             <th width="35%">Perkara</th>
                             <th width="20%">Status</th>
-                            <th width="20%">Catatan</th>
-                            <th width="20%">Bahan Bukti (Pautan/Link)</th>
+                            <th width="40%">Catatan & Bahan Sokongan</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-perancangan">
@@ -454,8 +474,7 @@
                             <th width="5%">Bil.</th>
                             <th width="35%">Perkara</th>
                             <th width="20%">Status</th>
-                            <th width="20%">Catatan</th>
-                            <th width="20%">Bahan Bukti (Pautan/Link)</th>
+                            <th width="40%">Catatan & Bahan Sokongan</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-moderasi">
@@ -473,14 +492,9 @@
                 <label>Cadangan Penambahbaikan</label>
                 <textarea id="cadangan"></textarea>
             </div>
-            <div class="input-group" style="margin-bottom: 1.5rem;">
+            <div class="input-group">
                 <label>Nama Pengesah / Penilai</label>
                 <input type="text" id="namaPenilai">
-            </div>
-            
-            <div class="input-group file-upload">
-                <label>Muat Naik Laporan / Fail Utama Keseluruhan (Jika Ada)</label>
-                <input type="file" id="failBukti">
             </div>
         </div>
 
@@ -498,76 +512,92 @@
     </div>
 
     <script>
-        // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxERLzqWfS5xjhVHp0fCU0WfldhVwotSQQZHKNrBlfMv7YYj2t_--0f7QkymlHwi-LO/exec';
 
-        // Data Soalan Perancangan (Disusun mengikut permintaan pautan)
         const soalanPerancangan = [
-            { text: "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan", link: false },
-            { text: "JST yang disediakan mengikut format yang ditetapkan", link: true },
-            { text: "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan", link: false },
-            { text: "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran", link: false },
-            { text: "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran", link: false },
-            { text: "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK)", link: false },
-            { text: "Wajaran markah tugasan mengikut wajaran dalam RMK/MK", link: false },
-            { text: "Aspek/Kriteria penilaian dinyatakan dengan jelas", link: false },
-            { text: "Tugasan mempunyai elemen: Rangsangan, Soalan tugasan, Arahan pentadbiran", link: false },
-            { text: "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, dll)", link: true },
-            { text: "Tugasan mencapai Kemahiran Berfikir Aras Tinggi (KBAT)", link: false },
-            { text: "Domain kognitif diuji dalam tugasan", link: false },
-            { text: "Domain psikomotor diuji dalam tugasan (jika berkenaan)", link: false },
-            { text: "Domain afektif diuji dalam tugasan (jika berkenaan)", link: false },
-            { text: "Domain kemahiran insaniah diuji (jika berkenaan)", link: false },
-            { text: "Soalan tugasan telah disemak oleh Pakar Bidang/Penyelaras", link: true },
-            { text: "Rubrik pemarkahan holistik/analitik selari dengan JST", link: true },
-            { text: "Skema/Rubrik mengukur domain kognitif", link: false },
-            { text: "Skema/Rubrik mengukur domain psikomotor", link: false },
-            { text: "Skema/Rubrik mengukur domain afektif", link: false },
-            { text: "Skema/Rubrik mengukur domain kemahiran insaniah", link: false }
+            "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan",
+            "JST yang disediakan mengikut format yang ditetapkan",
+            "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan",
+            "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran",
+            "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran",
+            "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK)",
+            "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
+            "Aspek/Kriteria penilaian dinyatakan dengan jelas",
+            "Tugasan mempunyai elemen: Rangsangan, Soalan tugasan, Arahan pentadbiran",
+            "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, dll)",
+            "Tugasan mencapai Kemahiran Berfikir Aras Tinggi (KBAT)",
+            "Domain kognitif diuji dalam tugasan",
+            "Domain psikomotor diuji dalam tugasan (jika berkenaan)",
+            "Domain afektif diuji dalam tugasan (jika berkenaan)",
+            "Domain kemahiran insaniah diuji (jika berkenaan)",
+            "Soalan tugasan telah disemak oleh Pakar Bidang/Penyelaras",
+            "Rubrik pemarkahan holistik/analitik selari dengan JST",
+            "Skema/Rubrik mengukur domain kognitif",
+            "Skema/Rubrik mengukur domain psikomotor",
+            "Skema/Rubrik mengukur domain afektif",
+            "Skema/Rubrik mengukur domain kemahiran insaniah"
         ];
+        // Index berasaskan nombor Item untuk diletakkan fungsi Upload/Link
+        const ulasanKhususPerancangan = [2, 10, 16, 17]; 
 
-        // Data Soalan Moderasi (Disusun mengikut permintaan pautan)
         const soalanModerasi = [
-            { text: "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah", link: false },
-            { text: "Pemilihan sampel dan penyelarasan skema pemarkahan dilaksanakan", link: false },
-            { text: "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan", link: false },
-            { text: "Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar", link: false },
-            { text: "Borang penyelarasan markah sebelum pemeriksaan diisi lengkap", link: false },
-            { text: "Pemeriksaan dan proses moderasi markah dijalankan mengikut prosedur", link: false },
-            { text: "Borang Moderasi (LAM PT04-02) diisi dan ditandatangani", link: true },
-            { text: "Penentuan markah akhir dibuat berdasarkan prosedur", link: false },
-            { text: "Borang markah pentaksiran berterusan diisi dengan lengkap dan disemak", link: true },
-            { text: "Taburan markah terdiri sekurang-kurangnya tiga gred merentasi dua kategori", link: true },
-            { text: "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap", link: false },
-            { text: "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)", link: true }
+            "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
+            "Pemilihan sampel dan penyelarasan skema pemarkahan dilaksanakan",
+            "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan",
+            "Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar",
+            "Borang penyelarasan markah sebelum pemeriksaan diisi lengkap",
+            "Pemeriksaan dan proses moderasi markah dijalankan mengikut prosedur",
+            "Borang Moderasi (LAM PT04-02) diisi dan ditandatangani",
+            "Penentuan markah akhir dibuat berdasarkan prosedur",
+            "Borang markah pentaksiran berterusan diisi dengan lengkap dan disemak",
+            "Taburan markah terdiri sekurang-kurangnya tiga gred merentasi dua kategori",
+            "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap",
+            "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
         ];
+        // Index berasaskan nombor Item untuk diletakkan fungsi Upload/Link
+        const ulasanKhususModerasi = [7, 9, 10, 12];
 
-        // Fungsi Menjana Jadual Dinamik
-        function generateTable(tableId, dataArray, prefix) {
+        // Fungsi Menjana Jadual Dinamik dengan Ruangan Upload Khas
+        function generateTable(tableId, dataArray, prefix, specialItems) {
             const tbody = document.getElementById(tableId);
             let html = '';
             
             dataArray.forEach((item, index) => {
                 const num = index + 1;
+                const isSpecial = specialItems.includes(num);
+                const rowClass = isSpecial ? 'row-highlight' : '';
+
+                let uploadArea = '';
+                if (isSpecial) {
+                    uploadArea = `
+                        <div class="bahan-sokongan">
+                            <label>Bahan Sokongan Item Ini:</label>
+                            <input type="file" id="${prefix}_${num}_file" class="file-sm">
+                            <input type="url" id="${prefix}_${num}_link" placeholder="Atau Pautan URL (Google Drive/Docs)...">
+                        </div>
+                    `;
+                }
+
                 html += `
-                <tr>
+                <tr class="${rowClass}">
                     <td>${num}.</td>
-                    <td>${item.text}</td>
+                    <td>${item}</td>
                     <td>
-                        <div class="radio-group" style="flex-direction:column; gap:0.3rem;">
-                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya</label>
-                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak</label>
-                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="TB"> TB</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="${prefix}_${num}_status" value="TB"> TB
+                            </label>
                         </div>
                     </td>
                     <td>
                         <input type="text" id="${prefix}_${num}_catatan" placeholder="Catatan...">
-                    </td>
-                    <td>
-                        ${item.link ? 
-                            `<input type="url" id="${prefix}_${num}_pautan" class="link-input" placeholder="🔗 Pautan URL/Folder">` : 
-                            `<span style="color: rgba(255,255,255,0.3); font-size: 0.8rem; display:block; padding-top:0.8rem; text-align:center;">- Tidak Perlu -</span>`
-                        }
+                        ${uploadArea}
                     </td>
                 </tr>`;
             });
@@ -575,8 +605,8 @@
         }
 
         // Initialize Tables
-        generateTable('tbody-perancangan', soalanPerancangan, 'perancangan');
-        generateTable('tbody-moderasi', soalanModerasi, 'moderasi');
+        generateTable('tbody-perancangan', soalanPerancangan, 'perancangan', ulasanKhususPerancangan);
+        generateTable('tbody-moderasi', soalanModerasi, 'moderasi', ulasanKhususModerasi);
 
         let currentFasa = 'perancangan';
 
@@ -590,7 +620,7 @@
             currentFasa = tab;
         }
 
-        // Fungsi Convert File ke Base64
+        // Fungsi Convert File ke Base64 (Untuk Google Drive)
         function getBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -603,7 +633,7 @@
         // Fungsi Utama Hantar Data
         async function submitData() {
             if(!document.getElementById('ipgKampus').value || !document.getElementById('kodKursus').value) {
-                alert("Sila isi sekurang-kurangnya IPG Kampus dan Kod Kursus.");
+                alert("Sila isi maklumat IPG Kampus dan Kod Kursus terlebih dahulu.");
                 return;
             }
 
@@ -626,37 +656,37 @@
                 payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
             }
 
-            // Kumpul data radio button, catatan & pautan
             const limit = currentFasa === 'perancangan' ? 21 : 12;
+            const specialItemsList = currentFasa === 'perancangan' ? ulasanKhususPerancangan : ulasanKhususModerasi;
+
             for(let i = 1; i <= limit; i++) {
+                // Status dan Catatan
                 const radios = document.getElementsByName(`${currentFasa}_${i}_status`);
                 let selectedValue = "";
                 for (const radio of radios) {
                     if (radio.checked) selectedValue = radio.value;
                 }
-                
-                let catatanText = document.getElementById(`${currentFasa}_${i}_catatan`).value;
-                let pautanInput = document.getElementById(`${currentFasa}_${i}_pautan`);
-                
-                // Jika pautan diisi, kita gabungkan ia ke dalam kotak catatan supaya ia terus masuk ke Google Sheets tanpa perlukan column baharu!
-                if(pautanInput && pautanInput.value.trim() !== "") {
-                    catatanText += ` [Pautan Bukti: ${pautanInput.value.trim()}]`;
-                }
-
                 payload[`item_${i}_status`] = selectedValue;
-                payload[`item_${i}_catatan`] = catatanText;
+                payload[`item_${i}_catatan`] = document.getElementById(`${currentFasa}_${i}_catatan`).value;
+
+                // Proses File dan Link untuk item spesifik
+                if (specialItemsList.includes(i)) {
+                    const fileInput = document.getElementById(`${currentFasa}_${i}_file`);
+                    if (fileInput && fileInput.files.length > 0) {
+                        const file = fileInput.files[0];
+                        payload[`item_${i}_fileName`] = `Item_${i}_${file.name}`;
+                        payload[`item_${i}_mimeType`] = file.type;
+                        payload[`item_${i}_fileData`] = await getBase64(file);
+                    }
+
+                    const linkInput = document.getElementById(`${currentFasa}_${i}_link`);
+                    if (linkInput && linkInput.value) {
+                        payload[`item_${i}_link`] = linkInput.value;
+                    }
+                }
             }
 
-            // Urus Fail (Jika Ada)
-            const fileInput = document.getElementById('failBukti');
-            if(fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                payload.fileName = file.name;
-                payload.mimeType = file.type;
-                payload.fileData = await getBase64(file);
-            }
-
-            // Hantar ke Google Apps Script via POST
+            // Hantar API Request
             try {
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
@@ -666,13 +696,14 @@
                 
                 document.getElementById('loader').style.display = 'none';
                 if(result.status === 'success') {
-                    alert('Data berjaya dihantar dan disimpan ke sistem!');
+                    alert('Tahniah! Data dan fail sokongan berjaya disimpan ke sistem.');
+                    // window.location.reload(); 
                 } else {
-                    alert('Ralat: ' + result.message);
+                    alert('Ralat sistem: ' + result.message);
                 }
             } catch (error) {
                 document.getElementById('loader').style.display = 'none';
-                alert('Terdapat ralat semasa menghantar data. Sila semak konsol.');
+                alert('Ralat pada rangkaian. Sila semak konsol.');
                 console.error(error);
             }
         }
