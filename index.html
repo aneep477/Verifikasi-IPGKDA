@@ -1,354 +1,2043 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Verifikasi Pentaksiran Berterusan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        /* Gaya skrin */
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding: 20px;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(12px);
-            border-radius: 32px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-        .glass-input, .glass-select, .glass-textarea {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            padding: 10px 14px;
-            color: white;
-            width: 100%;
-        }
-        label { color: #f3e8ff; font-weight: 500; display: block; margin-bottom: 5px; }
-        .btn-primary {
-            background: linear-gradient(90deg, #8b5cf6, #ec4899);
-            border-radius: 40px;
-            padding: 10px 24px;
-            color: white;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-        .tab-btn {
-            background: rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 30px;
-            color: white;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-        .tab-active { background: rgba(255,255,255,0.4); font-weight: bold; }
-        .file-drop-area {
-            border: 2px dashed white;
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-        }
-        /* Gaya cetakan (template asal) */
-        @media print {
-            body {
-                background: white;
-                padding: 0.5in;
-                margin: 0;
-                font-family: 'Times New Roman', Times, serif;
-            }
-            .no-print, .tab-buttons, .btn-primary, .file-drop-area, button, .glass-card, .backdrop-blur {
-                display: none !important;
-            }
-            .glass-card, .tab-content, form, div, input, select, textarea, label {
-                background: white !important;
-                color: black !important;
-                border-color: black !important;
-                box-shadow: none !important;
-            }
-            input, textarea, select {
-                border: 1px solid #000 !important;
-                background: white !important;
-            }
-            .glass-input, .glass-select, .glass-textarea {
-                background: white !important;
-                color: black !important;
-            }
-            label {
-                color: black !important;
-                font-weight: bold;
-            }
-            .print-item-list {
-                margin-top: 10px;
-            }
-            .print-item {
-                border-bottom: 1px solid #ccc;
-                margin-bottom: 8px;
-                padding-bottom: 5px;
-            }
-            input[type="radio"] {
-                accent-color: black;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Verifikasi PD - IPG Malaysia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #06b6d4;
+      --accent: #8b5cf6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-dark: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border: rgba(148, 163, 184, 0.2);
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+      animation: bgFloat 20s ease-in-out infinite;
+      z-index: -1;
+    }
+
+    @keyframes bgFloat {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(2deg); }
+      66% { transform: translate(-20px, 20px) rotate(-1deg); }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+      position: relative;
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+      animation: logoFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .header h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--text-primary), var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      margin-top: 8px;
+    }
+
+    /* Tab Navigation */
+    .tab-nav {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin: 30px 0;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 14px 28px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass);
+      color: var(--text-secondary);
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
+    }
+
+    .tab-btn.active {
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+    }
+
+    .tab-btn.active::before {
+      opacity: 1;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Glass Card */
+    .glass-card {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-title .icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    /* Form Elements */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    select.form-control {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+
+    /* Checkbox Table */
+    .checklist-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+    }
+
+    .checklist-table th {
+      background: linear-gradient(135deg, var(--primary-dark), var(--accent));
+      color: white;
+      padding: 14px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .checklist-table th:first-child { border-radius: 12px 0 0 12px; }
+    .checklist-table th:last-child { border-radius: 0 12px 12px 0; }
+
+    .checklist-table td {
+      background: var(--glass);
+      padding: 16px;
+      vertical-align: top;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .checklist-table td:first-child {
+      border-left: 1px solid var(--border);
+      border-radius: 12px 0 0 12px;
+    }
+
+    .checklist-table td:last-child {
+      border-right: 1px solid var(--border);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .item-number {
+      font-weight: 700;
+      color: var(--primary);
+      font-size: 0.9rem;
+      min-width: 30px;
+    }
+
+    .item-text {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .radio-option {
+      position: relative;
+    }
+
+    .radio-option input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .radio-label {
+      display: block;
+      padding: 10px 18px;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text-secondary);
+    }
+
+    .radio-option input:checked + .radio-label {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .radio-option input:checked + .radio-label.ya {
+      background: var(--success);
+      border-color: var(--success);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    .radio-option input:checked + .radio-label.tidak {
+      background: var(--danger);
+      border-color: var(--danger);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+
+    .radio-option input:checked + .radio-label.tidak-berkaitan {
+      background: var(--warning);
+      border-color: var(--warning);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+    }
+
+    textarea.catatan-input {
+      width: 100%;
+      min-height: 60px;
+      padding: 10px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+
+    textarea.catatan-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Section Headers */
+    .section-header {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 24px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-header h3 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .section-badge {
+      padding: 4px 12px;
+      background: var(--primary);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* Full Width Textarea */
+    .full-width-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.4);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+
+    .full-width-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover::after {
+      left: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, var(--success), #059669);
+      color: white;
+      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-3px);
+    }
+
+    .btn-print {
+      background: linear-gradient(135deg, var(--secondary), #0891b2);
+      color: white;
+      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-print:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(6, 182, 212, 0.5);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Loading Spinner */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+
+    .toast {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 16px 24px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      animation: slideIn 0.3s ease, fadeOut 0.3s ease 4.7s;
+      min-width: 300px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateX(100%); }
+    }
+
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); }
+    .toast.info { border-left: 4px solid var(--primary); }
+
+    /* File Upload Area */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(15, 23, 42, 0.3);
+    }
+
+    .upload-area:hover, .upload-area.dragover {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .upload-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .upload-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .upload-hint {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      opacity: 0.7;
+    }
+
+    .file-list {
+      margin-top: 16px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+    }
+
+    .file-name {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .file-remove {
+      background: none;
+      border: none;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 1.2rem;
+      padding: 4px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .file-remove:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* Progress Bar */
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .status-completed {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-pending {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    /* Print Styles */
+    @media print {
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      
+      body::before { display: none; }
+      
+      .tab-nav, .btn-group, .upload-area, .file-list, .toast-container, .no-print {
+        display: none !important;
+      }
+      
+      .tab-content { display: block !important; }
+      
+      .glass-card {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        break-inside: avoid;
+      }
+      
+      .header h1 {
+        -webkit-text-fill-color: black !important;
+        color: black !important;
+      }
+      
+      .checklist-table th {
+        background: #1a365d !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      
+      .checklist-table td {
+        background: #f8f9fa !important;
+        border: 1px solid #ddd !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      
+      .radio-label {
+        border: 1px solid #ddd !important;
+        color: #666 !important;
+      }
+      
+      .radio-option input:checked + .radio-label {
+        background: #4f46e5 !important;
+        color: white !important;
+        border-color: #4f46e5 !important;
+      }
+      
+      .section-header {
+        background: #f0f0f0 !important;
+        border: 1px solid #ddd !important;
+      }
+      
+      .form-control, textarea {
+        background: white !important;
+        border: 1px solid #ddd !important;
+        color: black !important;
+      }
+      
+      .header::after { background: #1a365d !important; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 1.8rem; }
+      .form-grid { grid-template-columns: 1fr; }
+      .glass-card { padding: 20px; }
+      .checklist-table { font-size: 0.85rem; }
+      .checklist-table td, .checklist-table th { padding: 12px 8px; }
+      .btn { padding: 14px 24px; font-size: 0.9rem; }
+      .radio-group { gap: 6px; }
+      .radio-label { padding: 8px 12px; font-size: 0.8rem; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+    /* Item Note Text */
+    .item-note {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-style: italic;
+      margin-top: 6px;
+      padding-left: 12px;
+      border-left: 2px solid var(--primary);
+    }
+
+    .item-note ul {
+      margin: 4px 0;
+      padding-left: 20px;
+    }
+
+    .item-note li {
+      margin-bottom: 2px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="max-w-6xl mx-auto">
-    <div class="text-center mb-6 no-print">
-        <h1 class="text-3xl font-bold text-white">📋 Verifikasi Pentaksiran Berterusan</h1>
-        <p class="text-purple-100">IPG Malaysia - Fasa Perancangan & Selepas Moderasi</p>
-    </div>
+<div class="toast-container" id="toastContainer"></div>
 
-    <!-- Tab Buttons -->
-    <div class="flex justify-center gap-3 mb-6 no-print">
-        <button id="btnPerancangan" class="tab-btn tab-active">📝 Perancangan</button>
-        <button id="btnSelepas" class="tab-btn">✅ Selepas Moderasi</button>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-section">
+      <div class="logo-icon">🎓</div>
     </div>
+    <h1>SENARAI SEMAK VERIFIKASI PD</h1>
+    <p>Institut Pendidikan Guru Malaysia • Kementerian Pendidikan Malaysia</p>
+  </div>
 
-    <!-- FORM PERANCANGAN -->
-    <div id="formPerancanganDiv" class="glass-card">
-        <form id="formPerancangan">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div><label>IPG Kampus</label><input type="text" name="ipg_kampus" class="glass-input" required></div>
-                <div><label>Kod Kursus</label><input type="text" name="kod_kursus" class="glass-input" required></div>
-                <div><label>Nama Kursus</label><input type="text" name="nama_kursus" class="glass-input" required></div>
-                <div><label>Program</label><select name="program" class="glass-select"><option>PPISMP</option><option>PISMP</option><option>PDPM</option><option>PDPP</option><option>PITO</option></select></div>
-                <div><label>Semester/Tahun</label><input type="text" name="semester_tahun" class="glass-input" placeholder="Sem 3 Tahun 2"></div>
-                <div><label>Tarikh Verifikasi</label><input type="date" name="tarikh_verifikasi" class="glass-input" required></div>
-            </div>
-            <div id="itemsPerancanganContainer" class="space-y-4 mb-6"></div>
-            <div class="grid md:grid-cols-2 gap-4 mb-6">
-                <div><label>Ulasan Keseluruhan</label><textarea name="ulasan_keseluruhan" rows="3" class="glass-textarea"></textarea></div>
-                <div><label>Cadangan Penambahbaikan</label><textarea name="cadangan_penambahbaikan" rows="3" class="glass-textarea"></textarea></div>
-            </div>
-            <div class="mb-6 no-print">
-                <label>Lampiran (fail)</label>
-                <div id="dropAreaPerancangan" class="file-drop-area"><i class="fas fa-cloud-upload-alt"></i> Klik atau seret fail</div>
-                <input type="file" id="fileInputPerancangan" multiple style="display:none">
-                <div id="fileListPerancangan" class="mt-2 text-sm"></div>
-            </div>
-            <div class="flex justify-between no-print">
-                <button type="button" id="cetakPerancanganBtn" class="bg-gray-700 text-white px-5 py-2 rounded-full"><i class="fas fa-print"></i> Cetak Borang</button>
-                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Hantar & Simpan</button>
-            </div>
-        </form>
-    </div>
+  <!-- Tab Navigation -->
+  <div class="tab-nav no-print">
+    <button class="tab-btn active" onclick="switchTab('perancangan')">
+      📋 Fasa Perancangan
+    </button>
+    <button class="tab-btn" onclick="switchTab('moderasi')">
+      ✅ Fasa Selepas Moderasi
+    </button>
+  </div>
 
-    <!-- FORM SELEPAS MODERASI (disembunyikan pada mulanya) -->
-    <div id="formSelepasDiv" class="glass-card hidden">
-        <form id="formSelepasModerasi">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div><label>IPG Kampus</label><input type="text" name="ipg_kampus" class="glass-input" required></div>
-                <div><label>Kod Kursus</label><input type="text" name="kod_kursus" class="glass-input" required></div>
-                <div><label>Nama Kursus</label><input type="text" name="nama_kursus" class="glass-input" required></div>
-                <div><label>Program</label><select name="program" class="glass-select"><option>PPISMP</option><option>PISMP</option><option>PDPM</option><option>PDPP</option><option>PITO</option></select></div>
-                <div><label>Semester/Tahun</label><input type="text" name="semester_tahun" class="glass-input"></div>
-                <div><label>Tarikh Verifikasi</label><input type="date" name="tarikh_verifikasi" class="glass-input" required></div>
-                <div><label>Tarikh Taklimat PB</label><input type="date" name="tarikh_taklimat_pb" class="glass-input"></div>
-            </div>
-            <div id="itemsSelepasContainer" class="space-y-4 mb-6"></div>
-            <div class="grid md:grid-cols-2 gap-4 mb-6">
-                <div><label>Ulasan Keseluruhan</label><textarea name="ulasan_keseluruhan" rows="3" class="glass-textarea"></textarea></div>
-                <div><label>Cadangan Penambahbaikan</label><textarea name="cadangan_penambahbaikan" rows="3" class="glass-textarea"></textarea></div>
-            </div>
-            <div class="mb-6 no-print">
-                <label>Lampiran (fail)</label>
-                <div id="dropAreaSelepas" class="file-drop-area"><i class="fas fa-cloud-upload-alt"></i> Klik atau seret fail</div>
-                <input type="file" id="fileInputSelepas" multiple style="display:none">
-                <div id="fileListSelepas" class="mt-2 text-sm"></div>
-            </div>
-            <div class="flex justify-between no-print">
-                <button type="button" id="cetakSelepasBtn" class="bg-gray-700 text-white px-5 py-2 rounded-full"><i class="fas fa-print"></i> Cetak Borang</button>
-                <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Hantar & Simpan</button>
-            </div>
-        </form>
-    </div>
+  <!-- ==================== TAB 1: FASA PERANCANGAN ==================== -->
+  <div id="tab-perancangan" class="tab-content active">
+    <form id="formPerancangan">
+      <!-- Maklumat Asas -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">📝</div>
+          <span>Maklumat Asas Verifikasi</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Kod Verifikasi</label>
+            <input type="text" class="form-control" id="pr_kodVerifikasi" readonly>
+          </div>
+          <div class="form-group">
+            <label>IPG Kampus</label>
+            <input type="text" class="form-control" id="pr_ipgKampus" placeholder="Masukkan nama kampus">
+          </div>
+          <div class="form-group">
+            <label>Kod Kursus</label>
+            <input type="text" class="form-control" id="pr_kodKursus" placeholder="cth: HBBI3103">
+          </div>
+          <div class="form-group">
+            <label>Nama Kursus</label>
+            <input type="text" class="form-control" id="pr_namaKursus" placeholder="Masukkan nama kursus">
+          </div>
+          <div class="form-group">
+            <label>Program</label>
+            <select class="form-control" id="pr_program">
+              <option value="">-- Pilih Program --</option>
+              <option value="PPISMP">PPISMP</option>
+              <option value="PISMP">PISMP</option>
+              <option value="PDPM">PDPM</option>
+              <option value="PDPP">PDPP</option>
+              <option value="PITO">PITO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Semester</label>
+            <select class="form-control" id="pr_semester">
+              <option value="">-- Pilih Semester --</option>
+              <option value="Sem 1">Sem 1</option>
+              <option value="Sem 2">Sem 2</option>
+              <option value="Sem 3">Sem 3</option>
+              <option value="Sem 4">Sem 4</option>
+              <option value="Sem 5">Sem 5</option>
+              <option value="Sem 6">Sem 6</option>
+              <option value="Sem 7">Sem 7</option>
+              <option value="Sem 8">Sem 8</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tahun</label>
+            <select class="form-control" id="pr_tahun">
+              <option value="">-- Pilih Tahun --</option>
+              <option value="Tahun 1">Tahun 1</option>
+              <option value="Tahun 2">Tahun 2</option>
+              <option value="Tahun 3">Tahun 3</option>
+              <option value="Tahun 4">Tahun 4</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tarikh Verifikasi</label>
+            <input type="date" class="form-control" id="pr_tarikhVerifikasi">
+          </div>
+        </div>
+      </div>
+
+      <!-- Senarai Semak -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">✅</div>
+          <span>Senarai Semak Verifikasi</span>
+        </div>
+
+        <!-- Jadual Spesifikasi Tugasan -->
+        <div class="section-header">
+          <span class="section-badge">JST</span>
+          <h3>Jadual Spesifikasi Tugasan</h3>
+        </div>
+        <table class="checklist-table">
+          <thead>
+            <tr>
+              <th style="width:50px">Bil.</th>
+              <th>Perkara</th>
+              <th style="width:280px">Pilihan</th>
+              <th style="width:250px">Catatan</th>
+            </tr>
+          </thead>
+          <tbody id="pr_checklist_jst"></tbody>
+        </table>
+
+        <!-- Soalan Tugasan -->
+        <div class="section-header">
+          <span class="section-badge">TUGASAN</span>
+          <h3>Soalan Tugasan</h3>
+        </div>
+        <table class="checklist-table">
+          <thead>
+            <tr>
+              <th style="width:50px">Bil.</th>
+              <th>Perkara</th>
+              <th style="width:280px">Pilihan</th>
+              <th style="width:250px">Catatan</th>
+            </tr>
+          </thead>
+          <tbody id="pr_checklist_tugasan"></tbody>
+        </table>
+
+        <!-- Rubrik Pemarkahan -->
+        <div class="section-header">
+          <span class="section-badge">RUBRIK</span>
+          <h3>Rubrik Pemarkahan</h3>
+        </div>
+        <table class="checklist-table">
+          <thead>
+            <tr>
+              <th style="width:50px">Bil.</th>
+              <th>Perkara</th>
+              <th style="width:280px">Pilihan</th>
+              <th style="width:250px">Catatan</th>
+            </tr>
+          </thead>
+          <tbody id="pr_checklist_rubrik"></tbody>
+        </table>
+      </div>
+
+      <!-- Ulasan & Cadangan -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">💬</div>
+          <span>Ulasan & Cadangan</span>
+        </div>
+        <div class="form-group">
+          <label>Ulasan Keseluruhan</label>
+          <textarea class="full-width-textarea" id="pr_ulasanKeseluruhan" placeholder="Masukkan ulasan keseluruhan..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Cadangan Penambahbaikan</label>
+          <textarea class="full-width-textarea" id="pr_cadanganPenambahbaikan" placeholder="Masukkan cadangan penambahbaikan..."></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nama Verifier</label>
+            <input type="text" class="form-control" id="pr_namaVerifier" placeholder="Nama penuh verifier">
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Bahan -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">📁</div>
+          <span>Muat Naik Bahan Sokongan</span>
+        </div>
+        <div class="upload-area" id="prUploadArea" onclick="document.getElementById('prFileInput').click()">
+          <div class="upload-icon">📤</div>
+          <div class="upload-text">Klik atau seret fail ke sini untuk memuat naik</div>
+          <div class="upload-hint">PDF, DOC, DOCX, JPG, PNG, XLS (Maksimum 10MB setiap fail)</div>
+          <input type="file" id="prFileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx" style="display:none" onchange="handleFileSelect(this, 'pr')">
+        </div>
+        <div class="file-list" id="prFileList"></div>
+        <div class="progress-bar" id="prProgressBar" style="display:none">
+          <div class="progress-fill" id="prProgressFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-group no-print">
+        <button type="button" class="btn btn-success" onclick="saveFasaPerancangan()">
+          💾 Simpan Data
+        </button>
+        <button type="button" class="btn btn-print" onclick="printForm('pr')">
+          🖨️ Cetak Borang
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm('pr')">
+          🔄 Reset
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ==================== TAB 2: FASA SELEPAS MODERASI ==================== -->
+  <div id="tab-moderasi" class="tab-content">
+    <form id="formModerasi">
+      <!-- Maklumat Asas -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">📝</div>
+          <span>Maklumat Asas Verifikasi</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Kod Verifikasi</label>
+            <input type="text" class="form-control" id="mod_kodVerifikasi" readonly>
+          </div>
+          <div class="form-group">
+            <label>IPG Kampus</label>
+            <input type="text" class="form-control" id="mod_ipgKampus" placeholder="Masukkan nama kampus">
+          </div>
+          <div class="form-group">
+            <label>Kod Kursus</label>
+            <input type="text" class="form-control" id="mod_kodKursus" placeholder="cth: HBBI3103">
+          </div>
+          <div class="form-group">
+            <label>Nama Kursus</label>
+            <input type="text" class="form-control" id="mod_namaKursus" placeholder="Masukkan nama kursus">
+          </div>
+          <div class="form-group">
+            <label>Program</label>
+            <select class="form-control" id="mod_program">
+              <option value="">-- Pilih Program --</option>
+              <option value="PPISMP">PPISMP</option>
+              <option value="PISMP">PISMP</option>
+              <option value="PDPM">PDPM</option>
+              <option value="PDPP">PDPP</option>
+              <option value="PITO">PITO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Semester</label>
+            <select class="form-control" id="mod_semester">
+              <option value="">-- Pilih Semester --</option>
+              <option value="Sem 1">Sem 1</option>
+              <option value="Sem 2">Sem 2</option>
+              <option value="Sem 3">Sem 3</option>
+              <option value="Sem 4">Sem 4</option>
+              <option value="Sem 5">Sem 5</option>
+              <option value="Sem 6">Sem 6</option>
+              <option value="Sem 7">Sem 7</option>
+              <option value="Sem 8">Sem 8</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tahun</label>
+            <select class="form-control" id="mod_tahun">
+              <option value="">-- Pilih Tahun --</option>
+              <option value="Tahun 1">Tahun 1</option>
+              <option value="Tahun 2">Tahun 2</option>
+              <option value="Tahun 3">Tahun 3</option>
+              <option value="Tahun 4">Tahun 4</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tarikh Verifikasi</label>
+            <input type="date" class="form-control" id="mod_tarikhVerifikasi">
+          </div>
+        </div>
+      </div>
+
+      <!-- Senarai Semak -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">✅</div>
+          <span>Senarai Semak Verifikasi (Selepas Moderasi)</span>
+        </div>
+
+        <table class="checklist-table">
+          <thead>
+            <tr>
+              <th style="width:50px">Bil.</th>
+              <th>Perkara</th>
+              <th style="width:320px">Pilihan</th>
+              <th style="width:250px">Catatan</th>
+            </tr>
+          </thead>
+          <tbody id="mod_checklist_main"></tbody>
+        </table>
+      </div>
+
+      <!-- Ulasan & Cadangan -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">💬</div>
+          <span>Ulasan & Cadangan</span>
+        </div>
+        <div class="form-group">
+          <label>Ulasan Keseluruhan</label>
+          <textarea class="full-width-textarea" id="mod_ulasanKeseluruhan" placeholder="Masukkan ulasan keseluruhan..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Cadangan Penambahbaikan</label>
+          <textarea class="full-width-textarea" id="mod_cadanganPenambahbaikan" placeholder="Masukkan cadangan penambahbaikan..."></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nama Verifier</label>
+            <input type="text" class="form-control" id="mod_namaVerifier" placeholder="Nama penuh verifier">
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Bahan -->
+      <div class="glass-card">
+        <div class="card-title">
+          <div class="icon">📁</div>
+          <span>Muat Naik Bahan Sokongan</span>
+        </div>
+        <div class="upload-area" id="modUploadArea" onclick="document.getElementById('modFileInput').click()">
+          <div class="upload-icon">📤</div>
+          <div class="upload-text">Klik atau seret fail ke sini untuk memuat naik</div>
+          <div class="upload-hint">PDF, DOC, DOCX, JPG, PNG, XLS (Maksimum 10MB setiap fail)</div>
+          <input type="file" id="modFileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx" style="display:none" onchange="handleFileSelect(this, 'mod')">
+        </div>
+        <div class="file-list" id="modFileList"></div>
+        <div class="progress-bar" id="modProgressBar" style="display:none">
+          <div class="progress-fill" id="modProgressFill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-group no-print">
+        <button type="button" class="btn btn-success" onclick="saveFasaModerasi()">
+          💾 Simpan Data
+        </button>
+        <button type="button" class="btn btn-print" onclick="printForm('mod')">
+          🖨️ Cetak Borang
+        </button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm('mod')">
+          🔄 Reset
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<div id="loadingOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:9999;" class="no-print"><div style="background:white; padding:20px; border-radius:20px;">Menyimpan data...</div></div>
-
 <script>
-    // ---------- SENARAI ITEMS ----------
-    const itemsPerancangan = [
-        "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan daripada Ketua Jabatan Akademik / Penyelaras Pentaksiran Berterusan",
-        "JST yang disediakan mengikut format yang ditetapkan",
-        "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan dan selaras dengan RMK/MK",
-        "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK",
-        "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK",
-        "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK) yang telah ditetapkan dalam RMK/MK",
-        "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
-        "Aspek/ Kriteria penilaian dinyatakan dengan jelas untuk mentaksir tugasan yang diberikan",
-        "Tugasan mempunyai elemen-elemen berikut: Rangsangan, Soalan tugasan, Arahan pentadbiran",
-        "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, Merangkai Standard, Backward Design, Pelan Pembelajaran Bermakna - 6C, MPP, MRP, 3E & 3R)",
-        "Tugasan yang disediakan mencapai Kemahiran Berfikir Aras Tinggi (KBAT) seperti yang dinyatakan dalam HPK",
-        "Domain kognitif yang dinyatakan dalam HPK diuji dalam tugasan",
-        "Domain psikomotor yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
-        "Domain afektif yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
-        "Domain kemahiran insaniah yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
-        "Soalan tugasan telah disemak oleh Pakar Bidang / Penyelaras Kursus / Pensyarah Kanan",
-        "Rubrik pemarkahan secara holistik / analitik disediakan selari dengan Jadual Spesifikasi Tugasan (JST) dan tugasan",
-        "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain kognitif",
-        "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain psikomotor (jika berkenaan)",
-        "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain afektif (jika berkenaan)",
-        "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain kemahiran insaniah (jika berkenaan)"
-    ];
+  // ============================================================================
+  // DATA: Checklist Items
+  // ============================================================================
+  
+  const perancanganItems = {
+    jst: [
+      { id: 1, text: 'Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan daripada Ketua Jabatan Akademik / Penyelaras Pentaksiran Berterusan' },
+      { id: 2, text: 'JST yang disediakan mengikut format yang ditetapkan' },
+      { id: 3, text: 'Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan dan selaras dengan RMK/MK' },
+      { id: 4, text: 'Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK' },
+      { id: 5, text: 'Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK' },
+      { id: 6, text: 'Objektif tugasan memenuhi hasil pembelajaran kursus (HPK) yang telah ditetapkan dalam RMK/MK' },
+      { id: 7, text: 'Wajaran markah tugasan mengikut wajaran dalam RMK/MK' },
+      { id: 8, text: 'Aspek / Kriteria penilaian dinyatakan dengan jelas untuk mentaksir tugasan yang diberikan' }
+    ],
+    tugasan: [
+      { id: 9, text: 'Tugasan mempunyai elemen-elemen berikut: Rangsangan, Soalan tugasan, Arahan pentadbiran' },
+      { id: 10, text: 'Kapasiti Pedagogi Pembelajaran Bermakna', note: '• Merungkai Standard untuk Kejelasan\n• Merangkai Standard\n• Backward Design: The Big Idea, EQ\n• Pelan Pembelajaran Bermakna - Model Kompetensi Global 6C, MPP, MRP, 3E & 3R', noteFull: 'Nota: Item-item senarai semak ini digunakan untuk mengenal pasti proses pentaksiran berterusan berasaskan Kerangka Pentaksiran Berterusan KPPB IPG. Walau bagaimanapun, proses pelaksanaan KPPB adalah melibatkan keseluruhan proses pembelajaran bermakna termasuk dalam pengajaran dan pembelajaran (PdP)' },
+      { id: 11, text: 'Tugasan yang disediakan mencapai Kemahiran Berfikir Aras Tinggi (KBAT) seperti yang dinyatakan dalam HPK' },
+      { id: 12, text: 'Domain kognitif yang dinyatakan dalam HPK diuji dalam tugasan' },
+      { id: 13, text: 'Domain psikomotor yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)' },
+      { id: 14, text: 'Domain afektif yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)' },
+      { id: 15, text: 'Domain kemahiran insaniah yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)' },
+      { id: 16, text: 'Soalan tugasan telah disemak oleh Pakar Bidang / Penyelaras Kursus / Pensyarah Kanan' }
+    ],
+    rubrik: [
+      { id: 17, text: 'Rubrik pemarkahan secara holistik/analitik disediakan selari dengan Jadual Spesifikasi Tugasan (JST) dan tugasan' },
+      { id: 18, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain kognitif' },
+      { id: 19, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain psikomotor (jika berkenaan)' },
+      { id: 20, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain afektif (jika berkenaan)' },
+      { id: 21, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain kemahiran insaniah (jika berkenaan)' }
+    ]
+  };
 
-    const itemsSelepasModerasi = [
-        "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
-        "Pemilihan sampel dan penyelarasan skema pemarkahan dan rubrik dilaksanakan (sekiranya 2 @ lebih pemeriksa)",
-        "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan dan rubrik pemarkahan yang disediakan",
-        "Pemeriksa memberi komen/ ulasan dalam hasil tugasan pelajar",
-        "Borang penyelarasan markah sebelum pemeriksaan diisi dengan lengkap (jika berkenaan)",
-        "Pemeriksaan dan proses moderasi markah pentaksiran berterusan dijalankan mengikut prosedur",
-        "Borang Moderasi (LAM PT04-02) diisi oleh panel moderasi dan ditandatangani oleh Ketua Pemeriksa",
-        "Penentuan markah akhir dibuat berdasarkan prosedur (Rujuk Buku Panduan Pentaksiran)",
-        "Borang markah pentaksiran berterusan (LAM PT04-01) diisi dengan lengkap dan tepat serta disemak oleh Ketua Jabatan Akademik",
-        "Taburan markah pentaksiran berterusan mestilah sekurang-kurangnya terdiri daripada tiga gred merentasi dua kategori gred (A,A-,B) dan tidak terlalu terpencong. Jika sebaliknya perlu justifikasi dalam Laporan Panel Pemeriksa",
-        "Laporan Panel Pemeriksa Pentaksiran Berterusan (LAM PT04-03) disediakan dengan lengkap",
-        "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
-    ];
+  const moderasiItems = [
+    { id: 1, text: 'Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah', hasDate: true, dateLabel: 'Tarikh Taklimat PB:' },
+    { id: 2, text: 'Pemilihan sampel dan penyelarasan skema pemarkahan dan rubrik dilaksanakan (sekiranya 2 @ lebih pemeriksa)' },
+    { id: 3, text: 'Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan dan rubrik pemarkahan yang disediakan' },
+    { id: 4, text: 'Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar' },
+    { id: 5, text: 'Borang penyelarasan markah sebelum pemeriksaan diisi dengan lengkap (jika berkenaan)' },
+    { id: 6, text: 'Pemeriksaan dan proses moderasi markah pentaksiran berterusan dijalankan mengikut prosedur' },
+    { id: 7, text: 'Borang Moderasi (LAM PT04-02) diisi oleh panel moderasi dan ditandatangani oleh Ketua Pemeriksa' },
+    { id: 8, text: 'Penentuan markah akhir dibuat berdasarkan prosedur (Rujuk Buku Panduan Pentaksiran)' },
+    { id: 9, text: 'Borang markah pentaksiran berterusan (LAM PT04-01) diisi dengan lengkap dan tepat serta disemak oleh Ketua Jabatan Akademik' },
+    { id: 10, text: 'Taburan markah pentaksiran berterusan mestilah sekurang-kurangnya terdiri daripada tiga gred merentasi dua kategori gred (Cth: A, A- dan B) dan tidak terlalu terpencong. Jika taburan sebaliknya pensyarah perlu menyatakan justifikasi dalam Laporan Panel Pemeriksa Kerja Kursus (LAM PT04-03)' },
+    { id: 11, text: 'Laporan Panel Pemeriksa Pentaksiran Berterusan (LAM PT04-03) disediakan dengan lengkap' },
+    { id: 12, text: 'Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)' }
+  ];
 
-    // Fungsi untuk render item-item
-    function renderItems(containerId, items, prefix) {
-        const container = document.getElementById(containerId);
-        if (!container) return;
-        container.innerHTML = '';
-        items.forEach((item, idx) => {
-            const div = document.createElement('div');
-            div.className = 'border-b border-white/20 pb-3';
-            div.innerHTML = `
-                <div class="flex flex-wrap items-start gap-2 mb-1">
-                    <span class="font-bold bg-purple-800/40 px-2 py-0.5 rounded-full text-sm">${idx+1}</span>
-                    <span class="flex-1">${escapeHtml(item)}</span>
-                </div>
-                <div class="flex flex-wrap gap-3 ml-6">
-                    <label><input type="radio" name="${prefix}_${idx}" value="Ya"> Ya</label>
-                    <label><input type="radio" name="${prefix}_${idx}" value="Tidak"> Tidak</label>
-                    <label><input type="radio" name="${prefix}_${idx}" value="Tidak Berkaitan"> Tidak Berkaitan</label>
-                    <input type="text" name="${prefix}_${idx}_catatan" placeholder="Catatan" class="glass-input w-64 text-sm">
-                </div>
-            `;
-            container.appendChild(div);
+  // ============================================================================
+  // INITIALIZATION
+  // ============================================================================
+  
+  let uploadedFiles = { pr: [], mod: [] };
+
+  document.addEventListener('DOMContentLoaded', function() {
+    generateKodVerifikasi();
+    renderPerancanganChecklist();
+    renderModerasiChecklist();
+    setupDragDrop('pr');
+    setupDragDrop('mod');
+  });
+
+  function generateKodVerifikasi() {
+    const prKod = 'VER-PR-' + Date.now().toString(36).toUpperCase();
+    const modKod = 'VER-MOD-' + Date.now().toString(36).toUpperCase();
+    document.getElementById('pr_kodVerifikasi').value = prKod;
+    document.getElementById('mod_kodVerifikasi').value = modKod;
+  }
+
+  function renderPerancanganChecklist() {
+    const jstContainer = document.getElementById('pr_checklist_jst');
+    const tugasanContainer = document.getElementById('pr_checklist_tugasan');
+    const rubrikContainer = document.getElementById('pr_checklist_rubrik');
+
+    jstContainer.innerHTML = perancanganItems.jst.map(item => createChecklistRow(item, 'pr')).join('');
+    tugasanContainer.innerHTML = perancanganItems.tugasan.map(item => createChecklistRow(item, 'pr')).join('');
+    rubrikContainer.innerHTML = perancanganItems.rubrik.map(item => createChecklistRow(item, 'pr')).join('');
+  }
+
+  function renderModerasiChecklist() {
+    const container = document.getElementById('mod_checklist_main');
+    container.innerHTML = moderasiItems.map(item => createChecklistRowMod(item)).join('');
+  }
+
+  function createChecklistRow(item, prefix) {
+    const noteHtml = item.note ? `<div class="item-note">${item.note.replace(/\n/g, '<br>')}</div>` : '';
+    const noteFullHtml = item.noteFull ? `<div class="item-note">${item.noteFull}</div>` : '';
+    
+    return `
+      <tr>
+        <td><span class="item-number">${item.id}.</span></td>
+        <td>
+          <div class="item-text">${item.text}</div>
+          ${noteHtml}
+          ${noteFullHtml}
+        </td>
+        <td>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="${prefix}_item${item.id}" value="Ya">
+              <span class="radio-label ya">Ya</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="${prefix}_item${item.id}" value="Tidak">
+              <span class="radio-label tidak">Tidak</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="${prefix}_item${item.id}" value="Tidak Berkaitan">
+              <span class="radio-label tidak-berkaitan">Tidak Berkaitan</span>
+            </label>
+          </div>
+        </td>
+        <td>
+          <textarea class="catatan-input" id="${prefix}_item${item.id}Catatan" placeholder="Catatan..."></textarea>
+        </td>
+      </tr>
+    `;
+  }
+
+  function createChecklistRowMod(item) {
+    let dateHtml = '';
+    if (item.hasDate) {
+      dateHtml = `
+        <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
+          <label style="font-size:0.8rem; color:var(--text-secondary); margin:0;">${item.dateLabel}</label>
+          <input type="date" class="form-control" id="mod_item${item.id}Tarikh" style="padding:8px; font-size:0.85rem;">
+        </div>
+      `;
+    }
+    
+    return `
+      <tr>
+        <td><span class="item-number">${item.id}.</span></td>
+        <td>
+          <div class="item-text">${item.text}</div>
+        </td>
+        <td>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="mod_item${item.id}" value="Ya">
+              <span class="radio-label ya">Ya</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="mod_item${item.id}" value="Tidak">
+              <span class="radio-label tidak">Tidak</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="mod_item${item.id}" value="Tidak Berkaitan">
+              <span class="radio-label tidak-berkaitan">Tidak Berkaitan</span>
+            </label>
+          </div>
+          ${dateHtml}
+        </td>
+        <td>
+          <textarea class="catatan-input" id="mod_item${item.id}Catatan" placeholder="Catatan..."></textarea>
+        </td>
+      </tr>
+    `;
+  }
+
+  // ============================================================================
+  // TAB SWITCHING
+  // ============================================================================
+  
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ============================================================================
+  // FILE UPLOAD
+  // ============================================================================
+  
+  function setupDragDrop(prefix) {
+    const area = document.getElementById(prefix + 'UploadArea');
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      area.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      });
+    });
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      area.addEventListener(eventName, () => area.classList.add('dragover'));
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      area.addEventListener(eventName, () => area.classList.remove('dragover'));
+    });
+    
+    area.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      handleFiles(files, prefix);
+    });
+  }
+
+  function handleFileSelect(input, prefix) {
+    handleFiles(input.files, prefix);
+  }
+
+  function handleFiles(files, prefix) {
+    for (let file of files) {
+      if (file.size > 10 * 1024 * 1024) {
+        showToast('❌ Fail ' + file.name + ' melebihi 10MB', 'error');
+        continue;
+      }
+      uploadedFiles[prefix].push(file);
+    }
+    renderFileList(prefix);
+  }
+
+  function renderFileList(prefix) {
+    const container = document.getElementById(prefix + 'FileList');
+    container.innerHTML = uploadedFiles[prefix].map((file, index) => `
+      <div class="file-item">
+        <div class="file-name">
+          📄 ${file.name} <span style="color:var(--text-secondary); font-size:0.8rem;">(${(file.size / 1024).toFixed(1)} KB)</span>
+        </div>
+        <button type="button" class="file-remove" onclick="removeFile('${prefix}', ${index})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function removeFile(prefix, index) {
+    uploadedFiles[prefix].splice(index, 1);
+    renderFileList(prefix);
+  }
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function uploadFiles(prefix, kodVerifikasi, fasaName) {
+    const files = uploadedFiles[prefix];
+    if (files.length === 0) return { success: true, uploaded: [] };
+
+    const progressBar = document.getElementById(prefix + 'ProgressBar');
+    const progressFill = document.getElementById(prefix + 'ProgressFill');
+    progressBar.style.display = 'block';
+
+    const uploaded = [];
+    
+    for (let i = 0; i < files.length; i++) {
+      const progress = ((i + 1) / files.length) * 100;
+      progressFill.style.width = progress + '%';
+
+      try {
+        const base64 = await fileToBase64(files[i]);
+        const result = await new Promise((resolve) => {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(err => resolve({ success: false, message: err }))
+            .uploadFileToDrive(base64, files[i].name, kodVerifikasi, fasaName);
         });
-    }
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    renderItems('itemsPerancanganContainer', itemsPerancangan, 'item');
-    renderItems('itemsSelepasContainer', itemsSelepasModerasi, 'item');
 
-    // ---------- UPLOAD FILE ----------
-    let currentFiles = { perancangan: [], selepas: [] };
-    function setupUpload(areaId, inputId, listId, type) {
-        const area = document.getElementById(areaId);
-        const input = document.getElementById(inputId);
-        const listDiv = document.getElementById(listId);
-        if (!area || !input) return;
-        area.addEventListener('click', () => input.click());
-        area.addEventListener('dragover', e => e.preventDefault());
-        area.addEventListener('drop', e => {
-            e.preventDefault();
-            handleFiles(e.dataTransfer.files, type, listDiv);
-        });
-        input.addEventListener('change', () => handleFiles(input.files, type, listDiv));
-    }
-    function handleFiles(files, type, listDiv) {
-        for (let f of files) currentFiles[type].push(f);
-        updateFileList(listDiv, currentFiles[type]);
-    }
-    function updateFileList(listDiv, files) {
-        listDiv.innerHTML = files.map(f => `<div class="inline-block bg-white/20 rounded-full px-2 py-0.5 mr-1 mb-1">📄 ${f.name}</div>`).join('');
-    }
-    setupUpload('dropAreaPerancangan', 'fileInputPerancangan', 'fileListPerancangan', 'perancangan');
-    setupUpload('dropAreaSelepas', 'fileInputSelepas', 'fileListSelepas', 'selepas');
-
-    // ---------- TAB TOGGLE ----------
-    function showTab(tab) {
-        const perancanganDiv = document.getElementById('formPerancanganDiv');
-        const selepasDiv = document.getElementById('formSelepasDiv');
-        const btnPer = document.getElementById('btnPerancangan');
-        const btnSel = document.getElementById('btnSelepas');
-        if (tab === 'perancangan') {
-            perancanganDiv.classList.remove('hidden');
-            selepasDiv.classList.add('hidden');
-            btnPer.classList.add('tab-active');
-            btnSel.classList.remove('tab-active');
+        if (result.success) {
+          uploaded.push({ fileName: result.fileName, fileUrl: result.fileUrl });
         } else {
-            perancanganDiv.classList.add('hidden');
-            selepasDiv.classList.remove('hidden');
-            btnSel.classList.add('tab-active');
-            btnPer.classList.remove('tab-active');
+          showToast('❌ Gagal memuat naik: ' + files[i].name, 'error');
         }
-    }
-    document.getElementById('btnPerancangan').addEventListener('click', () => showTab('perancangan'));
-    document.getElementById('btnSelepas').addEventListener('click', () => showTab('selepas'));
-    showTab('perancangan');
-
-    // ---------- CETAK BORANG (SOLID, PASTI BERFUNGSI) ----------
-    function cetakBorang(formType) {
-        // Paksa browser memaparkan dialog cetak
-        window.print();
-    }
-    document.getElementById('cetakPerancanganBtn').addEventListener('click', () => cetakBorang('perancangan'));
-    document.getElementById('cetakSelepasBtn').addEventListener('click', () => cetakBorang('selepas'));
-
-    // ---------- HANTAR DATA KE GOOGLE SHEET (GUNA google.script.run) ----------
-    async function callServer(fnName, ...args) {
-        if (typeof google === 'undefined' || !google.script || !google.script.run) {
-            throw new Error('Google Apps Script API tidak tersedia. Pastikan anda buka Web App melalui URL yang betul.');
-        }
-        return new Promise((resolve, reject) => {
-            google.script.run
-                .withSuccessHandler(resolve)
-                .withFailureHandler(reject)
-                [fnName](...args);
-        });
+      } catch (e) {
+        showToast('❌ Ralat: ' + e.message, 'error');
+      }
     }
 
-    async function submitForm(formElement, formType) {
-        const formData = new FormData(formElement);
-        const dataObj = {};
-        for (let [k,v] of formData.entries()) dataObj[k] = v;
-        const itemCount = formType === 'perancangan' ? 21 : 12;
-        for (let i=0; i<itemCount; i++) {
-            const key = `item_${i}`;
-            if (!dataObj[key]) dataObj[key] = '';
-        }
-        const files = currentFiles[formType];
-        const filesData = [];
-        for (let file of files) {
-            const reader = new FileReader();
-            const base64 = await new Promise(resolve => { reader.onload = () => resolve(reader.result); reader.readAsDataURL(file); });
-            filesData.push({ data: base64, name: file.name, mimeType: file.type });
-        }
-        const overlay = document.getElementById('loadingOverlay');
-        overlay.style.display = 'flex';
-        try {
-            const result = await callServer('saveFormData', dataObj, filesData, formType);
-            alert('✅ Data berjaya disimpan!');
-            formElement.reset();
-            currentFiles[formType] = [];
-            updateFileList(document.getElementById(formType === 'perancangan' ? 'fileListPerancangan' : 'fileListSelepas'), []);
-        } catch(err) {
-            alert('❌ Ralat: ' + err.message);
-        } finally {
-            overlay.style.display = 'none';
-        }
+    setTimeout(() => {
+      progressBar.style.display = 'none';
+      progressFill.style.width = '0%';
+    }, 1500);
+
+    return { success: true, uploaded };
+  }
+
+  // ============================================================================
+  // SAVE FASA PERANCANGAN
+  // ============================================================================
+  
+  async function saveFasaPerancangan() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    btn.disabled = true;
+
+    const data = {
+      kodVerifikasi: document.getElementById('pr_kodVerifikasi').value,
+      ipgKampus: document.getElementById('pr_ipgKampus').value,
+      kodKursus: document.getElementById('pr_kodKursus').value,
+      namaKursus: document.getElementById('pr_namaKursus').value,
+      program: document.getElementById('pr_program').value,
+      semester: document.getElementById('pr_semester').value,
+      tahun: document.getElementById('pr_tahun').value,
+      tarikhVerifikasi: document.getElementById('pr_tarikhVerifikasi').value,
+      ulasanKeseluruhan: document.getElementById('pr_ulasanKeseluruhan').value,
+      cadanganPenambahbaikan: document.getElementById('pr_cadanganPenambahbaikan').value,
+      namaVerifier: document.getElementById('pr_namaVerifier').value
+    };
+
+    // Collect checklist items
+    [...perancanganItems.jst, ...perancanganItems.tugasan, ...perancementItems.rubrik].forEach(item => {
+      const radios = document.querySelectorAll(`input[name="pr_item${item.id}"]`);
+      radios.forEach(radio => {
+        if (radio.checked) data['item' + item.id] = radio.value;
+      });
+      const catatan = document.getElementById('pr_item' + item.id + 'Catatan');
+      if (catatan) data['item' + item.id + 'Catatan'] = catatan.value;
+    });
+
+    // Fix: correct typo
+    [...perancanganItems.jst, ...perancanganItems.tugasan, ...perancanganItems.rubrik].forEach(item => {
+      const radios = document.querySelectorAll(`input[name="pr_item${item.id}"]`);
+      radios.forEach(radio => {
+        if (radio.checked) data['item' + item.id] = radio.value;
+      });
+      const catatanEl = document.getElementById('pr_item' + item.id + 'Catatan');
+      if (catatanEl) data['item' + item.id + 'Catatan'] = catatanEl.value;
+    });
+
+    // Validate
+    if (!data.ipgKampus || !data.kodKursus || !data.namaKursus) {
+      showToast('⚠️ Sila lengkapkan maklumat asas terlebih dahulu', 'error');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      return;
     }
-    document.getElementById('formPerancangan').addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'perancangan'); });
-    document.getElementById('formSelepasModerasi').addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'selepasmoderasi'); });
+
+    // Upload files first
+    const uploadResult = await uploadFiles('pr', data.kodVerifikasi, 'FASA PERANCANGAN');
+
+    // Save to spreadsheet
+    google.script.run
+      .withSuccessHandler(response => {
+        if (response.success) {
+          showToast('✅ ' + response.message, 'success');
+          if (uploadResult.uploaded.length > 0) {
+            showToast('📁 ' + uploadResult.uploaded.length + ' fail berjaya dimuat naik ke Google Drive', 'info');
+          }
+        } else {
+          showToast('❌ ' + response.message, 'error');
+        }
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      })
+      .withFailureHandler(err => {
+        showToast('❌ Ralat: ' + err.message, 'error');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      })
+      .saveFasaPerancangan(data);
+  }
+
+  // ============================================================================
+  // SAVE FASA MODERASI
+  // ============================================================================
+  
+  async function saveFasaModerasi() {
+    const btn = event.target;
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
+    btn.disabled = true;
+
+    const data = {
+      kodVerifikasi: document.getElementById('mod_kodVerifikasi').value,
+      ipgKampus: document.getElementById('mod_ipgKampus').value,
+      kodKursus: document.getElementById('mod_kodKursus').value,
+      namaKursus: document.getElementById('mod_namaKursus').value,
+      program: document.getElementById('mod_program').value,
+      semester: document.getElementById('mod_semester').value,
+      tahun: document.getElementById('mod_tahun').value,
+      tarikhVerifikasi: document.getElementById('mod_tarikhVerifikasi').value,
+      ulasanKeseluruhan: document.getElementById('mod_ulasanKeseluruhan').value,
+      cadanganPenambahbaikan: document.getElementById('mod_cadanganPenambahbaikan').value,
+      namaVerifier: document.getElementById('mod_namaVerifier').value
+    };
+
+    moderasiItems.forEach(item => {
+      const radios = document.querySelectorAll(`input[name="mod_item${item.id}"]`);
+      radios.forEach(radio => {
+        if (radio.checked) data['item' + item.id] = radio.value;
+      });
+      const catatanEl = document.getElementById('mod_item' + item.id + 'Catatan');
+      if (catatanEl) data['item' + item.id + 'Catatan'] = catatanEl.value;
+      if (item.hasDate) {
+        const dateEl = document.getElementById('mod_item' + item.id + 'Tarikh');
+        if (dateEl) data['item' + item.id + 'Tarikh'] = dateEl.value;
+      }
+    });
+
+    if (!data.ipgKampus || !data.kodKursus || !data.namaKursus) {
+      showToast('⚠️ Sila lengkapkan maklumat asas terlebih dahulu', 'error');
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+      return;
+    }
+
+    const uploadResult = await uploadFiles('mod', data.kodVerifikasi, 'FASA SELEPAS MODERASI');
+
+    google.script.run
+      .withSuccessHandler(response => {
+        if (response.success) {
+          showToast('✅ ' + response.message, 'success');
+          if (uploadResult.uploaded.length > 0) {
+            showToast('📁 ' + uploadResult.uploaded.length + ' fail berjaya dimuat naik ke Google Drive', 'info');
+          }
+        } else {
+          showToast('❌ ' + response.message, 'error');
+        }
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      })
+      .withFailureHandler(err => {
+        showToast('❌ Ralat: ' + err.message, 'error');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      })
+      .saveFasaModerasi(data);
+  }
+
+  // ============================================================================
+  // PRINT & RESET
+  // ============================================================================
+  
+  function printForm(prefix) {
+    window.print();
+  }
+
+  function resetForm(prefix) {
+    if (!confirm('Adakah anda pasti mahu reset borang ini? Semua data akan dipadam.')) return;
+    
+    const formId = prefix === 'pr' ? 'formPerancangan' : 'formModerasi';
+    document.getElementById(formId).reset();
+    uploadedFiles[prefix] = [];
+    document.getElementById(prefix + 'FileList').innerHTML = '';
+    
+    if (prefix === 'pr') {
+      document.getElementById('pr_kodVerifikasi').value = 'VER-PR-' + Date.now().toString(36).toUpperCase();
+    } else {
+      document.getElementById('mod_kodVerifikasi').value = 'VER-MOD-' + Date.now().toString(36).toUpperCase();
+    }
+    
+    showToast('🔄 Borang telah direset', 'info');
+  }
+
+  // ============================================================================
+  // TOAST NOTIFICATIONS
+  // ============================================================================
+  
+  function showToast(message, type = 'info') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `<span>${message}</span>`;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.remove();
+    }, 5000);
+  }
 </script>
+
 </body>
 </html>
+
+
+
+              <script>
+                              // ============================================================================
+// CONFIG - Sila tukar ID Spreadsheet dan Drive Folder di bawah
+// ============================================================================
+const SPREADSHEET_ID = '1N8fz2FSP6ypJcK0BN3BacSThdcZ7ckROVvVvoinj2sw';
+const DRIVE_FOLDER_ID = '1A7NiVQVSfUlRI0vVue2NOuNYN8EqHypR';
+
+// ============================================================================
+// doGet - Serve Web App
+// ============================================================================
+function doGet() {
+  return HtmlService.createTemplateFromFile('Index')
+    .evaluate()
+    .setTitle('Sistem Verifikasi PD - IPG Malaysia')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
+}
+
+// ============================================================================
+// SETUP SPREADSHEET - Jalankan fungsi ini sekali sahaja untuk setup header
+// ============================================================================
+function setupSpreadsheet() {
+  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+  
+  // FASA PERANCANGAN
+  let sheet1 = ss.getSheetByName('FASA PERANCANGAN');
+  if (!sheet1) {
+    sheet1 = ss.insertSheet('FASA PERANCANGAN');
+  } else {
+    sheet1.clear();
+  }
+  
+  const headersPerancangan = [
+    'Timestamp',
+    'Kod Verifikasi',
+    'IPG Kampus',
+    'Kod Kursus',
+    'Nama Kursus',
+    'Program',
+    'Semester',
+    'Tahun',
+    'Tarikh Verifikasi',
+    // Items 1-21
+    '1_Pensyarah_Arahan_Jelas',
+    '1_Pensyarah_Arahan_Catatan',
+    '2_JST_Format',
+    '2_JST_Catatan',
+    '3_Tempoh_Pelaksanaan',
+    '3_Tempoh_Catatan',
+    '4_JPP_Matriks',
+    '4_JPP_Catatan',
+    '5_HPK_Matriks',
+    '5_HPK_Catatan',
+    '6_Objektif_HPK',
+    '6_Objektif_Catatan',
+    '7_Wajaran_Markah',
+    '7_Wajaran_Catatan',
+    '8_Aspek_Kriteria',
+    '8_Aspek_Catatan',
+    '9_Elemen_Tugasan',
+    '9_Elemen_Catatan',
+    '10_Kapasiti_Pedagogi',
+    '10_Kapasiti_Catatan',
+    '11_KBAT_HPK',
+    '11_KBAT_Catatan',
+    '12_Domain_Kognitif',
+    '12_Domain_Catatan',
+    '13_Domain_Psikomotor',
+    '13_Domain_Catatan',
+    '14_Domain_Afektif',
+    '14_Domain_Catatan',
+    '15_Domain_Kemahiran',
+    '15_Domain_Catatan',
+    '16_Soalan_Disemak',
+    '16_Soalan_Catatan',
+    '17_Rubrik_JST',
+    '17_Rubrik_Catatan',
+    '18_Rubrik_Kognitif',
+    '18_Rubrik_Catatan',
+    '19_Rubrik_Psikomotor',
+    '19_Rubrik_Catatan',
+    '20_Rubrik_Afektif',
+    '20_Rubrik_Catatan',
+    '21_Rubrik_Kemahiran',
+    '21_Rubrik_Catatan',
+    'Ulasan_Keseluruhan',
+    'Cadangan_Penambahbaikan',
+    'Nama_Verifier',
+    'Status'
+  ];
+  
+  sheet1.getRange(1, 1, 1, headersPerancangan.length).setValues([headersPerancangan]);
+  sheet1.getRange(1, 1, 1, headersPerancangan.length)
+    .setBackground('#1a365d')
+    .setFontColor('#ffffff')
+    .setFontWeight('bold')
+    .setFontSize(10);
+  sheet1.setFrozenRows(1);
+  
+  // FASA SELEPAS MODERASI
+  let sheet2 = ss.getSheetByName('FASA SELEPAS MODERASI');
+  if (!sheet2) {
+    sheet2 = ss.insertSheet('FASA SELEPAS MODERASI');
+  } else {
+    sheet2.clear();
+  }
+  
+  const headersModerasi = [
+    'Timestamp',
+    'Kod Verifikasi',
+    'IPG Kampus',
+    'Kod Kursus',
+    'Nama Kursus',
+    'Program',
+    'Semester',
+    'Tahun',
+    'Tarikh Verifikasi',
+    // Items 1-12
+    '1_Pelajar_Taklimat',
+    '1_Pelajar_Tarikh',
+    '1_Pelajar_Catatan',
+    '2_Pemilihan_Sampel',
+    '2_Pemilihan_Catatan',
+    '3_Tugasan_Disemak',
+    '3_Tugasan_Catatan',
+    '4_Komen_Pemeriksa',
+    '4_Komen_Catatan',
+    '5_Borang_Penyelarasan',
+    '5_Borang_Catatan',
+    '6_Moderasi_Prosedur',
+    '6_Moderasi_Catatan',
+    '7_Borang_Moderasi',
+    '7_Borang_Catatan',
+    '8_Markah_Akhir',
+    '8_Markah_Catatan',
+    '9_Borang_Pentaksiran',
+    '9_Borang_Catatan',
+    '10_Taburan_Gred',
+    '10_Taburan_Catatan',
+    '11_Laporan_Pemeriksa',
+    '11_Laporan_Catatan',
+    '12_Laporan_Gagal',
+    '12_Laporan_Catatan',
+    'Ulasan_Keseluruhan',
+    'Cadangan_Penambahbaikan',
+    'Nama_Verifier',
+    'Status'
+  ];
+  
+  sheet2.getRange(1, 1, 1, headersModerasi.length).setValues([headersModerasi]);
+  sheet2.getRange(1, 1, 1, headersModerasi.length)
+    .setBackground('#1a365d')
+    .setFontColor('#ffffff')
+    .setFontWeight('bold')
+    .setFontSize(10);
+  sheet2.setFrozenRows(1);
+  
+  // SHEET FILE UPLOADS
+  let sheet3 = ss.getSheetByName('FILE_UPLOADS');
+  if (!sheet3) {
+    sheet3 = ss.insertSheet('FILE_UPLOADS');
+  } else {
+    sheet3.clear();
+  }
+  
+  const headersFiles = [
+    'Timestamp',
+    'Kod Verifikasi',
+    'Fasa',
+    'Nama Fail',
+    'Jenis Fail',
+    'URL Google Drive',
+    'Saiz (bytes)'
+  ];
+  
+  sheet3.getRange(1, 1, 1, headersFiles.length).setValues([headersFiles]);
+  sheet3.getRange(1, 1, 1, headersFiles.length)
+    .setBackground('#1a365d')
+    .setFontColor('#ffffff')
+    .setFontWeight('bold')
+    .setFontSize(10);
+  sheet3.setFrozenRows(1);
+  
+  return '✅ Spreadsheet berjaya disetup dengan header yang diperlukan!';
+}
+
+// ============================================================================
+// SAVE FORM DATA - FASA PERANCANGAN
+// ============================================================================
+function saveFasaPerancangan(data) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName('FASA PERANCANGAN');
+    
+    const rowData = [
+      new Date(),
+      data.kodVerifikasi,
+      data.ipgKampus,
+      data.kodKursus,
+      data.namaKursus,
+      data.program,
+      data.semester,
+      data.tahun,
+      data.tarikhVerifikasi,
+      data.item1 || 'Tidak', data.item1Catatan || '',
+      data.item2 || 'Tidak', data.item2Catatan || '',
+      data.item3 || 'Tidak', data.item3Catatan || '',
+      data.item4 || 'Tidak', data.item4Catatan || '',
+      data.item5 || 'Tidak', data.item5Catatan || '',
+      data.item6 || 'Tidak', data.item6Catatan || '',
+      data.item7 || 'Tidak', data.item7Catatan || '',
+      data.item8 || 'Tidak', data.item8Catatan || '',
+      data.item9 || 'Tidak', data.item9Catatan || '',
+      data.item10 || 'Tidak', data.item10Catatan || '',
+      data.item11 || 'Tidak', data.item11Catatan || '',
+      data.item12 || 'Tidak', data.item12Catatan || '',
+      data.item13 || 'Tidak', data.item13Catatan || '',
+      data.item14 || 'Tidak', data.item14Catatan || '',
+      data.item15 || 'Tidak', data.item15Catatan || '',
+      data.item16 || 'Tidak', data.item16Catatan || '',
+      data.item17 || 'Tidak', data.item17Catatan || '',
+      data.item18 || 'Tidak', data.item18Catatan || '',
+      data.item19 || 'Tidak', data.item19Catatan || '',
+      data.item20 || 'Tidak', data.item20Catatan || '',
+      data.item21 || 'Tidak', data.item21Catatan || '',
+      data.ulasanKeseluruhan || '',
+      data.cadanganPenambahbaikan || '',
+      data.namaVerifier || '',
+      'Disimpan'
+    ];
+    
+    sheet.appendRow(rowData);
+    
+    return {
+      success: true,
+      message: '✅ Data Fasa Perancangan berjaya disimpan!',
+      kodVerifikasi: data.kodVerifikasi
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: '❌ Ralat: ' + e.toString()
+    };
+  }
+}
+
+// ============================================================================
+// SAVE FORM DATA - FASA SELEPAS MODERASI
+// ============================================================================
+function saveFasaModerasi(data) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName('FASA SELEPAS MODERASI');
+    
+    const rowData = [
+      new Date(),
+      data.kodVerifikasi,
+      data.ipgKampus,
+      data.kodKursus,
+      data.namaKursus,
+      data.program,
+      data.semester,
+      data.tahun,
+      data.tarikhVerifikasi,
+      data.item1 || 'Tidak', data.item1Tarikh || '', data.item1Catatan || '',
+      data.item2 || 'Tidak', data.item2Catatan || '',
+      data.item3 || 'Tidak', data.item3Catatan || '',
+      data.item4 || 'Tidak', data.item4Catatan || '',
+      data.item5 || 'Tidak', data.item5Catatan || '',
+      data.item6 || 'Tidak', data.item6Catatan || '',
+      data.item7 || 'Tidak', data.item7Catatan || '',
+      data.item8 || 'Tidak', data.item8Catatan || '',
+      data.item9 || 'Tidak', data.item9Catatan || '',
+      data.item10 || 'Tidak', data.item10Catatan || '',
+      data.item11 || 'Tidak', data.item11Catatan || '',
+      data.item12 || 'Tidak', data.item12Catatan || '',
+      data.ulasanKeseluruhan || '',
+      data.cadanganPenambahbaikan || '',
+      data.namaVerifier || '',
+      'Disimpan'
+    ];
+    
+    sheet.appendRow(rowData);
+    
+    return {
+      success: true,
+      message: '✅ Data Fasa Selepas Moderasi berjaya disimpan!',
+      kodVerifikasi: data.kodVerifikasi
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: '❌ Ralat: ' + e.toString()
+    };
+  }
+}
+
+// ============================================================================
+// UPLOAD FILE TO GOOGLE DRIVE
+// ============================================================================
+function uploadFileToDrive(base64Data, fileName, kodVerifikasi, fasa) {
+  try {
+    const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
+    
+    // Create subfolder if not exists
+    let subFolder;
+    const subFolderName = kodVerifikasi;
+    const folders = folder.getFoldersByName(subFolderName);
+    if (folders.hasNext()) {
+      subFolder = folders.next();
+    } else {
+      subFolder = folder.createFolder(subFolderName);
+    }
+    
+    // Decode base64
+    const contentType = base64Data.substring(5, base64Data.indexOf(';'));
+    const bytes = Utilities.base64Decode(base64Data.substr(base64Data.indexOf('base64,') + 7));
+    const blob = Utilities.newBlob(bytes, contentType, fileName);
+    
+    const file = subFolder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    
+    // Log to spreadsheet
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheetFiles = ss.getSheetByName('FILE_UPLOADS');
+    sheetFiles.appendRow([
+      new Date(),
+      kodVerifikasi,
+      fasa,
+      fileName,
+      contentType,
+      file.getUrl(),
+      blob.getBytes().length
+    ]);
+    
+    return {
+      success: true,
+      fileUrl: file.getUrl(),
+      fileId: file.getId(),
+      fileName: fileName
+    };
+  } catch (e) {
+    return {
+      success: false,
+      message: '❌ Ralat upload: ' + e.toString()
+    };
+  }
+}
+
+// ============================================================================
+// GENERATE VERIFICATION CODE
+// ============================================================================
+function generateKodVerifikasi() {
+  const timestamp = new Date();
+  const year = timestamp.getFullYear();
+  const month = String(timestamp.getMonth() + 1).padStart(2, '0');
+  const day = String(timestamp.getDate()).padStart(2, '0');
+  const random = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+  return `VER-${year}${month}${day}-${random}`;
+}
+
+// ============================================================================
+// GET ALL SUBMISSIONS (for admin view)
+// ============================================================================
+function getAllSubmissions(fasa) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName(fasa === 'perancangan' ? 'FASA PERANCANGAN' : 'FASA SELEPAS MODERASI');
+    
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0];
+    const rows = data.slice(1);
+    
+    const result = rows.map(row => {
+      const obj = {};
+      headers.forEach((header, i) => {
+        obj[header] = row[i];
+      });
+      return obj;
+    });
+    
+    return { success: true, data: result };
+  } catch (e) {
+    return { success: false, message: e.toString() };
+  }
+}
+
+
+              </script>
+                        </body>
+                        </html>
+                    
