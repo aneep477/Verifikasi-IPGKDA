@@ -1,130 +1,396 @@
-// ============================================================
-//  KONFIGURASI GLOBAL
-// ============================================================
-const SPREADSHEET_ID = '1N8fz2FSP6ypJcK0BN3BacSThdcZ7ckROVvVvoinj2sw';
-const DRIVE_FOLDER_ID = '1A7NiVQVSfUlRI0vVue2NOuNYN8EqHypR';
-
-// ============================================================
-//  DOGET - LAMAN UTAMA
-// ============================================================
-function doGet() {
-  return HtmlService.createTemplateFromFile('index')
-    .evaluate()
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1')
-    .setTitle('Sistem Verifikasi Pentaksiran Berterusan')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
-
-function include(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
-}
-
-// ============================================================
-//  MUAT NAIK FAIL KE DRIVE (DENGAN PENGESAHAN)
-// ============================================================
-function uploadFileToDrive(base64Data, fileName, mimeType) {
-  try {
-    if (!base64Data || typeof base64Data !== 'string') {
-      throw new Error('Data fail tidak sah (bukan string).');
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Verifikasi Pentaksiran Berterusan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Gaya skrin (glassmorphism) */
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
-    const base64 = base64Data.split(',').pop();
-    const blob = Utilities.newBlob(Utilities.base64Decode(base64), mimeType, fileName);
-    const file = folder.createFile(blob);
-    return { success: true, url: file.getUrl(), name: file.getName() };
-  } catch (error) {
-    console.error('Upload error:', error);
-    return { success: false, error: error.toString() };
-  }
-}
+    .glass-card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+    .glass-input, .glass-select, .glass-textarea {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      padding: 10px 14px;
+      color: white;
+    }
+    .glass-input:focus, .glass-select:focus, .glass-textarea:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.25);
+    }
+    label { font-weight: 500; color: #f3e8ff; margin-bottom: 4px; display: block; }
+    .btn-primary {
+      background: linear-gradient(90deg, #8b5cf6, #ec4899);
+      border-radius: 40px;
+      padding: 12px 28px;
+      font-weight: bold;
+      color: white;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+    .btn-primary:hover { transform: scale(1.02); }
+    .tab-active { background: rgba(255,255,255,0.3); border-bottom: 3px solid white; }
+    .tab-btn { cursor: pointer; }
+    .file-drop-area {
+      border: 2px dashed rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .file-drop-area:hover { background: rgba(255,255,255,0.1); }
 
-// ============================================================
-//  SIMPAN DATA BORANG (DENGAN PENGENDALIAN ARRAY -> STRING)
-// ============================================================
-function saveFormData(formData, filesData, formType) {
-  try {
-    // Tukar sebarang nilai array dalam formData kepada string (pencegahan ralat "key must be string")
-    const cleanedData = {};
-    for (let key in formData) {
-      let value = formData[key];
-      if (Array.isArray(value)) {
-        value = value.join(', ');  // contoh: jika multiple select, gabungkan
+    /* Gaya cetakan (template asal seperti borang kertas) */
+    @media print {
+      body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0.5in !important;
+        font-family: 'Times New Roman', Times, serif !important;
+        color: black !important;
       }
-      cleanedData[key] = (value !== undefined && value !== null) ? value : '';
-    }
-
-    const sheetName = (formType === 'perancangan') ? 'Perancangan' : 'SelepasModerasi';
-    let sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(sheetName);
-    if (!sheet) {
-      createSheetIfNotExists(sheetName, formType);
-      sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(sheetName);
-    }
-
-    // Muat naik fail lampiran
-    const uploadedUrls = [];
-    if (filesData && Array.isArray(filesData) && filesData.length) {
-      for (const file of filesData) {
-        const result = uploadFileToDrive(file.data, file.name, file.mimeType);
-        if (result.success) uploadedUrls.push(result.url);
+      .no-print, .tab-buttons, .btn-primary, button, .file-drop-area, 
+      .glass-card, .backdrop-blur, .tab-btn, #loadingOverlay {
+        display: none !important;
+      }
+      .glass-card, .tab-content, .glass-card * {
+        background: white !important;
+        color: black !important;
+        border-color: black !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+      }
+      .glass-input, .glass-select, .glass-textarea {
+        background: white !important;
+        border: 1px solid #000 !important;
+        color: black !important;
+        padding: 4px 8px !important;
+        border-radius: 0 !important;
+      }
+      label {
+        color: black !important;
+        font-weight: bold !important;
+      }
+      .print-item-list {
+        margin-top: 10px;
+      }
+      .print-item {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+      }
+      .print-item .item-text {
+        font-weight: normal;
+      }
+      .print-radio-group {
+        display: inline-block;
+        margin-right: 16px;
+      }
+      input[type="radio"] {
+        accent-color: black;
+        transform: scale(0.9);
+      }
+      .print-header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid black;
+        padding-bottom: 10px;
+      }
+      .print-header h1 {
+        font-size: 18pt;
+        margin: 0;
+      }
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 20px;
+        border: 1px solid black;
+        padding: 10px;
       }
     }
+  </style>
+</head>
+<body class="p-4 md:p-8 min-h-screen">
+<div class="max-w-6xl mx-auto">
+  <div class="text-center mb-8 no-print">
+    <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow-lg">📋 Verifikasi Pentaksiran Berterusan</h1>
+    <p class="text-purple-100 mt-2">IPG Malaysia - Fasa Perancangan & Selepas Moderasi</p>
+  </div>
 
-    // Baca header dari sheet
-    const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-    const rowData = [];
+  <!-- Tabs (skrin sahaja) -->
+  <div class="flex justify-center gap-2 mb-8 no-print">
+    <button id="tabPerancanganBtn" class="tab-btn px-6 py-3 rounded-t-2xl font-semibold text-white bg-white/20 backdrop-blur-sm">📝 Perancangan</button>
+    <button id="tabSelepasBtn" class="tab-btn px-6 py-3 rounded-t-2xl font-semibold text-white bg-white/10">✅ Selepas Moderasi</button>
+  </div>
 
-    for (let i = 0; i < headers.length; i++) {
-      const header = headers[i];
-      if (header === 'timestamp') {
-        rowData.push(new Date());
-      } else if (header === 'lampiran_urls') {
-        rowData.push(uploadedUrls.join(', '));
-      } else if (header === 'tarikh_taklimat_pb' && formType === 'selepasmoderasi') {
-        rowData.push(cleanedData['tarikh_taklimat_pb'] || '');
-      } else {
-        // Pastikan nilai adalah string (jika wujud)
-        rowData.push(cleanedData[header] !== undefined ? cleanedData[header].toString() : '');
+  <!-- ========= TAB PERANCANGAN ========= -->
+  <div id="perancanganTab" class="tab-content glass-card p-6 md:p-8">
+    <form id="formPerancangan">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div><label>IPG Kampus</label><input type="text" name="ipg_kampus" class="glass-input w-full" required></div>
+        <div><label>Kod Kursus</label><input type="text" name="kod_kursus" class="glass-input w-full" required></div>
+        <div><label>Nama Kursus</label><input type="text" name="nama_kursus" class="glass-input w-full" required></div>
+        <div><label>Program</label><select name="program" class="glass-select w-full"><option>PPISMP</option><option>PISMP</option><option>PDPM</option><option>PDPP</option><option>PITO</option></select></div>
+        <div><label>Semester/Tahun</label><input type="text" name="semester_tahun" class="glass-input w-full" placeholder="Sem 3 Tahun 2"></div>
+        <div><label>Tarikh Verifikasi</label><input type="date" name="tarikh_verifikasi" class="glass-input w-full" required></div>
+      </div>
+      <div id="itemsPerancanganContainer" class="space-y-5 mb-8"></div>
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div><label>Ulasan Keseluruhan</label><textarea name="ulasan_keseluruhan" rows="3" class="glass-textarea w-full"></textarea></div>
+        <div><label>Cadangan Penambahbaikan</label><textarea name="cadangan_penambahbaikan" rows="3" class="glass-textarea w-full"></textarea></div>
+      </div>
+      <div class="mb-6 no-print">
+        <label>Muat Naik Lampiran</label>
+        <div id="dropAreaPerancangan" class="file-drop-area"><i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><p class="text-white">Seret & lepas atau klik</p><input type="file" id="fileInputPerancangan" multiple style="display:none"><div id="fileListPerancangan" class="mt-3 text-sm"></div></div>
+      </div>
+      <div class="flex justify-between gap-4 no-print">
+        <button type="button" id="printPerancanganBtn" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-full"><i class="fas fa-print"></i> Cetak Borang</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Hantar & Simpan</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ========= TAB SELEPAS MODERASI ========= -->
+  <div id="selepasModerasiTab" class="tab-content glass-card p-6 md:p-8 hidden">
+    <form id="formSelepasModerasi">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div><label>IPG Kampus</label><input type="text" name="ipg_kampus" class="glass-input w-full" required></div>
+        <div><label>Kod Kursus</label><input type="text" name="kod_kursus" class="glass-input w-full" required></div>
+        <div><label>Nama Kursus</label><input type="text" name="nama_kursus" class="glass-input w-full" required></div>
+        <div><label>Program</label><select name="program" class="glass-select w-full"><option>PPISMP</option><option>PISMP</option><option>PDPM</option><option>PDPP</option><option>PITO</option></select></div>
+        <div><label>Semester/Tahun</label><input type="text" name="semester_tahun" class="glass-input w-full"></div>
+        <div><label>Tarikh Verifikasi</label><input type="date" name="tarikh_verifikasi" class="glass-input w-full" required></div>
+        <div><label>Tarikh Taklimat PB</label><input type="date" name="tarikh_taklimat_pb" class="glass-input w-full"></div>
+      </div>
+      <div id="itemsSelepasContainer" class="space-y-5 mb-8"></div>
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div><label>Ulasan Keseluruhan</label><textarea name="ulasan_keseluruhan" rows="3" class="glass-textarea w-full"></textarea></div>
+        <div><label>Cadangan Penambahbaikan</label><textarea name="cadangan_penambahbaikan" rows="3" class="glass-textarea w-full"></textarea></div>
+      </div>
+      <div class="mb-6 no-print">
+        <label>Muat Naik Lampiran</label>
+        <div id="dropAreaSelepas" class="file-drop-area"><i class="fas fa-cloud-upload-alt fa-2x mb-2"></i><p class="text-white">Seret & lepas atau klik</p><input type="file" id="fileInputSelepas" multiple style="display:none"><div id="fileListSelepas" class="mt-3 text-sm"></div></div>
+      </div>
+      <div class="flex justify-between gap-4 no-print">
+        <button type="button" id="printSelepasBtn" class="bg-gray-700 hover:bg-gray-800 text-white px-6 py-2 rounded-full"><i class="fas fa-print"></i> Cetak Borang</button>
+        <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Hantar & Simpan</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="loadingOverlay" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden no-print"><div class="bg-white p-6 rounded-2xl text-center"><i class="fas fa-spinner fa-spin fa-3x text-purple-600"></i><p class="mt-3">Menyimpan...</p></div></div>
+
+<script>
+  // ================= DATA ITEMS =================
+  const itemsPerancangan = [
+    "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan daripada Ketua Jabatan Akademik / Penyelaras Pentaksiran Berterusan",
+    "JST yang disediakan mengikut format yang ditetapkan",
+    "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan dan selaras dengan RMK/MK",
+    "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK",
+    "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK",
+    "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK) yang telah ditetapkan dalam RMK/MK",
+    "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
+    "Aspek/ Kriteria penilaian dinyatakan dengan jelas untuk mentaksir tugasan yang diberikan",
+    "Tugasan mempunyai elemen-elemen berikut: Rangsangan, Soalan tugasan, Arahan pentadbiran",
+    "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, Merangkai Standard, Backward Design, Pelan Pembelajaran Bermakna - 6C, MPP, MRP, 3E & 3R)",
+    "Tugasan yang disediakan mencapai Kemahiran Berfikir Aras Tinggi (KBAT) seperti yang dinyatakan dalam HPK",
+    "Domain kognitif yang dinyatakan dalam HPK diuji dalam tugasan",
+    "Domain psikomotor yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
+    "Domain afektif yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
+    "Domain kemahiran insaniah yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)",
+    "Soalan tugasan telah disemak oleh Pakar Bidang / Penyelaras Kursus / Pensyarah Kanan",
+    "Rubrik pemarkahan secara holistik / analitik disediakan selari dengan Jadual Spesifikasi Tugasan (JST) dan tugasan",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain kognitif",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain psikomotor (jika berkenaan)",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain afektif (jika berkenaan)",
+    "Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria / deskriptor untuk mengukur domain kemahiran insaniah (jika berkenaan)"
+  ];
+
+  const itemsSelepasModerasi = [
+    "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
+    "Pemilihan sampel dan penyelarasan skema pemarkahan dan rubrik dilaksanakan (sekiranya 2 @ lebih pemeriksa)",
+    "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan dan rubrik pemarkahan yang disediakan",
+    "Pemeriksa memberi komen/ ulasan dalam hasil tugasan pelajar",
+    "Borang penyelarasan markah sebelum pemeriksaan diisi dengan lengkap (jika berkenaan)",
+    "Pemeriksaan dan proses moderasi markah pentaksiran berterusan dijalankan mengikut prosedur",
+    "Borang Moderasi (LAM PT04-02) diisi oleh panel moderasi dan ditandatangani oleh Ketua Pemeriksa",
+    "Penentuan markah akhir dibuat berdasarkan prosedur (Rujuk Buku Panduan Pentaksiran)",
+    "Borang markah pentaksiran berterusan (LAM PT04-01) diisi dengan lengkap dan tepat serta disemak oleh Ketua Jabatan Akademik",
+    "Taburan markah pentaksiran berterusan mestilah sekurang-kurangnya terdiri daripada tiga gred merentasi dua kategori gred (A,A-,B) dan tidak terlalu terpencong. Jika sebaliknya perlu justifikasi dalam Laporan Panel Pemeriksa",
+    "Laporan Panel Pemeriksa Pentaksiran Berterusan (LAM PT04-03) disediakan dengan lengkap",
+    "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
+  ];
+
+  // Fungsi render item
+  function renderItems(containerId, items, prefix) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    items.forEach((item, idx) => {
+      const div = document.createElement('div');
+      div.className = 'border-b border-white/20 pb-4 print:border-black print:pb-2';
+      div.innerHTML = `
+        <div class="flex flex-wrap items-start gap-3 mb-2">
+          <span class="font-bold text-white bg-purple-800/40 px-2 py-1 rounded-full text-sm print:bg-transparent print:text-black">${idx+1}</span>
+          <span class="text-white flex-1 print:text-black">${escapeHtml(item)}</span>
+        </div>
+        <div class="flex flex-wrap gap-4 items-center ml-6">
+          <label class="inline-flex items-center gap-1"><input type="radio" name="${prefix}_${idx}" value="Ya" class="accent-purple-500"> <span class="text-white print:text-black">Ya</span></label>
+          <label class="inline-flex items-center gap-1"><input type="radio" name="${prefix}_${idx}" value="Tidak" class="accent-red-500"> <span class="text-white print:text-black">Tidak</span></label>
+          <label class="inline-flex items-center gap-1"><input type="radio" name="${prefix}_${idx}" value="Tidak Berkaitan" class="accent-gray-500"> <span class="text-white print:text-black">Tidak Berkaitan</span></label>
+          <input type="text" name="${prefix}_${idx}_catatan" class="glass-input w-full md:w-64 text-sm print:border print:border-black" placeholder="Catatan (jika ada)">
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  renderItems('itemsPerancanganContainer', itemsPerancangan, 'item');
+  renderItems('itemsSelepasContainer', itemsSelepasModerasi, 'item');
+
+  // ========= UPLOAD FAIL =========
+  let currentFiles = { perancangan: [], selepas: [] };
+  function setupUpload(areaId, inputId, listId, type) {
+    const area = document.getElementById(areaId);
+    const input = document.getElementById(inputId);
+    const listDiv = document.getElementById(listId);
+    if (!area || !input || !listDiv) return;
+    area.addEventListener('click', () => input.click());
+    area.addEventListener('dragover', e => e.preventDefault());
+    area.addEventListener('drop', e => {
+      e.preventDefault();
+      handleFiles(e.dataTransfer.files, type, listDiv);
+    });
+    input.addEventListener('change', () => handleFiles(input.files, type, listDiv));
+  }
+  function handleFiles(files, type, listDiv) {
+    for (let f of files) currentFiles[type].push(f);
+    updateFileList(listDiv, currentFiles[type]);
+  }
+  function updateFileList(listDiv, files) {
+    listDiv.innerHTML = files.map(f => `<div class="bg-white/20 rounded-full px-3 py-1 inline-block mr-2 mb-2">📄 ${f.name}</div>`).join('');
+  }
+  setupUpload('dropAreaPerancangan', 'fileInputPerancangan', 'fileListPerancangan', 'perancangan');
+  setupUpload('dropAreaSelepas', 'fileInputSelepas', 'fileListSelepas', 'selepas');
+
+  // ========= TAB SWITCHING =========
+  let currentTab = 'perancangan';
+  function switchTab(tab) {
+    currentTab = tab;
+    const perancanganDiv = document.getElementById('perancanganTab');
+    const selepasDiv = document.getElementById('selepasModerasiTab');
+    if (perancanganDiv && selepasDiv) {
+      perancanganDiv.classList.toggle('hidden', tab !== 'perancangan');
+      selepasDiv.classList.toggle('hidden', tab !== 'selepasmoderasi');
+    }
+    const btnPer = document.getElementById('tabPerancanganBtn');
+    const btnSel = document.getElementById('tabSelepasBtn');
+    if (btnPer && btnSel) {
+      if (tab === 'perancangan') { btnPer.classList.add('tab-active'); btnSel.classList.remove('tab-active'); }
+      else { btnSel.classList.add('tab-active'); btnPer.classList.remove('tab-active'); }
+    }
+  }
+  document.getElementById('tabPerancanganBtn')?.addEventListener('click', () => switchTab('perancangan'));
+  document.getElementById('tabSelepasBtn')?.addEventListener('click', () => switchTab('selepasmoderasi'));
+  switchTab('perancangan');
+
+  // ========= FUNGSI CETAK YANG LEBIH HANDAL =========
+  function printForm(formType) {
+    // Dapatkan borang yang aktif
+    const formId = (formType === 'perancangan') ? 'formPerancangan' : 'formSelepasModerasi';
+    const form = document.getElementById(formId);
+    if (!form) {
+      alert('Borang tidak dijumpai.');
+      return;
+    }
+    // Simpan nilai semasa radio & text input (kerana cetakan akan menggunakan nilai semasa)
+    // Tiada tindakan khas diperlukan kerana window.print() akan mencetak keadaan DOM semasa.
+    // Namun, pastikan tiada ralat JavaScript yang menghalang.
+    try {
+      window.print();
+    } catch (e) {
+      console.error('Cetak gagal:', e);
+      alert('Gagal membuka dialog cetakan. Sila gunakan fungsi cetak pelayar (Ctrl+P).');
+    }
+  }
+
+  // Pasang event listener pada butang cetak
+  document.getElementById('printPerancanganBtn')?.addEventListener('click', () => printForm('perancangan'));
+  document.getElementById('printSelepasBtn')?.addEventListener('click', () => printForm('selepasmoderasi'));
+
+  // ========= PANGGILAN SERVER (GOOGLE) =========
+  async function callServer(functionName, ...args) {
+    return new Promise((resolve, reject) => {
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        reject(new Error('❌ Objek "google" tidak dijumpai. Pastikan anda mengakses melalui URL Web App yang sah.'));
+        return;
       }
-    }
-
-    sheet.appendRow(rowData);
-    return { success: true, message: 'Data berjaya disimpan!' };
-  } catch (error) {
-    console.error('saveFormData error:', error);
-    return { success: false, error: error.toString() };
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(reject)
+        [functionName](...args);
+    });
   }
-}
 
-// ============================================================
-//  CIPTA SHEET DENGAN HEADER LENGKAP (jika belum wujud)
-// ============================================================
-function createSheetIfNotExists(sheetName, formType) {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  let sheet = ss.getSheetByName(sheetName);
-  if (sheet) return;
-  sheet = ss.insertSheet(sheetName);
-  let headers = [];
-  if (formType === 'perancangan') {
-    headers = ['timestamp', 'ipg_kampus', 'kod_kursus', 'nama_kursus', 'program',
-      'semester_tahun', 'tarikh_verifikasi', 'ulasan_keseluruhan', 'cadangan_penambahbaikan', 'lampiran_urls'];
-    for (let i = 1; i <= 21; i++) {
-      headers.push(`item${i}`);
-      headers.push(`item${i}_catatan`);
+  async function submitForm(formElement, formType) {
+    const formData = new FormData(formElement);
+    const dataObj = {};
+    for (let [k, v] of formData.entries()) {
+      dataObj[k] = (Array.isArray(v)) ? v.join(', ') : v;
     }
-  } else {
-    headers = ['timestamp', 'ipg_kampus', 'kod_kursus', 'nama_kursus', 'program',
-      'semester_tahun', 'tarikh_verifikasi', 'tarikh_taklimat_pb', 'ulasan_keseluruhan', 'cadangan_penambahbaikan', 'lampiran_urls'];
-    for (let i = 1; i <= 12; i++) {
-      headers.push(`item${i}`);
-      headers.push(`item${i}_catatan`);
+    const itemCount = (formType === 'perancangan') ? 21 : 12;
+    for (let i = 0; i < itemCount; i++) {
+      const key = `item_${i}`;
+      if (!dataObj[key]) dataObj[key] = '';
+    }
+    const files = currentFiles[formType];
+    const filesData = [];
+    for (let file of files) {
+      const reader = new FileReader();
+      const base64 = await new Promise(resolve => { reader.onload = () => resolve(reader.result); reader.readAsDataURL(file); });
+      filesData.push({ data: base64, name: file.name, mimeType: file.type });
+    }
+    const overlay = document.getElementById('loadingOverlay');
+    if (overlay) overlay.classList.remove('hidden');
+    try {
+      const result = await callServer('saveFormData', dataObj, filesData, formType);
+      alert('✅ Data berjaya disimpan!');
+      formElement.reset();
+      currentFiles[formType] = [];
+      updateFileList(document.getElementById(formType === 'perancangan' ? 'fileListPerancangan' : 'fileListSelepas'), []);
+    } catch (err) {
+      alert('❌ Ralat: ' + (err.message || err));
+    } finally {
+      if (overlay) overlay.classList.add('hidden');
     }
   }
-  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sheet.setFrozenRows(1);
-}
 
-// Fungsi untuk setup awal (panggil sekali)
-function setupSheets() {
-  createSheetIfNotExists('Perancangan', 'perancangan');
-  createSheetIfNotExists('SelepasModerasi', 'selepasmoderasi');
-}
+  document.getElementById('formPerancangan')?.addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'perancangan'); });
+  document.getElementById('formSelepasModerasi')?.addEventListener('submit', e => { e.preventDefault(); submitForm(e.target, 'selepasmoderasi'); });
+</script>
+</body>
+</html>
