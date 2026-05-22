@@ -73,7 +73,7 @@
             letter-spacing: 2px;
         }
 
-        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; }
+        .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; flex-wrap: wrap; }
 
         .tab-btn {
             background: rgba(255, 255, 255, 0.05);
@@ -151,7 +151,7 @@
         }
         .file-sm::file-selector-button:hover { background: var(--primary); color: #000; }
 
-        .action-area { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); }
+        .action-area { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); flex-wrap: wrap; }
         
         .btn {
             padding: 1rem 2.5rem; border-radius: 8px; border: none; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 1rem;
@@ -159,6 +159,7 @@
         }
         .btn-submit { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3); }
         .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
 
         .loader-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
@@ -170,13 +171,25 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        .alert {
+            padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none;
+        }
+
+        .alert.success {
+            background: rgba(0, 240, 100, 0.2); border: 1px solid rgba(0, 240, 100, 0.5); color: #00f064;
+        }
+
+        .alert.error {
+            background: rgba(255, 0, 100, 0.2); border: 1px solid rgba(255, 0, 100, 0.5); color: #ff0064;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="loader-overlay" id="loader">
         <div class="spinner"></div>
-        <h3 style="color: #fff; font-family: 'Outfit'; text-align:center;">
+        <h3 style="color: #fff; font-family: 'Outfit', sans-serif; text-align:center;">
             Sedang Menjana Dokumen Cetakan...<br>
             <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Mengekstrak templat dari Google Drive. Sila tunggu.</span>
         </h3>
@@ -188,6 +201,8 @@
             <h3>KEMENTERIAN PENDIDIKAN MALAYSIA</h3>
             <p style="margin-top:1rem; color:var(--text-muted)">Senarai Semak Verifikasi Pelaksanaan Pentaksiran Berterusan</p>
         </div>
+
+        <div id="alert" class="alert"></div>
 
         <div class="form-grid">
             <div class="input-group">
@@ -284,7 +299,7 @@
         </div>
 
         <div class="action-area">
-            <button class="btn btn-submit" onclick="submitData()">
+            <button class="btn btn-submit" id="submitBtn" onclick="submitData()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
                 Hantar & Jana Dokumen Rasmi
             </button>
@@ -293,9 +308,10 @@
     </div>
 
     <script>
-        // MASUKKAN URL NEW DEPLOYMENT ANDA DI SINI
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxERLzqWfS5xjhVHp0fCU0WfldhVwotSQQZHKNrBlfMv7YYj2t_--0f7QkymlHwi-LO/exec';
+        // ===== URL API DEPLOYMENT ANDA =====
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMTn9cIcper63R4GC7_IXF6UvsmA3K2FPPtzJ1K8YxKfXnRrv9cd4cEYcnTeEHLkWR/exec';
 
+        // Data soalan untuk kedua-dua fasa
         const soalanPerancangan = [
             "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan",
             "JST yang disediakan mengikut format yang ditetapkan",
@@ -337,6 +353,18 @@
         ];
         const ulasanKhususModerasi = [7, 9, 10, 12];
 
+        // Fungsi untuk menampilkan alert
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alert');
+            alertDiv.textContent = message;
+            alertDiv.className = `alert ${type}`;
+            alertDiv.style.display = 'block';
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Fungsi untuk menjana jadual
         function generateTable(tableId, dataArray, prefix, specialItems) {
             const tbody = document.getElementById(tableId);
             let html = '';
@@ -374,11 +402,13 @@
             tbody.innerHTML = html;
         }
 
+        // Inisialisasi jadual
         generateTable('tbody-perancangan', soalanPerancangan, 'perancangan', ulasanKhususPerancangan);
         generateTable('tbody-moderasi', soalanModerasi, 'moderasi', ulasanKhususModerasi);
 
         let currentFasa = 'perancangan';
 
+        // Fungsi untuk menukar tab
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -387,6 +417,7 @@
             currentFasa = tab;
         }
 
+        // Fungsi untuk menukar fail ke Base64
         function getBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -396,14 +427,27 @@
             });
         }
 
+        // Fungsi untuk menghantar data
         async function submitData() {
-            if(!document.getElementById('ipgKampus').value || !document.getElementById('kodKursus').value) {
-                alert("Sila isi maklumat IPG Kampus dan Kod Kursus terlebih dahulu.");
+            // Pengesahan medan wajib
+            if(!document.getElementById('ipgKampus').value) {
+                showAlert("⚠️ Sila isi maklumat IPG Kampus", "error");
+                return;
+            }
+            if(!document.getElementById('kodKursus').value) {
+                showAlert("⚠️ Sila isi maklumat Kod Kursus", "error");
+                return;
+            }
+            if(!document.getElementById('tarikhVerifikasi').value) {
+                showAlert("⚠️ Sila isi Tarikh Verifikasi", "error");
                 return;
             }
 
+            // Tunjukkan loader
             document.getElementById('loader').style.display = 'flex';
+            document.getElementById('submitBtn').disabled = true;
 
+            // Kumpul data asas
             let payload = {
                 fasa: currentFasa,
                 ipgKampus: document.getElementById('ipgKampus').value,
@@ -417,54 +461,68 @@
                 namaPenilai: document.getElementById('namaPenilai').value
             };
 
-            if(currentFasa === 'moderasi') payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
+            // Tambah tarikh taklimat jika fasa moderasi
+            if(currentFasa === 'moderasi') {
+                payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
+            }
 
+            // Tentukan jumlah soalan dan item khas
             const limit = currentFasa === 'perancangan' ? 21 : 12;
             const specialItemsList = currentFasa === 'perancangan' ? ulasanKhususPerancangan : ulasanKhususModerasi;
 
-            for(let i = 1; i <= limit; i++) {
-                const radios = document.getElementsByName(`${currentFasa}_${i}_status`);
-                let selectedValue = "";
-                for (const radio of radios) { if (radio.checked) selectedValue = radio.value; }
-                
-                payload[`item_${i}_status`] = selectedValue;
-                payload[`item_${i}_catatan`] = document.getElementById(`${currentFasa}_${i}_catatan`).value;
-
-                if (specialItemsList.includes(i)) {
-                    const fileInput = document.getElementById(`${currentFasa}_${i}_file`);
-                    if (fileInput && fileInput.files.length > 0) {
-                        const file = fileInput.files[0];
-                        payload[`item_${i}_fileName`] = `Item_${i}_${file.name}`;
-                        payload[`item_${i}_mimeType`] = file.type;
-                        payload[`item_${i}_fileData`] = await getBase64(file);
-                    }
-                    const linkInput = document.getElementById(`${currentFasa}_${i}_link`);
-                    if (linkInput && linkInput.value) payload[`item_${i}_link`] = linkInput.value;
-                }
-            }
-
             try {
+                // Kumpul data setiap item
+                for(let i = 1; i <= limit; i++) {
+                    const radios = document.getElementsByName(`${currentFasa}_${i}_status`);
+                    let selectedValue = "";
+                    for (const radio of radios) { 
+                        if (radio.checked) selectedValue = radio.value; 
+                    }
+                    
+                    payload[`item_${i}_status`] = selectedValue;
+                    payload[`item_${i}_catatan`] = document.getElementById(`${currentFasa}_${i}_catatan`).value;
+
+                    // Proses fail dan pautan untuk item khas
+                    if (specialItemsList.includes(i)) {
+                        const fileInput = document.getElementById(`${currentFasa}_${i}_file`);
+                        if (fileInput && fileInput.files.length > 0) {
+                            const file = fileInput.files[0];
+                            payload[`item_${i}_fileName`] = `Item_${i}_${file.name}`;
+                            payload[`item_${i}_mimeType`] = file.type;
+                            payload[`item_${i}_fileData`] = await getBase64(file);
+                        }
+                        const linkInput = document.getElementById(`${currentFasa}_${i}_link`);
+                        if (linkInput && linkInput.value) payload[`item_${i}_link`] = linkInput.value;
+                    }
+                }
+
+                // Hantar data ke API
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify(payload)
                 });
+
                 const result = await response.json();
                 
+                // Sorok loader
                 document.getElementById('loader').style.display = 'none';
+                document.getElementById('submitBtn').disabled = false;
                 
                 if(result.status === 'success') {
-                    // DOKUMEN BERJAYA DIJANA. BUKA URL TEMPLAT BARU.
-                    alert('Berjaya! Dokumen anda sedang dibuka di tab baharu untuk dicetak.');
+                    showAlert("✅ Berjaya! Dokumen anda sedang dibuka untuk dicetak.", "success");
                     if(result.docUrl) {
-                        window.open(result.docUrl, '_blank'); 
+                        setTimeout(() => {
+                            window.open(result.docUrl, '_blank');
+                        }, 1500);
                     }
                 } else {
-                    alert('Ralat sistem: ' + result.message);
+                    showAlert("❌ Ralat: " + result.message, "error");
                 }
             } catch (error) {
                 document.getElementById('loader').style.display = 'none';
-                alert('Ralat pada rangkaian. Sila semak konsol.');
-                console.error(error);
+                document.getElementById('submitBtn').disabled = false;
+                showAlert("❌ Ralat rangkaian. Sila cuba semula.", "error");
+                console.error('Error:', error);
             }
         }
     </script>
