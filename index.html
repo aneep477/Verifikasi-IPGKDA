@@ -1,2043 +1,656 @@
-
-                        <!DOCTYPE html>
-                        <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body {
-                  background-color: white; /* Ensure the iframe has a white background */
-                }
-
-                
-              </style>
-                        </head>
-                        <body>
-                            <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Verifikasi PD - IPG Malaysia</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #6366f1;
-      --primary-dark: #4f46e5;
-      --secondary: #06b6d4;
-      --accent: #8b5cf6;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --bg-dark: #0f172a;
-      --bg-card: rgba(30, 41, 59, 0.7);
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --border: rgba(148, 163, 184, 0.2);
-      --glass: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-      animation: bgFloat 20s ease-in-out infinite;
-      z-index: -1;
-    }
-
-    @keyframes bgFloat {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(30px, -30px) rotate(2deg); }
-      66% { transform: translate(-20px, 20px) rotate(-1deg); }
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    /* Header */
-    .header {
-      text-align: center;
-      padding: 40px 20px;
-      position: relative;
-    }
-
-    .header::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 4px;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border-radius: 2px;
-    }
-
-    .logo-section {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
-
-    .logo-icon {
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
-      animation: logoFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes logoFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .header h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--text-primary), var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.5px;
-    }
-
-    .header p {
-      color: var(--text-secondary);
-      font-size: 1rem;
-      margin-top: 8px;
-    }
-
-    /* Tab Navigation */
-    .tab-nav {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin: 30px 0;
-      flex-wrap: wrap;
-    }
-
-    .tab-btn {
-      padding: 14px 28px;
-      border: 1px solid var(--glass-border);
-      background: var(--glass);
-      color: var(--text-secondary);
-      border-radius: 12px;
-      cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(10px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .tab-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: -1;
-    }
-
-    .tab-btn:hover {
-      color: var(--text-primary);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
-    }
-
-    .tab-btn.active {
-      color: white;
-      border-color: transparent;
-      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
-    }
-
-    .tab-btn.active::before {
-      opacity: 1;
-    }
-
-    .tab-content {
-      display: none;
-      animation: fadeInUp 0.5s ease;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Glass Card */
-    .glass-card {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 30px;
-      margin-bottom: 24px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .glass-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .card-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .card-title .icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-
-    /* Form Elements */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-      background: rgba(15, 23, 42, 0.8);
-    }
-
-    select.form-control {
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-    }
-
-    /* Checkbox Table */
-    .checklist-table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 8px;
-    }
-
-    .checklist-table th {
-      background: linear-gradient(135deg, var(--primary-dark), var(--accent));
-      color: white;
-      padding: 14px 16px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .checklist-table th:first-child { border-radius: 12px 0 0 12px; }
-    .checklist-table th:last-child { border-radius: 0 12px 12px 0; }
-
-    .checklist-table td {
-      background: var(--glass);
-      padding: 16px;
-      vertical-align: top;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .checklist-table td:first-child {
-      border-left: 1px solid var(--border);
-      border-radius: 12px 0 0 12px;
-    }
-
-    .checklist-table td:last-child {
-      border-right: 1px solid var(--border);
-      border-radius: 0 12px 12px 0;
-    }
-
-    .item-number {
-      font-weight: 700;
-      color: var(--primary);
-      font-size: 0.9rem;
-      min-width: 30px;
-    }
-
-    .item-text {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: var(--text-primary);
-    }
-
-    .radio-group {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .radio-option {
-      position: relative;
-    }
-
-    .radio-option input {
-      position: absolute;
-      opacity: 0;
-      cursor: pointer;
-    }
-
-    .radio-label {
-      display: block;
-      padding: 10px 18px;
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: var(--text-secondary);
-    }
-
-    .radio-option input:checked + .radio-label {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: white;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-    }
-
-    .radio-option input:checked + .radio-label.ya {
-      background: var(--success);
-      border-color: var(--success);
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    }
-
-    .radio-option input:checked + .radio-label.tidak {
-      background: var(--danger);
-      border-color: var(--danger);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    }
-
-    .radio-option input:checked + .radio-label.tidak-berkaitan {
-      background: var(--warning);
-      border-color: var(--warning);
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
-    }
-
-    textarea.catatan-input {
-      width: 100%;
-      min-height: 60px;
-      padding: 10px;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      resize: vertical;
-      transition: all 0.3s ease;
-    }
-
-    textarea.catatan-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-    }
-
-    /* Section Headers */
-    .section-header {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 16px 20px;
-      margin: 24px 0 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .section-header h3 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .section-badge {
-      padding: 4px 12px;
-      background: var(--primary);
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    /* Full Width Textarea */
-    .full-width-textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 16px;
-      background: rgba(15, 23, 42, 0.4);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      color: var(--text-primary);
-      font-family: 'Inter', sans-serif;
-      font-size: 0.95rem;
-      resize: vertical;
-      transition: all 0.3s ease;
-    }
-
-    .full-width-textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-    }
-
-    /* Buttons */
-    .btn-group {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      margin-top: 30px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 16px 32px;
-      border: none;
-      border-radius: 12px;
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-      transition: left 0.5s ease;
-    }
-
-    .btn:hover::after {
-      left: 100%;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      color: white;
-      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(99, 102, 241, 0.5);
-    }
-
-    .btn-success {
-      background: linear-gradient(135deg, var(--success), #059669);
-      color: white;
-      box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
-    }
-
-    .btn-success:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(16, 185, 129, 0.5);
-    }
-
-    .btn-secondary {
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      color: var(--text-primary);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-3px);
-    }
-
-    .btn-print {
-      background: linear-gradient(135deg, var(--secondary), #0891b2);
-      color: white;
-      box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
-    }
-
-    .btn-print:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(6, 182, 212, 0.5);
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    /* Loading Spinner */
-    .spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: white;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* Toast Notification */
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 9999;
-    }
-
-    .toast {
-      background: var(--bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 16px 24px;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      animation: slideIn 0.3s ease, fadeOut 0.3s ease 4.7s;
-      min-width: 300px;
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    @keyframes fadeOut {
-      to { opacity: 0; transform: translateX(100%); }
-    }
-
-    .toast.success { border-left: 4px solid var(--success); }
-    .toast.error { border-left: 4px solid var(--danger); }
-    .toast.info { border-left: 4px solid var(--primary); }
-
-    /* File Upload Area */
-    .upload-area {
-      border: 2px dashed var(--border);
-      border-radius: 16px;
-      padding: 40px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: rgba(15, 23, 42, 0.3);
-    }
-
-    .upload-area:hover, .upload-area.dragover {
-      border-color: var(--primary);
-      background: rgba(99, 102, 241, 0.1);
-    }
-
-    .upload-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-    }
-
-    .upload-text {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      margin-bottom: 8px;
-    }
-
-    .upload-hint {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      opacity: 0.7;
-    }
-
-    .file-list {
-      margin-top: 16px;
-    }
-
-    .file-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--glass);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 16px;
-      margin-bottom: 8px;
-    }
-
-    .file-name {
-      font-size: 0.9rem;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .file-remove {
-      background: none;
-      border: none;
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 1.2rem;
-      padding: 4px;
-      border-radius: 6px;
-      transition: background 0.2s;
-    }
-
-    .file-remove:hover {
-      background: rgba(239, 68, 68, 0.2);
-    }
-
-    /* Progress Bar */
-    .progress-bar {
-      height: 6px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 3px;
-      overflow: hidden;
-      margin-top: 10px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border-radius: 3px;
-      transition: width 0.3s ease;
-    }
-
-    /* Status Badge */
-    .status-badge {
-      display: inline-block;
-      padding: 6px 14px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .status-completed {
-      background: rgba(16, 185, 129, 0.2);
-      color: var(--success);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-
-    .status-pending {
-      background: rgba(245, 158, 11, 0.2);
-      color: var(--warning);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-
-    /* Print Styles */
-    @media print {
-      body {
-        background: white !important;
-        color: black !important;
-      }
-      
-      body::before { display: none; }
-      
-      .tab-nav, .btn-group, .upload-area, .file-list, .toast-container, .no-print {
-        display: none !important;
-      }
-      
-      .tab-content { display: block !important; }
-      
-      .glass-card {
-        background: white !important;
-        border: 1px solid #ddd !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        break-inside: avoid;
-      }
-      
-      .header h1 {
-        -webkit-text-fill-color: black !important;
-        color: black !important;
-      }
-      
-      .checklist-table th {
-        background: #1a365d !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      
-      .checklist-table td {
-        background: #f8f9fa !important;
-        border: 1px solid #ddd !important;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      
-      .radio-label {
-        border: 1px solid #ddd !important;
-        color: #666 !important;
-      }
-      
-      .radio-option input:checked + .radio-label {
-        background: #4f46e5 !important;
-        color: white !important;
-        border-color: #4f46e5 !important;
-      }
-      
-      .section-header {
-        background: #f0f0f0 !important;
-        border: 1px solid #ddd !important;
-      }
-      
-      .form-control, textarea {
-        background: white !important;
-        border: 1px solid #ddd !important;
-        color: black !important;
-      }
-      
-      .header::after { background: #1a365d !important; }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .header h1 { font-size: 1.8rem; }
-      .form-grid { grid-template-columns: 1fr; }
-      .glass-card { padding: 20px; }
-      .checklist-table { font-size: 0.85rem; }
-      .checklist-table td, .checklist-table th { padding: 12px 8px; }
-      .btn { padding: 14px 24px; font-size: 0.9rem; }
-      .radio-group { gap: 6px; }
-      .radio-label { padding: 8px 12px; font-size: 0.8rem; }
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-dark); }
-    ::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-    /* Item Note Text */
-    .item-note {
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-      font-style: italic;
-      margin-top: 6px;
-      padding-left: 12px;
-      border-left: 2px solid var(--primary);
-    }
-
-    .item-note ul {
-      margin: 4px 0;
-      padding-left: 20px;
-    }
-
-    .item-note li {
-      margin-bottom: 2px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Verifikasi Pentaksiran Berterusan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #00f0ff;
+            --secondary: #7000ff;
+            --bg-color: #050510;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.4), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.3), transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .glass-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 2rem;
+        }
+
+        .header-section h1 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-section h3 {
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(112,0,255,0.4), rgba(0,240,255,0.4));
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            background: rgba(0,0,0,0.2);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        input[type="text"], 
+        input[type="date"], 
+        select, 
+        textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 0.8rem;
+            color: #fff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: all 0.3s ease;
+            border-radius: 4px 4px 0 0;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-bottom-color: var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            font-family: 'Outfit', sans-serif;
+            color: var(--primary);
+            font-weight: 600;
+            background: rgba(0,0,0,0.3);
+        }
+
+        th:first-child { border-top-left-radius: 12px; }
+        th:last-child { border-top-right-radius: 12px; }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Custom Radio Buttons */
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .radio-label input[type="radio"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--text-muted);
+            border-radius: 50%;
+            outline: none;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .radio-label input[type="radio"]:checked {
+            border-color: var(--primary);
+        }
+
+        .radio-label input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        /* Action Buttons */
+        .action-area {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-print {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-print:hover { background: rgba(255, 255, 255, 0.2); }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
+        }
+
+        .file-upload {
+            margin-top: 1rem;
+        }
+        .file-upload input[type="file"] {
+            border: 1px dashed var(--glass-border);
+            padding: 1rem;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        /* Loading Overlay */
+        .loader-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Print Media Query */
+        @media print {
+            body { background: #fff; color: #000; padding: 0; }
+            .glass-container { 
+                background: none; border: none; box-shadow: none; padding: 0; 
+                backdrop-filter: none; -webkit-backdrop-filter: none;
+            }
+            .header-section h1, label, th { color: #000 !important; -webkit-text-fill-color: #000; }
+            .tabs, .action-area, .file-upload { display: none !important; }
+            input, select, textarea { 
+                border: 1px solid #ccc !important; 
+                color: #000 !important; 
+                background: transparent !important;
+            }
+            .tab-content { display: block !important; page-break-before: always; }
+            .tab-content:first-of-type { page-break-before: avoid; }
+            th { background: #f0f0f0 !important; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="toast-container" id="toastContainer"></div>
-
-<div class="container">
-  <!-- Header -->
-  <div class="header">
-    <div class="logo-section">
-      <div class="logo-icon">🎓</div>
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+        <h3 style="color: #fff; font-family: 'Outfit';">Sedang Menyimpan Data...</h3>
     </div>
-    <h1>SENARAI SEMAK VERIFIKASI PD</h1>
-    <p>Institut Pendidikan Guru Malaysia • Kementerian Pendidikan Malaysia</p>
-  </div>
 
-  <!-- Tab Navigation -->
-  <div class="tab-nav no-print">
-    <button class="tab-btn active" onclick="switchTab('perancangan')">
-      📋 Fasa Perancangan
-    </button>
-    <button class="tab-btn" onclick="switchTab('moderasi')">
-      ✅ Fasa Selepas Moderasi
-    </button>
-  </div>
-
-  <!-- ==================== TAB 1: FASA PERANCANGAN ==================== -->
-  <div id="tab-perancangan" class="tab-content active">
-    <form id="formPerancangan">
-      <!-- Maklumat Asas -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">📝</div>
-          <span>Maklumat Asas Verifikasi</span>
+    <div class="glass-container">
+        <div class="header-section">
+            <h1>INSTITUT PENDIDIKAN GURU MALAYSIA</h1>
+            <h3>KEMENTERIAN PENDIDIKAN MALAYSIA</h3>
+            <p style="margin-top:1rem; color:var(--text-muted)">Senarai Semak Verifikasi Pelaksanaan Pentaksiran Berterusan</p>
         </div>
+
         <div class="form-grid">
-          <div class="form-group">
-            <label>Kod Verifikasi</label>
-            <input type="text" class="form-control" id="pr_kodVerifikasi" readonly>
-          </div>
-          <div class="form-group">
-            <label>IPG Kampus</label>
-            <input type="text" class="form-control" id="pr_ipgKampus" placeholder="Masukkan nama kampus">
-          </div>
-          <div class="form-group">
-            <label>Kod Kursus</label>
-            <input type="text" class="form-control" id="pr_kodKursus" placeholder="cth: HBBI3103">
-          </div>
-          <div class="form-group">
-            <label>Nama Kursus</label>
-            <input type="text" class="form-control" id="pr_namaKursus" placeholder="Masukkan nama kursus">
-          </div>
-          <div class="form-group">
-            <label>Program</label>
-            <select class="form-control" id="pr_program">
-              <option value="">-- Pilih Program --</option>
-              <option value="PPISMP">PPISMP</option>
-              <option value="PISMP">PISMP</option>
-              <option value="PDPM">PDPM</option>
-              <option value="PDPP">PDPP</option>
-              <option value="PITO">PITO</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Semester</label>
-            <select class="form-control" id="pr_semester">
-              <option value="">-- Pilih Semester --</option>
-              <option value="Sem 1">Sem 1</option>
-              <option value="Sem 2">Sem 2</option>
-              <option value="Sem 3">Sem 3</option>
-              <option value="Sem 4">Sem 4</option>
-              <option value="Sem 5">Sem 5</option>
-              <option value="Sem 6">Sem 6</option>
-              <option value="Sem 7">Sem 7</option>
-              <option value="Sem 8">Sem 8</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Tahun</label>
-            <select class="form-control" id="pr_tahun">
-              <option value="">-- Pilih Tahun --</option>
-              <option value="Tahun 1">Tahun 1</option>
-              <option value="Tahun 2">Tahun 2</option>
-              <option value="Tahun 3">Tahun 3</option>
-              <option value="Tahun 4">Tahun 4</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Tarikh Verifikasi</label>
-            <input type="date" class="form-control" id="pr_tarikhVerifikasi">
-          </div>
-        </div>
-      </div>
-
-      <!-- Senarai Semak -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">✅</div>
-          <span>Senarai Semak Verifikasi</span>
+            <div class="input-group">
+                <label>IPG Kampus</label>
+                <input type="text" id="ipgKampus" required>
+            </div>
+            <div class="input-group">
+                <label>Kod Kursus</label>
+                <input type="text" id="kodKursus" required>
+            </div>
+            <div class="input-group">
+                <label>Nama Kursus</label>
+                <input type="text" id="namaKursus" required>
+            </div>
+            <div class="input-group">
+                <label>Program</label>
+                <select id="program">
+                    <option value="">-- Pilih --</option>
+                    <option value="PPISMP">PPISMP</option>
+                    <option value="PISMP">PISMP</option>
+                    <option value="PDPM">PDPM</option>
+                    <option value="PDPP">PDPP</option>
+                    <option value="PITO">PITO</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Semester / Tahun</label>
+                <input type="text" id="semesterTahun" placeholder="Cth: Sem 1 / Tahun 2" required>
+            </div>
+            <div class="input-group">
+                <label>Tarikh Verifikasi</label>
+                <input type="date" id="tarikhVerifikasi" required>
+            </div>
         </div>
 
-        <!-- Jadual Spesifikasi Tugasan -->
-        <div class="section-header">
-          <span class="section-badge">JST</span>
-          <h3>Jadual Spesifikasi Tugasan</h3>
-        </div>
-        <table class="checklist-table">
-          <thead>
-            <tr>
-              <th style="width:50px">Bil.</th>
-              <th>Perkara</th>
-              <th style="width:280px">Pilihan</th>
-              <th style="width:250px">Catatan</th>
-            </tr>
-          </thead>
-          <tbody id="pr_checklist_jst"></tbody>
-        </table>
-
-        <!-- Soalan Tugasan -->
-        <div class="section-header">
-          <span class="section-badge">TUGASAN</span>
-          <h3>Soalan Tugasan</h3>
-        </div>
-        <table class="checklist-table">
-          <thead>
-            <tr>
-              <th style="width:50px">Bil.</th>
-              <th>Perkara</th>
-              <th style="width:280px">Pilihan</th>
-              <th style="width:250px">Catatan</th>
-            </tr>
-          </thead>
-          <tbody id="pr_checklist_tugasan"></tbody>
-        </table>
-
-        <!-- Rubrik Pemarkahan -->
-        <div class="section-header">
-          <span class="section-badge">RUBRIK</span>
-          <h3>Rubrik Pemarkahan</h3>
-        </div>
-        <table class="checklist-table">
-          <thead>
-            <tr>
-              <th style="width:50px">Bil.</th>
-              <th>Perkara</th>
-              <th style="width:280px">Pilihan</th>
-              <th style="width:250px">Catatan</th>
-            </tr>
-          </thead>
-          <tbody id="pr_checklist_rubrik"></tbody>
-        </table>
-      </div>
-
-      <!-- Ulasan & Cadangan -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">💬</div>
-          <span>Ulasan & Cadangan</span>
-        </div>
-        <div class="form-group">
-          <label>Ulasan Keseluruhan</label>
-          <textarea class="full-width-textarea" id="pr_ulasanKeseluruhan" placeholder="Masukkan ulasan keseluruhan..."></textarea>
-        </div>
-        <div class="form-group">
-          <label>Cadangan Penambahbaikan</label>
-          <textarea class="full-width-textarea" id="pr_cadanganPenambahbaikan" placeholder="Masukkan cadangan penambahbaikan..."></textarea>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Nama Verifier</label>
-            <input type="text" class="form-control" id="pr_namaVerifier" placeholder="Nama penuh verifier">
-          </div>
-        </div>
-      </div>
-
-      <!-- Upload Bahan -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">📁</div>
-          <span>Muat Naik Bahan Sokongan</span>
-        </div>
-        <div class="upload-area" id="prUploadArea" onclick="document.getElementById('prFileInput').click()">
-          <div class="upload-icon">📤</div>
-          <div class="upload-text">Klik atau seret fail ke sini untuk memuat naik</div>
-          <div class="upload-hint">PDF, DOC, DOCX, JPG, PNG, XLS (Maksimum 10MB setiap fail)</div>
-          <input type="file" id="prFileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx" style="display:none" onchange="handleFileSelect(this, 'pr')">
-        </div>
-        <div class="file-list" id="prFileList"></div>
-        <div class="progress-bar" id="prProgressBar" style="display:none">
-          <div class="progress-fill" id="prProgressFill" style="width:0%"></div>
-        </div>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="btn-group no-print">
-        <button type="button" class="btn btn-success" onclick="saveFasaPerancangan()">
-          💾 Simpan Data
-        </button>
-        <button type="button" class="btn btn-print" onclick="printForm('pr')">
-          🖨️ Cetak Borang
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="resetForm('pr')">
-          🔄 Reset
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <!-- ==================== TAB 2: FASA SELEPAS MODERASI ==================== -->
-  <div id="tab-moderasi" class="tab-content">
-    <form id="formModerasi">
-      <!-- Maklumat Asas -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">📝</div>
-          <span>Maklumat Asas Verifikasi</span>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Kod Verifikasi</label>
-            <input type="text" class="form-control" id="mod_kodVerifikasi" readonly>
-          </div>
-          <div class="form-group">
-            <label>IPG Kampus</label>
-            <input type="text" class="form-control" id="mod_ipgKampus" placeholder="Masukkan nama kampus">
-          </div>
-          <div class="form-group">
-            <label>Kod Kursus</label>
-            <input type="text" class="form-control" id="mod_kodKursus" placeholder="cth: HBBI3103">
-          </div>
-          <div class="form-group">
-            <label>Nama Kursus</label>
-            <input type="text" class="form-control" id="mod_namaKursus" placeholder="Masukkan nama kursus">
-          </div>
-          <div class="form-group">
-            <label>Program</label>
-            <select class="form-control" id="mod_program">
-              <option value="">-- Pilih Program --</option>
-              <option value="PPISMP">PPISMP</option>
-              <option value="PISMP">PISMP</option>
-              <option value="PDPM">PDPM</option>
-              <option value="PDPP">PDPP</option>
-              <option value="PITO">PITO</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Semester</label>
-            <select class="form-control" id="mod_semester">
-              <option value="">-- Pilih Semester --</option>
-              <option value="Sem 1">Sem 1</option>
-              <option value="Sem 2">Sem 2</option>
-              <option value="Sem 3">Sem 3</option>
-              <option value="Sem 4">Sem 4</option>
-              <option value="Sem 5">Sem 5</option>
-              <option value="Sem 6">Sem 6</option>
-              <option value="Sem 7">Sem 7</option>
-              <option value="Sem 8">Sem 8</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Tahun</label>
-            <select class="form-control" id="mod_tahun">
-              <option value="">-- Pilih Tahun --</option>
-              <option value="Tahun 1">Tahun 1</option>
-              <option value="Tahun 2">Tahun 2</option>
-              <option value="Tahun 3">Tahun 3</option>
-              <option value="Tahun 4">Tahun 4</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Tarikh Verifikasi</label>
-            <input type="date" class="form-control" id="mod_tarikhVerifikasi">
-          </div>
-        </div>
-      </div>
-
-      <!-- Senarai Semak -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">✅</div>
-          <span>Senarai Semak Verifikasi (Selepas Moderasi)</span>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('perancangan')">Fasa Perancangan</button>
+            <button class="tab-btn" onclick="switchTab('moderasi')">Fasa Selepas Moderasi</button>
         </div>
 
-        <table class="checklist-table">
-          <thead>
-            <tr>
-              <th style="width:50px">Bil.</th>
-              <th>Perkara</th>
-              <th style="width:320px">Pilihan</th>
-              <th style="width:250px">Catatan</th>
-            </tr>
-          </thead>
-          <tbody id="mod_checklist_main"></tbody>
-        </table>
-      </div>
-
-      <!-- Ulasan & Cadangan -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">💬</div>
-          <span>Ulasan & Cadangan</span>
+        <div id="tab-perancangan" class="tab-content active">
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">Fasa Perancangan</h2>
+            <div class="table-responsive">
+                <table id="table-perancangan">
+                    <thead>
+                        <tr>
+                            <th width="5%">Bil.</th>
+                            <th width="45%">Perkara</th>
+                            <th width="25%">Status</th>
+                            <th width="25%">Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-perancangan">
+                        </tbody>
+                </table>
+            </div>
         </div>
-        <div class="form-group">
-          <label>Ulasan Keseluruhan</label>
-          <textarea class="full-width-textarea" id="mod_ulasanKeseluruhan" placeholder="Masukkan ulasan keseluruhan..."></textarea>
+
+        <div id="tab-moderasi" class="tab-content">
+            <h2 style="color:var(--primary); margin-bottom: 1rem;">Fasa Selepas Moderasi</h2>
+            
+            <div class="input-group" style="max-width: 300px; margin-bottom: 2rem;">
+                <label>Tarikh Taklimat PB</label>
+                <input type="date" id="tarikhTaklimat">
+            </div>
+
+            <div class="table-responsive">
+                <table id="table-moderasi">
+                    <thead>
+                        <tr>
+                            <th width="5%">Bil.</th>
+                            <th width="45%">Perkara</th>
+                            <th width="25%">Status</th>
+                            <th width="25%">Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-moderasi">
+                        </tbody>
+                </table>
+            </div>
         </div>
-        <div class="form-group">
-          <label>Cadangan Penambahbaikan</label>
-          <textarea class="full-width-textarea" id="mod_cadanganPenambahbaikan" placeholder="Masukkan cadangan penambahbaikan..."></textarea>
+
+        <div style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border);">
+            <div class="input-group" style="margin-bottom: 1.5rem;">
+                <label>Ulasan Keseluruhan</label>
+                <textarea id="ulasan"></textarea>
+            </div>
+            <div class="input-group" style="margin-bottom: 1.5rem;">
+                <label>Cadangan Penambahbaikan</label>
+                <textarea id="cadangan"></textarea>
+            </div>
+            <div class="input-group" style="margin-bottom: 1.5rem;">
+                <label>Nama Pengesah / Penilai</label>
+                <input type="text" id="namaPenilai">
+            </div>
+            
+            <div class="input-group file-upload">
+                <label>Muat Naik Fail Bukti (Jika Ada)</label>
+                <input type="file" id="failBukti">
+            </div>
         </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Nama Verifier</label>
-            <input type="text" class="form-control" id="mod_namaVerifier" placeholder="Nama penuh verifier">
-          </div>
+
+        <div class="action-area">
+            <button class="btn btn-print" onclick="window.print()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                Cetak
+            </button>
+            <button class="btn btn-submit" onclick="submitData()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                Hantar Data
+            </button>
         </div>
-      </div>
 
-      <!-- Upload Bahan -->
-      <div class="glass-card">
-        <div class="card-title">
-          <div class="icon">📁</div>
-          <span>Muat Naik Bahan Sokongan</span>
-        </div>
-        <div class="upload-area" id="modUploadArea" onclick="document.getElementById('modFileInput').click()">
-          <div class="upload-icon">📤</div>
-          <div class="upload-text">Klik atau seret fail ke sini untuk memuat naik</div>
-          <div class="upload-hint">PDF, DOC, DOCX, JPG, PNG, XLS (Maksimum 10MB setiap fail)</div>
-          <input type="file" id="modFileInput" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xls,.xlsx" style="display:none" onchange="handleFileSelect(this, 'mod')">
-        </div>
-        <div class="file-list" id="modFileList"></div>
-        <div class="progress-bar" id="modProgressBar" style="display:none">
-          <div class="progress-fill" id="modProgressFill" style="width:0%"></div>
-        </div>
-      </div>
+    </div>
 
-      <!-- Action Buttons -->
-      <div class="btn-group no-print">
-        <button type="button" class="btn btn-success" onclick="saveFasaModerasi()">
-          💾 Simpan Data
-        </button>
-        <button type="button" class="btn btn-print" onclick="printForm('mod')">
-          🖨️ Cetak Borang
-        </button>
-        <button type="button" class="btn btn-secondary" onclick="resetForm('mod')">
-          🔄 Reset
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
+    <script>
+        // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxERLzqWfS5xjhVHp0fCU0WfldhVwotSQQZHKNrBlfMv7YYj2t_--0f7QkymlHwi-LO/exec';
 
-<script>
-  // ============================================================================
-  // DATA: Checklist Items
-  // ============================================================================
-  
-  const perancanganItems = {
-    jst: [
-      { id: 1, text: 'Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan daripada Ketua Jabatan Akademik / Penyelaras Pentaksiran Berterusan' },
-      { id: 2, text: 'JST yang disediakan mengikut format yang ditetapkan' },
-      { id: 3, text: 'Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan dan selaras dengan RMK/MK' },
-      { id: 4, text: 'Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK' },
-      { id: 5, text: 'Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran kursus dalam RMK/MK' },
-      { id: 6, text: 'Objektif tugasan memenuhi hasil pembelajaran kursus (HPK) yang telah ditetapkan dalam RMK/MK' },
-      { id: 7, text: 'Wajaran markah tugasan mengikut wajaran dalam RMK/MK' },
-      { id: 8, text: 'Aspek / Kriteria penilaian dinyatakan dengan jelas untuk mentaksir tugasan yang diberikan' }
-    ],
-    tugasan: [
-      { id: 9, text: 'Tugasan mempunyai elemen-elemen berikut: Rangsangan, Soalan tugasan, Arahan pentadbiran' },
-      { id: 10, text: 'Kapasiti Pedagogi Pembelajaran Bermakna', note: '• Merungkai Standard untuk Kejelasan\n• Merangkai Standard\n• Backward Design: The Big Idea, EQ\n• Pelan Pembelajaran Bermakna - Model Kompetensi Global 6C, MPP, MRP, 3E & 3R', noteFull: 'Nota: Item-item senarai semak ini digunakan untuk mengenal pasti proses pentaksiran berterusan berasaskan Kerangka Pentaksiran Berterusan KPPB IPG. Walau bagaimanapun, proses pelaksanaan KPPB adalah melibatkan keseluruhan proses pembelajaran bermakna termasuk dalam pengajaran dan pembelajaran (PdP)' },
-      { id: 11, text: 'Tugasan yang disediakan mencapai Kemahiran Berfikir Aras Tinggi (KBAT) seperti yang dinyatakan dalam HPK' },
-      { id: 12, text: 'Domain kognitif yang dinyatakan dalam HPK diuji dalam tugasan' },
-      { id: 13, text: 'Domain psikomotor yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)' },
-      { id: 14, text: 'Domain afektif yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)' },
-      { id: 15, text: 'Domain kemahiran insaniah yang dinyatakan dalam HPK diuji dalam tugasan (jika berkenaan)' },
-      { id: 16, text: 'Soalan tugasan telah disemak oleh Pakar Bidang / Penyelaras Kursus / Pensyarah Kanan' }
-    ],
-    rubrik: [
-      { id: 17, text: 'Rubrik pemarkahan secara holistik/analitik disediakan selari dengan Jadual Spesifikasi Tugasan (JST) dan tugasan' },
-      { id: 18, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain kognitif' },
-      { id: 19, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain psikomotor (jika berkenaan)' },
-      { id: 20, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain afektif (jika berkenaan)' },
-      { id: 21, text: 'Skema pemarkahan dan Rubrik yang disediakan mengandungi kriteria/deskriptor untuk mengukur domain kemahiran insaniah (jika berkenaan)' }
-    ]
-  };
+        // Data Soalan Perancangan
+        const soalanPerancangan = [
+            "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan",
+            "JST yang disediakan mengikut format yang ditetapkan",
+            "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan",
+            "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran",
+            "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran",
+            "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK)",
+            "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
+            "Aspek/Kriteria penilaian dinyatakan dengan jelas",
+            "Tugasan mempunyai elemen: Rangsangan, Soalan tugasan, Arahan pentadbiran",
+            "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, dll)",
+            "Tugasan mencapai Kemahiran Berfikir Aras Tinggi (KBAT)",
+            "Domain kognitif diuji dalam tugasan",
+            "Domain psikomotor diuji dalam tugasan (jika berkenaan)",
+            "Domain afektif diuji dalam tugasan (jika berkenaan)",
+            "Domain kemahiran insaniah diuji (jika berkenaan)",
+            "Soalan tugasan telah disemak oleh Pakar Bidang/Penyelaras",
+            "Rubrik pemarkahan holistik/analitik selari dengan JST",
+            "Skema/Rubrik mengukur domain kognitif",
+            "Skema/Rubrik mengukur domain psikomotor",
+            "Skema/Rubrik mengukur domain afektif",
+            "Skema/Rubrik mengukur domain kemahiran insaniah"
+        ];
 
-  const moderasiItems = [
-    { id: 1, text: 'Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah', hasDate: true, dateLabel: 'Tarikh Taklimat PB:' },
-    { id: 2, text: 'Pemilihan sampel dan penyelarasan skema pemarkahan dan rubrik dilaksanakan (sekiranya 2 @ lebih pemeriksa)' },
-    { id: 3, text: 'Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan dan rubrik pemarkahan yang disediakan' },
-    { id: 4, text: 'Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar' },
-    { id: 5, text: 'Borang penyelarasan markah sebelum pemeriksaan diisi dengan lengkap (jika berkenaan)' },
-    { id: 6, text: 'Pemeriksaan dan proses moderasi markah pentaksiran berterusan dijalankan mengikut prosedur' },
-    { id: 7, text: 'Borang Moderasi (LAM PT04-02) diisi oleh panel moderasi dan ditandatangani oleh Ketua Pemeriksa' },
-    { id: 8, text: 'Penentuan markah akhir dibuat berdasarkan prosedur (Rujuk Buku Panduan Pentaksiran)' },
-    { id: 9, text: 'Borang markah pentaksiran berterusan (LAM PT04-01) diisi dengan lengkap dan tepat serta disemak oleh Ketua Jabatan Akademik' },
-    { id: 10, text: 'Taburan markah pentaksiran berterusan mestilah sekurang-kurangnya terdiri daripada tiga gred merentasi dua kategori gred (Cth: A, A- dan B) dan tidak terlalu terpencong. Jika taburan sebaliknya pensyarah perlu menyatakan justifikasi dalam Laporan Panel Pemeriksa Kerja Kursus (LAM PT04-03)' },
-    { id: 11, text: 'Laporan Panel Pemeriksa Pentaksiran Berterusan (LAM PT04-03) disediakan dengan lengkap' },
-    { id: 12, text: 'Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)' }
-  ];
+        // Data Soalan Moderasi
+        const soalanModerasi = [
+            "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
+            "Pemilihan sampel dan penyelarasan skema pemarkahan dilaksanakan",
+            "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan",
+            "Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar",
+            "Borang penyelarasan markah sebelum pemeriksaan diisi lengkap",
+            "Pemeriksaan dan proses moderasi markah dijalankan mengikut prosedur",
+            "Borang Moderasi (LAM PT04-02) diisi dan ditandatangani",
+            "Penentuan markah akhir dibuat berdasarkan prosedur",
+            "Borang markah pentaksiran berterusan diisi dengan lengkap dan disemak",
+            "Taburan markah terdiri sekurang-kurangnya tiga gred merentasi dua kategori",
+            "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap",
+            "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
+        ];
 
-  // ============================================================================
-  // INITIALIZATION
-  // ============================================================================
-  
-  let uploadedFiles = { pr: [], mod: [] };
-
-  document.addEventListener('DOMContentLoaded', function() {
-    generateKodVerifikasi();
-    renderPerancanganChecklist();
-    renderModerasiChecklist();
-    setupDragDrop('pr');
-    setupDragDrop('mod');
-  });
-
-  function generateKodVerifikasi() {
-    const prKod = 'VER-PR-' + Date.now().toString(36).toUpperCase();
-    const modKod = 'VER-MOD-' + Date.now().toString(36).toUpperCase();
-    document.getElementById('pr_kodVerifikasi').value = prKod;
-    document.getElementById('mod_kodVerifikasi').value = modKod;
-  }
-
-  function renderPerancanganChecklist() {
-    const jstContainer = document.getElementById('pr_checklist_jst');
-    const tugasanContainer = document.getElementById('pr_checklist_tugasan');
-    const rubrikContainer = document.getElementById('pr_checklist_rubrik');
-
-    jstContainer.innerHTML = perancanganItems.jst.map(item => createChecklistRow(item, 'pr')).join('');
-    tugasanContainer.innerHTML = perancanganItems.tugasan.map(item => createChecklistRow(item, 'pr')).join('');
-    rubrikContainer.innerHTML = perancanganItems.rubrik.map(item => createChecklistRow(item, 'pr')).join('');
-  }
-
-  function renderModerasiChecklist() {
-    const container = document.getElementById('mod_checklist_main');
-    container.innerHTML = moderasiItems.map(item => createChecklistRowMod(item)).join('');
-  }
-
-  function createChecklistRow(item, prefix) {
-    const noteHtml = item.note ? `<div class="item-note">${item.note.replace(/\n/g, '<br>')}</div>` : '';
-    const noteFullHtml = item.noteFull ? `<div class="item-note">${item.noteFull}</div>` : '';
-    
-    return `
-      <tr>
-        <td><span class="item-number">${item.id}.</span></td>
-        <td>
-          <div class="item-text">${item.text}</div>
-          ${noteHtml}
-          ${noteFullHtml}
-        </td>
-        <td>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="${prefix}_item${item.id}" value="Ya">
-              <span class="radio-label ya">Ya</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="${prefix}_item${item.id}" value="Tidak">
-              <span class="radio-label tidak">Tidak</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="${prefix}_item${item.id}" value="Tidak Berkaitan">
-              <span class="radio-label tidak-berkaitan">Tidak Berkaitan</span>
-            </label>
-          </div>
-        </td>
-        <td>
-          <textarea class="catatan-input" id="${prefix}_item${item.id}Catatan" placeholder="Catatan..."></textarea>
-        </td>
-      </tr>
-    `;
-  }
-
-  function createChecklistRowMod(item) {
-    let dateHtml = '';
-    if (item.hasDate) {
-      dateHtml = `
-        <div style="margin-top:8px; display:flex; align-items:center; gap:8px;">
-          <label style="font-size:0.8rem; color:var(--text-secondary); margin:0;">${item.dateLabel}</label>
-          <input type="date" class="form-control" id="mod_item${item.id}Tarikh" style="padding:8px; font-size:0.85rem;">
-        </div>
-      `;
-    }
-    
-    return `
-      <tr>
-        <td><span class="item-number">${item.id}.</span></td>
-        <td>
-          <div class="item-text">${item.text}</div>
-        </td>
-        <td>
-          <div class="radio-group">
-            <label class="radio-option">
-              <input type="radio" name="mod_item${item.id}" value="Ya">
-              <span class="radio-label ya">Ya</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="mod_item${item.id}" value="Tidak">
-              <span class="radio-label tidak">Tidak</span>
-            </label>
-            <label class="radio-option">
-              <input type="radio" name="mod_item${item.id}" value="Tidak Berkaitan">
-              <span class="radio-label tidak-berkaitan">Tidak Berkaitan</span>
-            </label>
-          </div>
-          ${dateHtml}
-        </td>
-        <td>
-          <textarea class="catatan-input" id="mod_item${item.id}Catatan" placeholder="Catatan..."></textarea>
-        </td>
-      </tr>
-    `;
-  }
-
-  // ============================================================================
-  // TAB SWITCHING
-  // ============================================================================
-  
-  function switchTab(tab) {
-    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-    
-    document.getElementById('tab-' + tab).classList.add('active');
-    event.target.classList.add('active');
-  }
-
-  // ============================================================================
-  // FILE UPLOAD
-  // ============================================================================
-  
-  function setupDragDrop(prefix) {
-    const area = document.getElementById(prefix + 'UploadArea');
-    
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      area.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      });
-    });
-    
-    ['dragenter', 'dragover'].forEach(eventName => {
-      area.addEventListener(eventName, () => area.classList.add('dragover'));
-    });
-    
-    ['dragleave', 'drop'].forEach(eventName => {
-      area.addEventListener(eventName, () => area.classList.remove('dragover'));
-    });
-    
-    area.addEventListener('drop', (e) => {
-      const files = e.dataTransfer.files;
-      handleFiles(files, prefix);
-    });
-  }
-
-  function handleFileSelect(input, prefix) {
-    handleFiles(input.files, prefix);
-  }
-
-  function handleFiles(files, prefix) {
-    for (let file of files) {
-      if (file.size > 10 * 1024 * 1024) {
-        showToast('❌ Fail ' + file.name + ' melebihi 10MB', 'error');
-        continue;
-      }
-      uploadedFiles[prefix].push(file);
-    }
-    renderFileList(prefix);
-  }
-
-  function renderFileList(prefix) {
-    const container = document.getElementById(prefix + 'FileList');
-    container.innerHTML = uploadedFiles[prefix].map((file, index) => `
-      <div class="file-item">
-        <div class="file-name">
-          📄 ${file.name} <span style="color:var(--text-secondary); font-size:0.8rem;">(${(file.size / 1024).toFixed(1)} KB)</span>
-        </div>
-        <button type="button" class="file-remove" onclick="removeFile('${prefix}', ${index})">✕</button>
-      </div>
-    `).join('');
-  }
-
-  function removeFile(prefix, index) {
-    uploadedFiles[prefix].splice(index, 1);
-    renderFileList(prefix);
-  }
-
-  function fileToBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  async function uploadFiles(prefix, kodVerifikasi, fasaName) {
-    const files = uploadedFiles[prefix];
-    if (files.length === 0) return { success: true, uploaded: [] };
-
-    const progressBar = document.getElementById(prefix + 'ProgressBar');
-    const progressFill = document.getElementById(prefix + 'ProgressFill');
-    progressBar.style.display = 'block';
-
-    const uploaded = [];
-    
-    for (let i = 0; i < files.length; i++) {
-      const progress = ((i + 1) / files.length) * 100;
-      progressFill.style.width = progress + '%';
-
-      try {
-        const base64 = await fileToBase64(files[i]);
-        const result = await new Promise((resolve) => {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(err => resolve({ success: false, message: err }))
-            .uploadFileToDrive(base64, files[i].name, kodVerifikasi, fasaName);
-        });
-
-        if (result.success) {
-          uploaded.push({ fileName: result.fileName, fileUrl: result.fileUrl });
-        } else {
-          showToast('❌ Gagal memuat naik: ' + files[i].name, 'error');
+        // Fungsi Menjana Jadual Dinamik
+        function generateTable(tableId, dataArray, prefix) {
+            const tbody = document.getElementById(tableId);
+            let html = '';
+            
+            dataArray.forEach((item, index) => {
+                const num = index + 1;
+                html += `
+                <tr>
+                    <td>${num}.</td>
+                    <td>${item}</td>
+                    <td>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="${prefix}_${num}_status" value="TB"> TB
+                            </label>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="text" id="${prefix}_${num}_catatan" placeholder="Catatan...">
+                    </td>
+                </tr>`;
+            });
+            tbody.innerHTML = html;
         }
-      } catch (e) {
-        showToast('❌ Ralat: ' + e.message, 'error');
-      }
-    }
 
-    setTimeout(() => {
-      progressBar.style.display = 'none';
-      progressFill.style.width = '0%';
-    }, 1500);
+        // Initialize Tables
+        generateTable('tbody-perancangan', soalanPerancangan, 'perancangan');
+        generateTable('tbody-moderasi', soalanModerasi, 'moderasi');
 
-    return { success: true, uploaded };
-  }
+        let currentFasa = 'perancangan';
 
-  // ============================================================================
-  // SAVE FASA PERANCANGAN
-  // ============================================================================
-  
-  async function saveFasaPerancangan() {
-    const btn = event.target;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-    btn.disabled = true;
-
-    const data = {
-      kodVerifikasi: document.getElementById('pr_kodVerifikasi').value,
-      ipgKampus: document.getElementById('pr_ipgKampus').value,
-      kodKursus: document.getElementById('pr_kodKursus').value,
-      namaKursus: document.getElementById('pr_namaKursus').value,
-      program: document.getElementById('pr_program').value,
-      semester: document.getElementById('pr_semester').value,
-      tahun: document.getElementById('pr_tahun').value,
-      tarikhVerifikasi: document.getElementById('pr_tarikhVerifikasi').value,
-      ulasanKeseluruhan: document.getElementById('pr_ulasanKeseluruhan').value,
-      cadanganPenambahbaikan: document.getElementById('pr_cadanganPenambahbaikan').value,
-      namaVerifier: document.getElementById('pr_namaVerifier').value
-    };
-
-    // Collect checklist items
-    [...perancanganItems.jst, ...perancanganItems.tugasan, ...perancementItems.rubrik].forEach(item => {
-      const radios = document.querySelectorAll(`input[name="pr_item${item.id}"]`);
-      radios.forEach(radio => {
-        if (radio.checked) data['item' + item.id] = radio.value;
-      });
-      const catatan = document.getElementById('pr_item' + item.id + 'Catatan');
-      if (catatan) data['item' + item.id + 'Catatan'] = catatan.value;
-    });
-
-    // Fix: correct typo
-    [...perancanganItems.jst, ...perancanganItems.tugasan, ...perancanganItems.rubrik].forEach(item => {
-      const radios = document.querySelectorAll(`input[name="pr_item${item.id}"]`);
-      radios.forEach(radio => {
-        if (radio.checked) data['item' + item.id] = radio.value;
-      });
-      const catatanEl = document.getElementById('pr_item' + item.id + 'Catatan');
-      if (catatanEl) data['item' + item.id + 'Catatan'] = catatanEl.value;
-    });
-
-    // Validate
-    if (!data.ipgKampus || !data.kodKursus || !data.namaKursus) {
-      showToast('⚠️ Sila lengkapkan maklumat asas terlebih dahulu', 'error');
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-      return;
-    }
-
-    // Upload files first
-    const uploadResult = await uploadFiles('pr', data.kodVerifikasi, 'FASA PERANCANGAN');
-
-    // Save to spreadsheet
-    google.script.run
-      .withSuccessHandler(response => {
-        if (response.success) {
-          showToast('✅ ' + response.message, 'success');
-          if (uploadResult.uploaded.length > 0) {
-            showToast('📁 ' + uploadResult.uploaded.length + ' fail berjaya dimuat naik ke Google Drive', 'info');
-          }
-        } else {
-          showToast('❌ ' + response.message, 'error');
+        // Tab Switcher
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            currentFasa = tab;
         }
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      })
-      .withFailureHandler(err => {
-        showToast('❌ Ralat: ' + err.message, 'error');
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      })
-      .saveFasaPerancangan(data);
-  }
 
-  // ============================================================================
-  // SAVE FASA MODERASI
-  // ============================================================================
-  
-  async function saveFasaModerasi() {
-    const btn = event.target;
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<span class="spinner"></span> Menyimpan...';
-    btn.disabled = true;
-
-    const data = {
-      kodVerifikasi: document.getElementById('mod_kodVerifikasi').value,
-      ipgKampus: document.getElementById('mod_ipgKampus').value,
-      kodKursus: document.getElementById('mod_kodKursus').value,
-      namaKursus: document.getElementById('mod_namaKursus').value,
-      program: document.getElementById('mod_program').value,
-      semester: document.getElementById('mod_semester').value,
-      tahun: document.getElementById('mod_tahun').value,
-      tarikhVerifikasi: document.getElementById('mod_tarikhVerifikasi').value,
-      ulasanKeseluruhan: document.getElementById('mod_ulasanKeseluruhan').value,
-      cadanganPenambahbaikan: document.getElementById('mod_cadanganPenambahbaikan').value,
-      namaVerifier: document.getElementById('mod_namaVerifier').value
-    };
-
-    moderasiItems.forEach(item => {
-      const radios = document.querySelectorAll(`input[name="mod_item${item.id}"]`);
-      radios.forEach(radio => {
-        if (radio.checked) data['item' + item.id] = radio.value;
-      });
-      const catatanEl = document.getElementById('mod_item' + item.id + 'Catatan');
-      if (catatanEl) data['item' + item.id + 'Catatan'] = catatanEl.value;
-      if (item.hasDate) {
-        const dateEl = document.getElementById('mod_item' + item.id + 'Tarikh');
-        if (dateEl) data['item' + item.id + 'Tarikh'] = dateEl.value;
-      }
-    });
-
-    if (!data.ipgKampus || !data.kodKursus || !data.namaKursus) {
-      showToast('⚠️ Sila lengkapkan maklumat asas terlebih dahulu', 'error');
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-      return;
-    }
-
-    const uploadResult = await uploadFiles('mod', data.kodVerifikasi, 'FASA SELEPAS MODERASI');
-
-    google.script.run
-      .withSuccessHandler(response => {
-        if (response.success) {
-          showToast('✅ ' + response.message, 'success');
-          if (uploadResult.uploaded.length > 0) {
-            showToast('📁 ' + uploadResult.uploaded.length + ' fail berjaya dimuat naik ke Google Drive', 'info');
-          }
-        } else {
-          showToast('❌ ' + response.message, 'error');
+        // Fungsi Convert File ke Base64
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+            });
         }
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      })
-      .withFailureHandler(err => {
-        showToast('❌ Ralat: ' + err.message, 'error');
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-      })
-      .saveFasaModerasi(data);
-  }
 
-  // ============================================================================
-  // PRINT & RESET
-  // ============================================================================
-  
-  function printForm(prefix) {
-    window.print();
-  }
+        // Fungsi Utama Hantar Data
+        async function submitData() {
+            // Pengesahan ringkas
+            if(!document.getElementById('ipgKampus').value || !document.getElementById('kodKursus').value) {
+                alert("Sila isi sekurang-kurangnya IPG Kampus dan Kod Kursus.");
+                return;
+            }
 
-  function resetForm(prefix) {
-    if (!confirm('Adakah anda pasti mahu reset borang ini? Semua data akan dipadam.')) return;
-    
-    const formId = prefix === 'pr' ? 'formPerancangan' : 'formModerasi';
-    document.getElementById(formId).reset();
-    uploadedFiles[prefix] = [];
-    document.getElementById(prefix + 'FileList').innerHTML = '';
-    
-    if (prefix === 'pr') {
-      document.getElementById('pr_kodVerifikasi').value = 'VER-PR-' + Date.now().toString(36).toUpperCase();
-    } else {
-      document.getElementById('mod_kodVerifikasi').value = 'VER-MOD-' + Date.now().toString(36).toUpperCase();
-    }
-    
-    showToast('🔄 Borang telah direset', 'info');
-  }
+            document.getElementById('loader').style.display = 'flex';
 
-  // ============================================================================
-  // TOAST NOTIFICATIONS
-  // ============================================================================
-  
-  function showToast(message, type = 'info') {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${message}</span>`;
-    container.appendChild(toast);
-    
-    setTimeout(() => {
-      toast.remove();
-    }, 5000);
-  }
-</script>
+            let payload = {
+                fasa: currentFasa,
+                ipgKampus: document.getElementById('ipgKampus').value,
+                kodKursus: document.getElementById('kodKursus').value,
+                namaKursus: document.getElementById('namaKursus').value,
+                program: document.getElementById('program').value,
+                semesterTahun: document.getElementById('semesterTahun').value,
+                tarikhVerifikasi: document.getElementById('tarikhVerifikasi').value,
+                ulasan: document.getElementById('ulasan').value,
+                cadangan: document.getElementById('cadangan').value,
+                namaPenilai: document.getElementById('namaPenilai').value
+            };
 
+            if(currentFasa === 'moderasi') {
+                payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
+            }
+
+            // Kumpul data radio button & catatan
+            const limit = currentFasa === 'perancangan' ? 21 : 12;
+            for(let i = 1; i <= limit; i++) {
+                const radios = document.getElementsByName(`${currentFasa}_${i}_status`);
+                let selectedValue = "";
+                for (const radio of radios) {
+                    if (radio.checked) selectedValue = radio.value;
+                }
+                payload[`item_${i}_status`] = selectedValue;
+                payload[`item_${i}_catatan`] = document.getElementById(`${currentFasa}_${i}_catatan`).value;
+            }
+
+            // Urus Fail (Jika Ada)
+            const fileInput = document.getElementById('failBukti');
+            if(fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                payload.fileName = file.name;
+                payload.mimeType = file.type;
+                payload.fileData = await getBase64(file);
+            }
+
+            // Hantar ke Google Apps Script via POST
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                document.getElementById('loader').style.display = 'none';
+                if(result.status === 'success') {
+                    alert('Data berjaya dihantar dan disimpan ke sistem!');
+                    // Pilihan: Reset form selepas berjaya
+                    // window.location.reload(); 
+                } else {
+                    alert('Ralat: ' + result.message);
+                }
+            } catch (error) {
+                document.getElementById('loader').style.display = 'none';
+                alert('Terdapat ralat semasa menghantar data. Sila semak konsol.');
+                console.error(error);
+            }
+        }
+    </script>
 </body>
 </html>
-
-
-
-              <script>
-                              // ============================================================================
-// CONFIG - Sila tukar ID Spreadsheet dan Drive Folder di bawah
-// ============================================================================
-const SPREADSHEET_ID = '1N8fz2FSP6ypJcK0BN3BacSThdcZ7ckROVvVvoinj2sw';
-const DRIVE_FOLDER_ID = '1A7NiVQVSfUlRI0vVue2NOuNYN8EqHypR';
-
-// ============================================================================
-// doGet - Serve Web App
-// ============================================================================
-function doGet() {
-  return HtmlService.createTemplateFromFile('Index')
-    .evaluate()
-    .setTitle('Sistem Verifikasi PD - IPG Malaysia')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1');
-}
-
-// ============================================================================
-// SETUP SPREADSHEET - Jalankan fungsi ini sekali sahaja untuk setup header
-// ============================================================================
-function setupSpreadsheet() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  
-  // FASA PERANCANGAN
-  let sheet1 = ss.getSheetByName('FASA PERANCANGAN');
-  if (!sheet1) {
-    sheet1 = ss.insertSheet('FASA PERANCANGAN');
-  } else {
-    sheet1.clear();
-  }
-  
-  const headersPerancangan = [
-    'Timestamp',
-    'Kod Verifikasi',
-    'IPG Kampus',
-    'Kod Kursus',
-    'Nama Kursus',
-    'Program',
-    'Semester',
-    'Tahun',
-    'Tarikh Verifikasi',
-    // Items 1-21
-    '1_Pensyarah_Arahan_Jelas',
-    '1_Pensyarah_Arahan_Catatan',
-    '2_JST_Format',
-    '2_JST_Catatan',
-    '3_Tempoh_Pelaksanaan',
-    '3_Tempoh_Catatan',
-    '4_JPP_Matriks',
-    '4_JPP_Catatan',
-    '5_HPK_Matriks',
-    '5_HPK_Catatan',
-    '6_Objektif_HPK',
-    '6_Objektif_Catatan',
-    '7_Wajaran_Markah',
-    '7_Wajaran_Catatan',
-    '8_Aspek_Kriteria',
-    '8_Aspek_Catatan',
-    '9_Elemen_Tugasan',
-    '9_Elemen_Catatan',
-    '10_Kapasiti_Pedagogi',
-    '10_Kapasiti_Catatan',
-    '11_KBAT_HPK',
-    '11_KBAT_Catatan',
-    '12_Domain_Kognitif',
-    '12_Domain_Catatan',
-    '13_Domain_Psikomotor',
-    '13_Domain_Catatan',
-    '14_Domain_Afektif',
-    '14_Domain_Catatan',
-    '15_Domain_Kemahiran',
-    '15_Domain_Catatan',
-    '16_Soalan_Disemak',
-    '16_Soalan_Catatan',
-    '17_Rubrik_JST',
-    '17_Rubrik_Catatan',
-    '18_Rubrik_Kognitif',
-    '18_Rubrik_Catatan',
-    '19_Rubrik_Psikomotor',
-    '19_Rubrik_Catatan',
-    '20_Rubrik_Afektif',
-    '20_Rubrik_Catatan',
-    '21_Rubrik_Kemahiran',
-    '21_Rubrik_Catatan',
-    'Ulasan_Keseluruhan',
-    'Cadangan_Penambahbaikan',
-    'Nama_Verifier',
-    'Status'
-  ];
-  
-  sheet1.getRange(1, 1, 1, headersPerancangan.length).setValues([headersPerancangan]);
-  sheet1.getRange(1, 1, 1, headersPerancangan.length)
-    .setBackground('#1a365d')
-    .setFontColor('#ffffff')
-    .setFontWeight('bold')
-    .setFontSize(10);
-  sheet1.setFrozenRows(1);
-  
-  // FASA SELEPAS MODERASI
-  let sheet2 = ss.getSheetByName('FASA SELEPAS MODERASI');
-  if (!sheet2) {
-    sheet2 = ss.insertSheet('FASA SELEPAS MODERASI');
-  } else {
-    sheet2.clear();
-  }
-  
-  const headersModerasi = [
-    'Timestamp',
-    'Kod Verifikasi',
-    'IPG Kampus',
-    'Kod Kursus',
-    'Nama Kursus',
-    'Program',
-    'Semester',
-    'Tahun',
-    'Tarikh Verifikasi',
-    // Items 1-12
-    '1_Pelajar_Taklimat',
-    '1_Pelajar_Tarikh',
-    '1_Pelajar_Catatan',
-    '2_Pemilihan_Sampel',
-    '2_Pemilihan_Catatan',
-    '3_Tugasan_Disemak',
-    '3_Tugasan_Catatan',
-    '4_Komen_Pemeriksa',
-    '4_Komen_Catatan',
-    '5_Borang_Penyelarasan',
-    '5_Borang_Catatan',
-    '6_Moderasi_Prosedur',
-    '6_Moderasi_Catatan',
-    '7_Borang_Moderasi',
-    '7_Borang_Catatan',
-    '8_Markah_Akhir',
-    '8_Markah_Catatan',
-    '9_Borang_Pentaksiran',
-    '9_Borang_Catatan',
-    '10_Taburan_Gred',
-    '10_Taburan_Catatan',
-    '11_Laporan_Pemeriksa',
-    '11_Laporan_Catatan',
-    '12_Laporan_Gagal',
-    '12_Laporan_Catatan',
-    'Ulasan_Keseluruhan',
-    'Cadangan_Penambahbaikan',
-    'Nama_Verifier',
-    'Status'
-  ];
-  
-  sheet2.getRange(1, 1, 1, headersModerasi.length).setValues([headersModerasi]);
-  sheet2.getRange(1, 1, 1, headersModerasi.length)
-    .setBackground('#1a365d')
-    .setFontColor('#ffffff')
-    .setFontWeight('bold')
-    .setFontSize(10);
-  sheet2.setFrozenRows(1);
-  
-  // SHEET FILE UPLOADS
-  let sheet3 = ss.getSheetByName('FILE_UPLOADS');
-  if (!sheet3) {
-    sheet3 = ss.insertSheet('FILE_UPLOADS');
-  } else {
-    sheet3.clear();
-  }
-  
-  const headersFiles = [
-    'Timestamp',
-    'Kod Verifikasi',
-    'Fasa',
-    'Nama Fail',
-    'Jenis Fail',
-    'URL Google Drive',
-    'Saiz (bytes)'
-  ];
-  
-  sheet3.getRange(1, 1, 1, headersFiles.length).setValues([headersFiles]);
-  sheet3.getRange(1, 1, 1, headersFiles.length)
-    .setBackground('#1a365d')
-    .setFontColor('#ffffff')
-    .setFontWeight('bold')
-    .setFontSize(10);
-  sheet3.setFrozenRows(1);
-  
-  return '✅ Spreadsheet berjaya disetup dengan header yang diperlukan!';
-}
-
-// ============================================================================
-// SAVE FORM DATA - FASA PERANCANGAN
-// ============================================================================
-function saveFasaPerancangan(data) {
-  try {
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName('FASA PERANCANGAN');
-    
-    const rowData = [
-      new Date(),
-      data.kodVerifikasi,
-      data.ipgKampus,
-      data.kodKursus,
-      data.namaKursus,
-      data.program,
-      data.semester,
-      data.tahun,
-      data.tarikhVerifikasi,
-      data.item1 || 'Tidak', data.item1Catatan || '',
-      data.item2 || 'Tidak', data.item2Catatan || '',
-      data.item3 || 'Tidak', data.item3Catatan || '',
-      data.item4 || 'Tidak', data.item4Catatan || '',
-      data.item5 || 'Tidak', data.item5Catatan || '',
-      data.item6 || 'Tidak', data.item6Catatan || '',
-      data.item7 || 'Tidak', data.item7Catatan || '',
-      data.item8 || 'Tidak', data.item8Catatan || '',
-      data.item9 || 'Tidak', data.item9Catatan || '',
-      data.item10 || 'Tidak', data.item10Catatan || '',
-      data.item11 || 'Tidak', data.item11Catatan || '',
-      data.item12 || 'Tidak', data.item12Catatan || '',
-      data.item13 || 'Tidak', data.item13Catatan || '',
-      data.item14 || 'Tidak', data.item14Catatan || '',
-      data.item15 || 'Tidak', data.item15Catatan || '',
-      data.item16 || 'Tidak', data.item16Catatan || '',
-      data.item17 || 'Tidak', data.item17Catatan || '',
-      data.item18 || 'Tidak', data.item18Catatan || '',
-      data.item19 || 'Tidak', data.item19Catatan || '',
-      data.item20 || 'Tidak', data.item20Catatan || '',
-      data.item21 || 'Tidak', data.item21Catatan || '',
-      data.ulasanKeseluruhan || '',
-      data.cadanganPenambahbaikan || '',
-      data.namaVerifier || '',
-      'Disimpan'
-    ];
-    
-    sheet.appendRow(rowData);
-    
-    return {
-      success: true,
-      message: '✅ Data Fasa Perancangan berjaya disimpan!',
-      kodVerifikasi: data.kodVerifikasi
-    };
-  } catch (e) {
-    return {
-      success: false,
-      message: '❌ Ralat: ' + e.toString()
-    };
-  }
-}
-
-// ============================================================================
-// SAVE FORM DATA - FASA SELEPAS MODERASI
-// ============================================================================
-function saveFasaModerasi(data) {
-  try {
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName('FASA SELEPAS MODERASI');
-    
-    const rowData = [
-      new Date(),
-      data.kodVerifikasi,
-      data.ipgKampus,
-      data.kodKursus,
-      data.namaKursus,
-      data.program,
-      data.semester,
-      data.tahun,
-      data.tarikhVerifikasi,
-      data.item1 || 'Tidak', data.item1Tarikh || '', data.item1Catatan || '',
-      data.item2 || 'Tidak', data.item2Catatan || '',
-      data.item3 || 'Tidak', data.item3Catatan || '',
-      data.item4 || 'Tidak', data.item4Catatan || '',
-      data.item5 || 'Tidak', data.item5Catatan || '',
-      data.item6 || 'Tidak', data.item6Catatan || '',
-      data.item7 || 'Tidak', data.item7Catatan || '',
-      data.item8 || 'Tidak', data.item8Catatan || '',
-      data.item9 || 'Tidak', data.item9Catatan || '',
-      data.item10 || 'Tidak', data.item10Catatan || '',
-      data.item11 || 'Tidak', data.item11Catatan || '',
-      data.item12 || 'Tidak', data.item12Catatan || '',
-      data.ulasanKeseluruhan || '',
-      data.cadanganPenambahbaikan || '',
-      data.namaVerifier || '',
-      'Disimpan'
-    ];
-    
-    sheet.appendRow(rowData);
-    
-    return {
-      success: true,
-      message: '✅ Data Fasa Selepas Moderasi berjaya disimpan!',
-      kodVerifikasi: data.kodVerifikasi
-    };
-  } catch (e) {
-    return {
-      success: false,
-      message: '❌ Ralat: ' + e.toString()
-    };
-  }
-}
-
-// ============================================================================
-// UPLOAD FILE TO GOOGLE DRIVE
-// ============================================================================
-function uploadFileToDrive(base64Data, fileName, kodVerifikasi, fasa) {
-  try {
-    const folder = DriveApp.getFolderById(DRIVE_FOLDER_ID);
-    
-    // Create subfolder if not exists
-    let subFolder;
-    const subFolderName = kodVerifikasi;
-    const folders = folder.getFoldersByName(subFolderName);
-    if (folders.hasNext()) {
-      subFolder = folders.next();
-    } else {
-      subFolder = folder.createFolder(subFolderName);
-    }
-    
-    // Decode base64
-    const contentType = base64Data.substring(5, base64Data.indexOf(';'));
-    const bytes = Utilities.base64Decode(base64Data.substr(base64Data.indexOf('base64,') + 7));
-    const blob = Utilities.newBlob(bytes, contentType, fileName);
-    
-    const file = subFolder.createFile(blob);
-    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-    
-    // Log to spreadsheet
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheetFiles = ss.getSheetByName('FILE_UPLOADS');
-    sheetFiles.appendRow([
-      new Date(),
-      kodVerifikasi,
-      fasa,
-      fileName,
-      contentType,
-      file.getUrl(),
-      blob.getBytes().length
-    ]);
-    
-    return {
-      success: true,
-      fileUrl: file.getUrl(),
-      fileId: file.getId(),
-      fileName: fileName
-    };
-  } catch (e) {
-    return {
-      success: false,
-      message: '❌ Ralat upload: ' + e.toString()
-    };
-  }
-}
-
-// ============================================================================
-// GENERATE VERIFICATION CODE
-// ============================================================================
-function generateKodVerifikasi() {
-  const timestamp = new Date();
-  const year = timestamp.getFullYear();
-  const month = String(timestamp.getMonth() + 1).padStart(2, '0');
-  const day = String(timestamp.getDate()).padStart(2, '0');
-  const random = String(Math.floor(Math.random() * 1000)).padStart(3, '0');
-  return `VER-${year}${month}${day}-${random}`;
-}
-
-// ============================================================================
-// GET ALL SUBMISSIONS (for admin view)
-// ============================================================================
-function getAllSubmissions(fasa) {
-  try {
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    const sheet = ss.getSheetByName(fasa === 'perancangan' ? 'FASA PERANCANGAN' : 'FASA SELEPAS MODERASI');
-    
-    const data = sheet.getDataRange().getValues();
-    const headers = data[0];
-    const rows = data.slice(1);
-    
-    const result = rows.map(row => {
-      const obj = {};
-      headers.forEach((header, i) => {
-        obj[header] = row[i];
-      });
-      return obj;
-    });
-    
-    return { success: true, data: result };
-  } catch (e) {
-    return { success: false, message: e.toString() };
-  }
-}
-
-
-              </script>
-                        </body>
-                        </html>
-                    
