@@ -43,7 +43,7 @@
         }
 
         .glass-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
@@ -151,6 +151,7 @@
         }
 
         input[type="text"], 
+        input[type="url"],
         input[type="date"], 
         select, 
         textarea {
@@ -169,6 +170,18 @@
             outline: none;
             border-bottom-color: var(--primary);
             background: rgba(255, 255, 255, 0.1);
+        }
+
+        .link-input {
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 8px !important;
+            font-size: 0.85rem;
+            padding: 0.6rem !important;
+        }
+        
+        .link-input:focus {
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
 
         textarea {
@@ -193,6 +206,7 @@
             padding: 1rem;
             text-align: left;
             border-bottom: 1px solid var(--glass-border);
+            vertical-align: top;
         }
 
         th {
@@ -305,6 +319,8 @@
             background: rgba(0,0,0,0.2);
             border-radius: 8px;
             cursor: pointer;
+            width: 100%;
+            color: #fff;
         }
 
         /* Loading Overlay */
@@ -336,6 +352,7 @@
             .glass-container { 
                 background: none; border: none; box-shadow: none; padding: 0; 
                 backdrop-filter: none; -webkit-backdrop-filter: none;
+                max-width: 100%;
             }
             .header-section h1, label, th { color: #000 !important; -webkit-text-fill-color: #000; }
             .tabs, .action-area, .file-upload { display: none !important; }
@@ -410,9 +427,10 @@
                     <thead>
                         <tr>
                             <th width="5%">Bil.</th>
-                            <th width="45%">Perkara</th>
-                            <th width="25%">Status</th>
-                            <th width="25%">Catatan</th>
+                            <th width="35%">Perkara</th>
+                            <th width="20%">Status</th>
+                            <th width="20%">Catatan</th>
+                            <th width="20%">Bahan Bukti (Pautan/Link)</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-perancangan">
@@ -434,9 +452,10 @@
                     <thead>
                         <tr>
                             <th width="5%">Bil.</th>
-                            <th width="45%">Perkara</th>
-                            <th width="25%">Status</th>
-                            <th width="25%">Catatan</th>
+                            <th width="35%">Perkara</th>
+                            <th width="20%">Status</th>
+                            <th width="20%">Catatan</th>
+                            <th width="20%">Bahan Bukti (Pautan/Link)</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-moderasi">
@@ -460,7 +479,7 @@
             </div>
             
             <div class="input-group file-upload">
-                <label>Muat Naik Fail Bukti (Jika Ada)</label>
+                <label>Muat Naik Laporan / Fail Utama Keseluruhan (Jika Ada)</label>
                 <input type="file" id="failBukti">
             </div>
         </div>
@@ -482,45 +501,45 @@
         // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxERLzqWfS5xjhVHp0fCU0WfldhVwotSQQZHKNrBlfMv7YYj2t_--0f7QkymlHwi-LO/exec';
 
-        // Data Soalan Perancangan
+        // Data Soalan Perancangan (Disusun mengikut permintaan pautan)
         const soalanPerancangan = [
-            "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan",
-            "JST yang disediakan mengikut format yang ditetapkan",
-            "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan",
-            "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran",
-            "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran",
-            "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK)",
-            "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
-            "Aspek/Kriteria penilaian dinyatakan dengan jelas",
-            "Tugasan mempunyai elemen: Rangsangan, Soalan tugasan, Arahan pentadbiran",
-            "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, dll)",
-            "Tugasan mencapai Kemahiran Berfikir Aras Tinggi (KBAT)",
-            "Domain kognitif diuji dalam tugasan",
-            "Domain psikomotor diuji dalam tugasan (jika berkenaan)",
-            "Domain afektif diuji dalam tugasan (jika berkenaan)",
-            "Domain kemahiran insaniah diuji (jika berkenaan)",
-            "Soalan tugasan telah disemak oleh Pakar Bidang/Penyelaras",
-            "Rubrik pemarkahan holistik/analitik selari dengan JST",
-            "Skema/Rubrik mengukur domain kognitif",
-            "Skema/Rubrik mengukur domain psikomotor",
-            "Skema/Rubrik mengukur domain afektif",
-            "Skema/Rubrik mengukur domain kemahiran insaniah"
+            { text: "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan", link: false },
+            { text: "JST yang disediakan mengikut format yang ditetapkan", link: true },
+            { text: "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan", link: false },
+            { text: "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran", link: false },
+            { text: "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran", link: false },
+            { text: "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK)", link: false },
+            { text: "Wajaran markah tugasan mengikut wajaran dalam RMK/MK", link: false },
+            { text: "Aspek/Kriteria penilaian dinyatakan dengan jelas", link: false },
+            { text: "Tugasan mempunyai elemen: Rangsangan, Soalan tugasan, Arahan pentadbiran", link: false },
+            { text: "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, dll)", link: true },
+            { text: "Tugasan mencapai Kemahiran Berfikir Aras Tinggi (KBAT)", link: false },
+            { text: "Domain kognitif diuji dalam tugasan", link: false },
+            { text: "Domain psikomotor diuji dalam tugasan (jika berkenaan)", link: false },
+            { text: "Domain afektif diuji dalam tugasan (jika berkenaan)", link: false },
+            { text: "Domain kemahiran insaniah diuji (jika berkenaan)", link: false },
+            { text: "Soalan tugasan telah disemak oleh Pakar Bidang/Penyelaras", link: true },
+            { text: "Rubrik pemarkahan holistik/analitik selari dengan JST", link: true },
+            { text: "Skema/Rubrik mengukur domain kognitif", link: false },
+            { text: "Skema/Rubrik mengukur domain psikomotor", link: false },
+            { text: "Skema/Rubrik mengukur domain afektif", link: false },
+            { text: "Skema/Rubrik mengukur domain kemahiran insaniah", link: false }
         ];
 
-        // Data Soalan Moderasi
+        // Data Soalan Moderasi (Disusun mengikut permintaan pautan)
         const soalanModerasi = [
-            "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
-            "Pemilihan sampel dan penyelarasan skema pemarkahan dilaksanakan",
-            "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan",
-            "Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar",
-            "Borang penyelarasan markah sebelum pemeriksaan diisi lengkap",
-            "Pemeriksaan dan proses moderasi markah dijalankan mengikut prosedur",
-            "Borang Moderasi (LAM PT04-02) diisi dan ditandatangani",
-            "Penentuan markah akhir dibuat berdasarkan prosedur",
-            "Borang markah pentaksiran berterusan diisi dengan lengkap dan disemak",
-            "Taburan markah terdiri sekurang-kurangnya tiga gred merentasi dua kategori",
-            "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap",
-            "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
+            { text: "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah", link: false },
+            { text: "Pemilihan sampel dan penyelarasan skema pemarkahan dilaksanakan", link: false },
+            { text: "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan", link: false },
+            { text: "Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar", link: false },
+            { text: "Borang penyelarasan markah sebelum pemeriksaan diisi lengkap", link: false },
+            { text: "Pemeriksaan dan proses moderasi markah dijalankan mengikut prosedur", link: false },
+            { text: "Borang Moderasi (LAM PT04-02) diisi dan ditandatangani", link: true },
+            { text: "Penentuan markah akhir dibuat berdasarkan prosedur", link: false },
+            { text: "Borang markah pentaksiran berterusan diisi dengan lengkap dan disemak", link: true },
+            { text: "Taburan markah terdiri sekurang-kurangnya tiga gred merentasi dua kategori", link: true },
+            { text: "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap", link: false },
+            { text: "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)", link: true }
         ];
 
         // Fungsi Menjana Jadual Dinamik
@@ -533,22 +552,22 @@
                 html += `
                 <tr>
                     <td>${num}.</td>
-                    <td>${item}</td>
+                    <td>${item.text}</td>
                     <td>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="${prefix}_${num}_status" value="TB"> TB
-                            </label>
+                        <div class="radio-group" style="flex-direction:column; gap:0.3rem;">
+                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya</label>
+                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak</label>
+                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="TB"> TB</label>
                         </div>
                     </td>
                     <td>
                         <input type="text" id="${prefix}_${num}_catatan" placeholder="Catatan...">
+                    </td>
+                    <td>
+                        ${item.link ? 
+                            `<input type="url" id="${prefix}_${num}_pautan" class="link-input" placeholder="🔗 Pautan URL/Folder">` : 
+                            `<span style="color: rgba(255,255,255,0.3); font-size: 0.8rem; display:block; padding-top:0.8rem; text-align:center;">- Tidak Perlu -</span>`
+                        }
                     </td>
                 </tr>`;
             });
@@ -583,7 +602,6 @@
 
         // Fungsi Utama Hantar Data
         async function submitData() {
-            // Pengesahan ringkas
             if(!document.getElementById('ipgKampus').value || !document.getElementById('kodKursus').value) {
                 alert("Sila isi sekurang-kurangnya IPG Kampus dan Kod Kursus.");
                 return;
@@ -608,7 +626,7 @@
                 payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
             }
 
-            // Kumpul data radio button & catatan
+            // Kumpul data radio button, catatan & pautan
             const limit = currentFasa === 'perancangan' ? 21 : 12;
             for(let i = 1; i <= limit; i++) {
                 const radios = document.getElementsByName(`${currentFasa}_${i}_status`);
@@ -616,8 +634,17 @@
                 for (const radio of radios) {
                     if (radio.checked) selectedValue = radio.value;
                 }
+                
+                let catatanText = document.getElementById(`${currentFasa}_${i}_catatan`).value;
+                let pautanInput = document.getElementById(`${currentFasa}_${i}_pautan`);
+                
+                // Jika pautan diisi, kita gabungkan ia ke dalam kotak catatan supaya ia terus masuk ke Google Sheets tanpa perlukan column baharu!
+                if(pautanInput && pautanInput.value.trim() !== "") {
+                    catatanText += ` [Pautan Bukti: ${pautanInput.value.trim()}]`;
+                }
+
                 payload[`item_${i}_status`] = selectedValue;
-                payload[`item_${i}_catatan`] = document.getElementById(`${currentFasa}_${i}_catatan`).value;
+                payload[`item_${i}_catatan`] = catatanText;
             }
 
             // Urus Fail (Jika Ada)
@@ -640,8 +667,6 @@
                 document.getElementById('loader').style.display = 'none';
                 if(result.status === 'success') {
                     alert('Data berjaya dihantar dan disimpan ke sistem!');
-                    // Pilihan: Reset form selepas berjaya
-                    // window.location.reload(); 
                 } else {
                     alert('Ralat: ' + result.message);
                 }
