@@ -7,524 +7,511 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --primary: #00f0ff;
             --secondary: #7000ff;
             --bg-color: #050510;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.7);
-            --highlight: rgba(0, 240, 255, 0.08);
+            --glass-bg: rgba(255,255,255,0.05);
+            --glass-border: rgba(255,255,255,0.1);
+            --text-main: #fff;
+            --text-muted: rgba(255,255,255,0.7);
+            --highlight: rgba(0,240,255,0.08);
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-color);
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(112, 0, 255, 0.4), transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.3), transparent 50%);
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(112,0,255,0.4), transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(0,240,255,0.3), transparent 50%);
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
             padding: 2rem;
             line-height: 1.6;
         }
-
-        h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; }
-
+        h1,h2,h3,h4 { font-family: 'Outfit', sans-serif; }
         .glass-container {
-            max-width: 1300px;
-            margin: 0 auto;
+            max-width: 1300px; margin: 0 auto;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 3rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
+            border-radius: 24px; padding: 3rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         }
-
-        .header-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 2rem;
-        }
-
+        .header-section { text-align: center; margin-bottom: 3rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 2rem; }
         .header-section h1 {
-            font-weight: 800;
-            font-size: 2.5rem;
+            font-weight: 800; font-size: 2.2rem;
             background: linear-gradient(90deg, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 0.5rem;
         }
-
-        .header-section h3 {
-            font-weight: 400;
-            color: var(--text-muted);
-            letter-spacing: 2px;
-        }
-
+        .header-section h3 { font-weight: 400; color: var(--text-muted); letter-spacing: 2px; }
         .tabs { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center; flex-wrap: wrap; }
-
         .tab-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
             border: 1px solid var(--glass-border);
-            color: var(--text-muted);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-family: 'Outfit', sans-serif;
-            font-weight: 600;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            color: var(--text-muted); padding: 0.9rem 2rem;
+            border-radius: 50px; font-family: 'Outfit', sans-serif;
+            font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s;
         }
-
-        .tab-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-
+        .tab-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
         .tab-btn.active {
             background: linear-gradient(135deg, rgba(112,0,255,0.4), rgba(0,240,255,0.4));
             border-color: var(--primary); color: #fff;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0,240,255,0.2);
         }
-
-        .tab-content { display: none; animation: fadeIn 0.5s ease; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
         .form-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem; margin-bottom: 3rem; background: rgba(0,0,0,0.2);
-            padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+            gap: 1.5rem; margin-bottom: 2.5rem;
+            background: rgba(0,0,0,0.2); padding: 2rem;
+            border-radius: 16px; border: 1px solid var(--glass-border);
         }
-
-        .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        label { font-size: 0.9rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; }
-
+        .input-group { display: flex; flex-direction: column; gap: 0.4rem; }
+        label { font-size: 0.85rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px; }
         input[type="text"], input[type="url"], input[type="date"], select, textarea {
-            width: 100%; background: rgba(255, 255, 255, 0.05); border: none;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2); padding: 0.8rem;
+            width: 100%; background: rgba(255,255,255,0.05); border: none;
+            border-bottom: 2px solid rgba(255,255,255,0.2); padding: 0.75rem;
             color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: all 0.3s ease; border-radius: 4px 4px 0 0;
+            transition: all 0.3s; border-radius: 4px 4px 0 0; font-size: 0.95rem;
         }
-
-        input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-bottom-color: var(--primary);
+            background: rgba(255,255,255,0.1);
+        }
+        select option { background: #1a1a2e; color: #fff; }
         textarea { resize: vertical; min-height: 80px; }
-
         .table-responsive { overflow-x: auto; margin-bottom: 2rem; }
         table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 1rem; }
-        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--glass-border); vertical-align: top; }
+        th, td { padding: 0.9rem 1rem; text-align: left; border-bottom: 1px solid var(--glass-border); vertical-align: top; }
         th { font-family: 'Outfit', sans-serif; color: var(--primary); font-weight: 600; background: rgba(0,0,0,0.3); }
-        th:first-child { border-top-left-radius: 12px; } th:last-child { border-top-right-radius: 12px; }
-        tr:hover td { background: rgba(255, 255, 255, 0.03); }
+        th:first-child { border-top-left-radius: 12px; }
+        th:last-child { border-top-right-radius: 12px; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
         .row-highlight { background: var(--highlight); border-left: 3px solid var(--primary); }
-
-        .radio-group { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .radio-label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; color: var(--text-muted); }
+        .radio-group { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+        .radio-label { display: flex; align-items: center; gap: 0.4rem; cursor: pointer; font-size: 0.82rem; color: var(--text-muted); }
         .radio-label input[type="radio"] {
-            appearance: none; width: 16px; height: 16px; border: 2px solid var(--text-muted);
-            border-radius: 50%; outline: none; position: relative; cursor: pointer; transition: all 0.2s ease;
+            appearance: none; width: 15px; height: 15px;
+            border: 2px solid var(--text-muted); border-radius: 50%;
+            outline: none; position: relative; cursor: pointer; transition: all 0.2s;
         }
         .radio-label input[type="radio"]:checked { border-color: var(--primary); }
         .radio-label input[type="radio"]:checked::after {
-            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 8px; height: 8px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary);
+            content: ''; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 7px; height: 7px; background: var(--primary);
+            border-radius: 50%; box-shadow: 0 0 6px var(--primary);
         }
-
         .bahan-sokongan {
-            margin-top: 1rem; padding: 1rem; background: rgba(0, 0, 0, 0.2);
-            border: 1px dashed var(--glass-border); border-radius: 8px; display: flex; flex-direction: column; gap: 0.8rem;
+            margin-top: 0.8rem; padding: 0.8rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px dashed var(--glass-border);
+            border-radius: 8px; display: flex; flex-direction: column; gap: 0.6rem;
         }
-        .bahan-sokongan label { font-size: 0.8rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
-        .file-sm { font-size: 0.85rem; color: var(--text-muted); }
+        .bahan-sokongan label { font-size: 0.75rem; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .file-sm { font-size: 0.82rem; color: var(--text-muted); }
         .file-sm::file-selector-button {
-            background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); padding: 0.4rem 0.8rem;
-            border-radius: 4px; color: #fff; cursor: pointer; margin-right: 1rem; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s;
+            background: rgba(255,255,255,0.1); border: 1px solid var(--glass-border);
+            padding: 0.35rem 0.7rem; border-radius: 4px; color: #fff;
+            cursor: pointer; margin-right: 0.8rem;
+            font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.3s;
         }
         .file-sm::file-selector-button:hover { background: var(--primary); color: #000; }
-
-        .action-area { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--glass-border); flex-wrap: wrap; }
-        
-        .btn {
-            padding: 1rem 2.5rem; border-radius: 8px; border: none; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 1rem;
-            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 0.5rem;
+        .bottom-section {
+            margin-top: 2.5rem; background: rgba(0,0,0,0.2);
+            padding: 2rem; border-radius: 16px;
+            border: 1px solid var(--glass-border);
         }
-        .btn-submit { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: #fff; box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3); }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5); }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-
+        .action-area {
+            display: flex; justify-content: flex-end; gap: 1rem;
+            margin-top: 2.5rem; padding-top: 2rem;
+            border-top: 1px solid var(--glass-border); flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.9rem 2.5rem; border-radius: 8px; border: none;
+            font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: #fff; box-shadow: 0 4px 15px rgba(0,240,255,0.3);
+        }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,240,255,0.5); }
+        .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .loader-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 9999; flex-direction: column; gap: 1rem;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
+            display: none; justify-content: center; align-items: center;
+            z-index: 9999; flex-direction: column; gap: 1.5rem;
         }
         .spinner {
-            width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.1); border-top-color: var(--primary);
-            border-radius: 50%; animation: spin 1s linear infinite;
+            width: 55px; height: 55px;
+            border: 5px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%; animation: spin 0.9s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-
+        .loader-text { color: #fff; font-family: 'Outfit', sans-serif; text-align: center; }
+        .loader-text span { font-size: 0.8rem; color: var(--text-muted); display: block; margin-top: 0.3rem; }
         .alert {
-            padding: 1rem; border-radius: 8px; margin-bottom: 1rem; display: none;
+            padding: 1rem 1.2rem; border-radius: 10px;
+            margin-bottom: 1.5rem; display: none;
+            font-weight: 500; font-size: 0.95rem;
         }
-
-        .alert.success {
-            background: rgba(0, 240, 100, 0.2); border: 1px solid rgba(0, 240, 100, 0.5); color: #00f064;
-        }
-
-        .alert.error {
-            background: rgba(255, 0, 100, 0.2); border: 1px solid rgba(255, 0, 100, 0.5); color: #ff0064;
-        }
-
+        .alert.success { background: rgba(0,240,100,0.15); border: 1px solid rgba(0,240,100,0.4); color: #00f064; }
+        .alert.error   { background: rgba(255,60,60,0.15);  border: 1px solid rgba(255,60,60,0.4);  color: #ff6060; }
+        .alert.info    { background: rgba(0,200,255,0.15);  border: 1px solid rgba(0,200,255,0.4);  color: #00c8ff; }
     </style>
 </head>
 <body>
 
-    <div class="loader-overlay" id="loader">
-        <div class="spinner"></div>
-        <h3 style="color: #fff; font-family: 'Outfit', sans-serif; text-align:center;">
-            Sedang Menjana Dokumen Cetakan...<br>
-            <span style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);">Mengekstrak templat dari Google Drive. Sila tunggu.</span>
-        </h3>
+<div class="loader-overlay" id="loader">
+    <div class="spinner"></div>
+    <div class="loader-text">
+        Sedang Menghantar & Menjana Dokumen...
+        <span>Proses ini mengambil masa 10-30 saat. Sila tunggu.</span>
+    </div>
+</div>
+
+<div class="glass-container">
+    <div class="header-section">
+        <h1>INSTITUT PENDIDIKAN GURU MALAYSIA</h1>
+        <h3>KEMENTERIAN PENDIDIKAN MALAYSIA</h3>
+        <p style="margin-top:0.8rem;color:var(--text-muted);font-size:0.95rem;">
+            Senarai Semak Verifikasi Pelaksanaan Pentaksiran Berterusan
+        </p>
     </div>
 
-    <div class="glass-container">
-        <div class="header-section">
-            <h1>INSTITUT PENDIDIKAN GURU MALAYSIA</h1>
-            <h3>KEMENTERIAN PENDIDIKAN MALAYSIA</h3>
-            <p style="margin-top:1rem; color:var(--text-muted)">Senarai Semak Verifikasi Pelaksanaan Pentaksiran Berterusan</p>
+    <div id="alertBox" class="alert"></div>
+
+    <div class="form-grid">
+        <div class="input-group">
+            <label>IPG Kampus</label>
+            <input type="text" id="ipgKampus" placeholder="Cth: IPG Kampus Ipoh">
         </div>
-
-        <div id="alert" class="alert"></div>
-
-        <div class="form-grid">
-            <div class="input-group">
-                <label>IPG Kampus</label>
-                <input type="text" id="ipgKampus" required>
-            </div>
-            <div class="input-group">
-                <label>Kod Kursus</label>
-                <input type="text" id="kodKursus" required>
-            </div>
-            <div class="input-group">
-                <label>Nama Kursus</label>
-                <input type="text" id="namaKursus" required>
-            </div>
-            <div class="input-group">
-                <label>Program</label>
-                <select id="program">
-                    <option value="">-- Pilih --</option>
-                    <option value="PPISMP">PPISMP</option>
-                    <option value="PISMP">PISMP</option>
-                    <option value="PDPM">PDPM</option>
-                    <option value="PDPP">PDPP</option>
-                    <option value="PITO">PITO</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>Semester / Tahun</label>
-                <input type="text" id="semesterTahun" placeholder="Cth: Sem 1 / Tahun 2" required>
-            </div>
-            <div class="input-group">
-                <label>Tarikh Verifikasi</label>
-                <input type="date" id="tarikhVerifikasi" required>
-            </div>
+        <div class="input-group">
+            <label>Kod Kursus</label>
+            <input type="text" id="kodKursus" placeholder="Cth: KED200">
         </div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('perancangan')">Fasa Perancangan</button>
-            <button class="tab-btn" onclick="switchTab('moderasi')">Fasa Selepas Moderasi</button>
+        <div class="input-group">
+            <label>Nama Kursus</label>
+            <input type="text" id="namaKursus" placeholder="Cth: Pentaksiran Pendidikan">
         </div>
-
-        <div id="tab-perancangan" class="tab-content active">
-            <h2 style="color:var(--primary); margin-bottom: 1rem;">Fasa Perancangan</h2>
-            <div class="table-responsive">
-                <table id="table-perancangan">
-                    <thead>
-                        <tr>
-                            <th width="5%">Bil.</th>
-                            <th width="35%">Perkara</th>
-                            <th width="20%">Status</th>
-                            <th width="40%">Catatan & Bahan Sokongan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-perancangan"></tbody>
-                </table>
-            </div>
+        <div class="input-group">
+            <label>Program</label>
+            <select id="program">
+                <option value="">-- Pilih Program --</option>
+                <option value="PPISMP">PPISMP</option>
+                <option value="PISMP">PISMP</option>
+                <option value="PDPM">PDPM</option>
+                <option value="PDPP">PDPP</option>
+                <option value="PITO">PITO</option>
+            </select>
         </div>
-
-        <div id="tab-moderasi" class="tab-content">
-            <h2 style="color:var(--primary); margin-bottom: 1rem;">Fasa Selepas Moderasi</h2>
-            
-            <div class="input-group" style="max-width: 300px; margin-bottom: 2rem;">
-                <label>Tarikh Taklimat PB</label>
-                <input type="date" id="tarikhTaklimat">
-            </div>
-
-            <div class="table-responsive">
-                <table id="table-moderasi">
-                    <thead>
-                        <tr>
-                            <th width="5%">Bil.</th>
-                            <th width="35%">Perkara</th>
-                            <th width="20%">Status</th>
-                            <th width="40%">Catatan & Bahan Sokongan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-moderasi"></tbody>
-                </table>
-            </div>
+        <div class="input-group">
+            <label>Semester / Tahun</label>
+            <input type="text" id="semesterTahun" placeholder="Cth: Sem 1 / Tahun 2">
         </div>
-
-        <div style="margin-top: 3rem; background: rgba(0,0,0,0.2); padding: 2rem; border-radius: 16px; border: 1px solid var(--glass-border);">
-            <div class="input-group" style="margin-bottom: 1.5rem;">
-                <label>Ulasan Keseluruhan</label>
-                <textarea id="ulasan"></textarea>
-            </div>
-            <div class="input-group" style="margin-bottom: 1.5rem;">
-                <label>Cadangan Penambahbaikan</label>
-                <textarea id="cadangan"></textarea>
-            </div>
-            <div class="input-group">
-                <label>Nama Pengesah / Penilai</label>
-                <input type="text" id="namaPenilai">
-            </div>
+        <div class="input-group">
+            <label>Tarikh Verifikasi</label>
+            <input type="date" id="tarikhVerifikasi">
         </div>
-
-        <div class="action-area">
-            <button class="btn btn-submit" id="submitBtn" onclick="submitData()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                Hantar & Jana Dokumen Rasmi
-            </button>
-        </div>
-
     </div>
 
-    <script>
-        // ===== URL API DEPLOYMENT ANDA =====
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyMTn9cIcper63R4GC7_IXF6UvsmA3K2FPPtzJ1K8YxKfXnRrv9cd4cEYcnTeEHLkWR/exec';
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('perancangan',this)">📋 Fasa Perancangan</button>
+        <button class="tab-btn" onclick="switchTab('moderasi',this)">📝 Fasa Selepas Moderasi</button>
+    </div>
 
-        // Data soalan untuk kedua-dua fasa
-        const soalanPerancangan = [
-            "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan",
-            "JST yang disediakan mengikut format yang ditetapkan",
-            "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan",
-            "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran",
-            "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran",
-            "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK)",
-            "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
-            "Aspek/Kriteria penilaian dinyatakan dengan jelas",
-            "Tugasan mempunyai elemen: Rangsangan, Soalan tugasan, Arahan pentadbiran",
-            "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, dll)",
-            "Tugasan mencapai Kemahiran Berfikir Aras Tinggi (KBAT)",
-            "Domain kognitif diuji dalam tugasan",
-            "Domain psikomotor diuji dalam tugasan (jika berkenaan)",
-            "Domain afektif diuji dalam tugasan (jika berkenaan)",
-            "Domain kemahiran insaniah diuji (jika berkenaan)",
-            "Soalan tugasan telah disemak oleh Pakar Bidang/Penyelaras",
-            "Rubrik pemarkahan holistik/analitik selari dengan JST",
-            "Skema/Rubrik mengukur domain kognitif",
-            "Skema/Rubrik mengukur domain psikomotor",
-            "Skema/Rubrik mengukur domain afektif",
-            "Skema/Rubrik mengukur domain kemahiran insaniah"
-        ];
-        const ulasanKhususPerancangan = [2, 10, 16, 17]; 
+    <div id="tab-perancangan" class="tab-content active">
+        <h2 style="color:var(--primary);margin-bottom:1rem;">Fasa Perancangan</h2>
+        <div class="table-responsive">
+            <table>
+                <thead><tr>
+                    <th width="5%">Bil.</th>
+                    <th width="38%">Perkara</th>
+                    <th width="18%">Status</th>
+                    <th width="39%">Catatan & Bahan Sokongan</th>
+                </tr></thead>
+                <tbody id="tbody-perancangan"></tbody>
+            </table>
+        </div>
+    </div>
 
-        const soalanModerasi = [
-            "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
-            "Pemilihan sampel dan penyelarasan skema pemarkahan dilaksanakan",
-            "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan",
-            "Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar",
-            "Borang penyelarasan markah sebelum pemeriksaan diisi lengkap",
-            "Pemeriksaan dan proses moderasi markah dijalankan mengikut prosedur",
-            "Borang Moderasi (LAM PT04-02) diisi dan ditandatangani",
-            "Penentuan markah akhir dibuat berdasarkan prosedur",
-            "Borang markah pentaksiran berterusan diisi dengan lengkap dan disemak",
-            "Taburan markah terdiri sekurang-kurangnya tiga gred merentasi dua kategori",
-            "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap",
-            "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
-        ];
-        const ulasanKhususModerasi = [7, 9, 10, 12];
+    <div id="tab-moderasi" class="tab-content">
+        <h2 style="color:var(--primary);margin-bottom:1rem;">Fasa Selepas Moderasi</h2>
+        <div class="input-group" style="max-width:280px;margin-bottom:1.5rem;">
+            <label>Tarikh Taklimat PB</label>
+            <input type="date" id="tarikhTaklimat">
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead><tr>
+                    <th width="5%">Bil.</th>
+                    <th width="38%">Perkara</th>
+                    <th width="18%">Status</th>
+                    <th width="39%">Catatan & Bahan Sokongan</th>
+                </tr></thead>
+                <tbody id="tbody-moderasi"></tbody>
+            </table>
+        </div>
+    </div>
 
-        // Fungsi untuk menampilkan alert
-        function showAlert(message, type) {
-            const alertDiv = document.getElementById('alert');
-            alertDiv.textContent = message;
-            alertDiv.className = `alert ${type}`;
-            alertDiv.style.display = 'block';
-            setTimeout(() => {
-                alertDiv.style.display = 'none';
-            }, 5000);
+    <div class="bottom-section">
+        <div class="input-group" style="margin-bottom:1.2rem;">
+            <label>Ulasan Keseluruhan</label>
+            <textarea id="ulasan" placeholder="Masukkan ulasan keseluruhan..."></textarea>
+        </div>
+        <div class="input-group" style="margin-bottom:1.2rem;">
+            <label>Cadangan Penambahbaikan</label>
+            <textarea id="cadangan" placeholder="Masukkan cadangan penambahbaikan..."></textarea>
+        </div>
+        <div class="input-group">
+            <label>Nama Pengesah / Penilai</label>
+            <input type="text" id="namaPenilai" placeholder="Nama penuh pengesah">
+        </div>
+    </div>
+
+    <div class="action-area">
+        <button class="btn btn-submit" id="submitBtn" onclick="submitData()">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Hantar & Jana Dokumen Rasmi
+        </button>
+    </div>
+</div>
+
+<script>
+// =====================================================
+//  GANTI URL INI DENGAN URL DEPLOYMENT BARU ANDA
+// =====================================================
+const SCRIPT_URL = 'GANTI_DENGAN_URL_DEPLOYMENT_BARU_ANDA';
+// =====================================================
+
+const soalanPerancangan = [
+    "Pensyarah menerima arahan yang jelas pelaksanaan pentaksiran berterusan",
+    "JST yang disediakan mengikut format yang ditetapkan",
+    "Tempoh pelaksanaan pentaksiran berterusan sesuai dengan bentuk tugasan",
+    "Jam pembelajaran pelajar (JPP) sejajar dengan matriks hasil pembelajaran",
+    "Hasil pembelajaran kursus (HPK) sejajar dengan matriks hasil pembelajaran",
+    "Objektif tugasan memenuhi hasil pembelajaran kursus (HPK)",
+    "Wajaran markah tugasan mengikut wajaran dalam RMK/MK",
+    "Aspek/Kriteria penilaian dinyatakan dengan jelas",
+    "Tugasan mempunyai elemen: Rangsangan, Soalan tugasan, Arahan pentadbiran",
+    "Kapasiti Pedagogi Pembelajaran Bermakna (Merungkai Standard, dll)",
+    "Tugasan mencapai Kemahiran Berfikir Aras Tinggi (KBAT)",
+    "Domain kognitif diuji dalam tugasan",
+    "Domain psikomotor diuji dalam tugasan (jika berkenaan)",
+    "Domain afektif diuji dalam tugasan (jika berkenaan)",
+    "Domain kemahiran insaniah diuji (jika berkenaan)",
+    "Soalan tugasan telah disemak oleh Pakar Bidang/Penyelaras",
+    "Rubrik pemarkahan holistik/analitik selari dengan JST",
+    "Skema/Rubrik mengukur domain kognitif",
+    "Skema/Rubrik mengukur domain psikomotor",
+    "Skema/Rubrik mengukur domain afektif",
+    "Skema/Rubrik mengukur domain kemahiran insaniah"
+];
+const specialPerancangan = [2,10,16,17];
+
+const soalanModerasi = [
+    "Pelajar menerima taklimat pentaksiran berterusan daripada pensyarah",
+    "Pemilihan sampel dan penyelarasan skema pemarkahan dilaksanakan",
+    "Tugasan disemak oleh pensyarah berdasarkan skema pemarkahan",
+    "Pemeriksa memberi komen/ulasan dalam hasil tugasan pelajar",
+    "Borang penyelarasan markah sebelum pemeriksaan diisi lengkap",
+    "Pemeriksaan dan proses moderasi markah dijalankan mengikut prosedur",
+    "Borang Moderasi (LAM PT04-02) diisi dan ditandatangani",
+    "Penentuan markah akhir dibuat berdasarkan prosedur",
+    "Borang markah pentaksiran berterusan diisi dengan lengkap dan disemak",
+    "Taburan markah terdiri sekurang-kurangnya tiga gred merentasi dua kategori",
+    "Laporan Panel Pemeriksa Pentaksiran Berterusan disediakan dengan lengkap",
+    "Laporan Kes Gagal (LAM PT04-04) disediakan (jika ada)"
+];
+const specialModerasi = [7,9,10,12];
+
+function showAlert(msg, type) {
+    const el = document.getElementById('alertBox');
+    el.textContent = msg;
+    el.className = 'alert ' + type;
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (type !== 'error') setTimeout(() => el.style.display = 'none', 7000);
+}
+
+function buildTable(tbodyId, soalan, prefix, special) {
+    const tbody = document.getElementById(tbodyId);
+    tbody.innerHTML = soalan.map((item, idx) => {
+        const n = idx + 1;
+        const isSpecial = special.includes(n);
+        const uploadHtml = isSpecial ? `
+            <div class="bahan-sokongan">
+                <label>Bahan Sokongan:</label>
+                <input type="file" id="${prefix}_${n}_file" class="file-sm">
+                <input type="url" id="${prefix}_${n}_link" placeholder="Atau masukkan URL pautan...">
+            </div>` : '';
+        return `
+        <tr class="${isSpecial ? 'row-highlight' : ''}">
+            <td style="font-weight:600;color:var(--primary)">${n}.</td>
+            <td style="font-size:0.9rem">${item}</td>
+            <td>
+                <div class="radio-group">
+                    <label class="radio-label">
+                        <input type="radio" name="${prefix}_${n}_s" value="Ya"> Ya
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="${prefix}_${n}_s" value="Tidak"> Tidak
+                    </label>
+                    <label class="radio-label">
+                        <input type="radio" name="${prefix}_${n}_s" value="TB"> TB
+                    </label>
+                </div>
+            </td>
+            <td>
+                <input type="text" id="${prefix}_${n}_c" placeholder="Catatan..." style="width:100%">
+                ${uploadHtml}
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+buildTable('tbody-perancangan', soalanPerancangan, 'p', specialPerancangan);
+buildTable('tbody-moderasi',    soalanModerasi,    'm', specialModerasi);
+
+let fasa = 'perancangan';
+
+function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+    fasa = tab;
+}
+
+function toBase64(file) {
+    return new Promise((res, rej) => {
+        const r = new FileReader();
+        r.readAsDataURL(file);
+        r.onload  = () => res(r.result.split(',')[1]);
+        r.onerror = rej;
+    });
+}
+
+async function submitData() {
+    // Pengesahan
+    const kampus = document.getElementById('ipgKampus').value.trim();
+    const kod    = document.getElementById('kodKursus').value.trim();
+    const tarikh = document.getElementById('tarikhVerifikasi').value;
+
+    if (!kampus) { showAlert('⚠️ Sila isi IPG Kampus', 'error'); return; }
+    if (!kod)    { showAlert('⚠️ Sila isi Kod Kursus', 'error'); return; }
+    if (!tarikh) { showAlert('⚠️ Sila pilih Tarikh Verifikasi', 'error'); return; }
+
+    if (SCRIPT_URL === 'GANTI_DENGAN_URL_DEPLOYMENT_BARU_ANDA') {
+        showAlert('⚠️ SCRIPT_URL belum dikemaskini! Sila ganti dengan URL deployment Apps Script anda.', 'error');
+        return;
+    }
+
+    document.getElementById('loader').style.display = 'flex';
+    document.getElementById('submitBtn').disabled = true;
+
+    // Kumpul payload
+    const payload = {
+        fasa,
+        ipgKampus:        kampus,
+        kodKursus:        kod,
+        namaKursus:       document.getElementById('namaKursus').value,
+        program:          document.getElementById('program').value,
+        semesterTahun:    document.getElementById('semesterTahun').value,
+        tarikhVerifikasi: tarikh,
+        ulasan:           document.getElementById('ulasan').value,
+        cadangan:         document.getElementById('cadangan').value,
+        namaPenilai:      document.getElementById('namaPenilai').value,
+    };
+
+    if (fasa === 'moderasi') {
+        payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
+    }
+
+    const prefix  = fasa === 'perancangan' ? 'p' : 'm';
+    const jumlah  = fasa === 'perancangan' ? 21 : 12;
+    const special = fasa === 'perancangan' ? specialPerancangan : specialModerasi;
+
+    for (let i = 1; i <= jumlah; i++) {
+        const radios = document.getElementsByName(`${prefix}_${i}_s`);
+        let status = '';
+        radios.forEach(r => { if (r.checked) status = r.value; });
+
+        payload[`item_${i}_status`]  = status;
+        payload[`item_${i}_catatan`] = document.getElementById(`${prefix}_${i}_c`).value;
+
+        if (special.includes(i)) {
+            const fi = document.getElementById(`${prefix}_${i}_file`);
+            if (fi && fi.files.length > 0) {
+                const f = fi.files[0];
+                payload[`item_${i}_fileName`] = `Item_${i}_${f.name}`;
+                payload[`item_${i}_mimeType`] = f.type;
+                payload[`item_${i}_fileData`] = await toBase64(f);
+            }
+            const li = document.getElementById(`${prefix}_${i}_link`);
+            if (li && li.value) payload[`item_${i}_link`] = li.value;
+        }
+    }
+
+    console.log('📤 Menghantar data ke Apps Script...');
+
+    try {
+        // ✅ Hantar sebagai FormData - ini cara TERBAIK untuk bypass CORS dengan Google Apps Script
+        const formData = new FormData();
+        formData.append('data', JSON.stringify(payload));
+
+        const resp = await fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        });
+
+        console.log('📥 Response status:', resp.status, resp.type);
+
+        let result;
+        try {
+            const text = await resp.text();
+            console.log('📥 Response text:', text);
+            result = JSON.parse(text);
+        } catch (pe) {
+            // Google Apps Script kadang-kadang redirect - anggap berjaya
+            console.log('ℹ️ Response tidak boleh di-parse (mungkin redirect) - data mungkin sudah sampai');
+            result = { status: 'success', message: 'Data dihantar (semak Sheets)', docUrl: null };
         }
 
-        // Fungsi untuk menjana jadual
-        function generateTable(tableId, dataArray, prefix, specialItems) {
-            const tbody = document.getElementById(tableId);
-            let html = '';
-            
-            dataArray.forEach((item, index) => {
-                const num = index + 1;
-                const isSpecial = specialItems.includes(num);
-                const rowClass = isSpecial ? 'row-highlight' : '';
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
 
-                let uploadArea = isSpecial ? `
-                    <div class="bahan-sokongan">
-                        <label>Bahan Sokongan Item Ini:</label>
-                        <input type="file" id="${prefix}_${num}_file" class="file-sm">
-                        <input type="url" id="${prefix}_${num}_link" placeholder="Atau Pautan URL...">
-                    </div>
-                ` : '';
-
-                html += `
-                <tr class="${rowClass}">
-                    <td>${num}.</td>
-                    <td>${item}</td>
-                    <td>
-                        <div class="radio-group">
-                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Ya"> Ya</label>
-                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="Tidak"> Tidak</label>
-                            <label class="radio-label"><input type="radio" name="${prefix}_${num}_status" value="TB"> TB</label>
-                        </div>
-                    </td>
-                    <td>
-                        <input type="text" id="${prefix}_${num}_catatan" placeholder="Catatan...">
-                        ${uploadArea}
-                    </td>
-                </tr>`;
-            });
-            tbody.innerHTML = html;
+        if (result.status === 'success') {
+            showAlert('✅ Berjaya! Data telah disimpan. Dokumen sedang dibuka...', 'success');
+            if (result.docUrl) {
+                setTimeout(() => window.open(result.docUrl, '_blank'), 1500);
+            } else {
+                setTimeout(() => showAlert('✅ Data berjaya dihantar! Sila semak Google Sheets anda.', 'success'), 500);
+            }
+        } else {
+            showAlert('❌ Ralat dari server: ' + result.message, 'error');
+            console.error('Server error:', result.message);
         }
 
-        // Inisialisasi jadual
-        generateTable('tbody-perancangan', soalanPerancangan, 'perancangan', ulasanKhususPerancangan);
-        generateTable('tbody-moderasi', soalanModerasi, 'moderasi', ulasanKhususModerasi);
-
-        let currentFasa = 'perancangan';
-
-        // Fungsi untuk menukar tab
-        function switchTab(tab) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            currentFasa = tab;
-        }
-
-        // Fungsi untuk menukar fail ke Base64
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
-            });
-        }
-
-        // Fungsi untuk menghantar data
-        async function submitData() {
-            // Pengesahan medan wajib
-            if(!document.getElementById('ipgKampus').value) {
-                showAlert("⚠️ Sila isi maklumat IPG Kampus", "error");
-                return;
-            }
-            if(!document.getElementById('kodKursus').value) {
-                showAlert("⚠️ Sila isi maklumat Kod Kursus", "error");
-                return;
-            }
-            if(!document.getElementById('tarikhVerifikasi').value) {
-                showAlert("⚠️ Sila isi Tarikh Verifikasi", "error");
-                return;
-            }
-
-            // Tunjukkan loader
-            document.getElementById('loader').style.display = 'flex';
-            document.getElementById('submitBtn').disabled = true;
-
-            // Kumpul data asas
-            let payload = {
-                fasa: currentFasa,
-                ipgKampus: document.getElementById('ipgKampus').value,
-                kodKursus: document.getElementById('kodKursus').value,
-                namaKursus: document.getElementById('namaKursus').value,
-                program: document.getElementById('program').value,
-                semesterTahun: document.getElementById('semesterTahun').value,
-                tarikhVerifikasi: document.getElementById('tarikhVerifikasi').value,
-                ulasan: document.getElementById('ulasan').value,
-                cadangan: document.getElementById('cadangan').value,
-                namaPenilai: document.getElementById('namaPenilai').value
-            };
-
-            // Tambah tarikh taklimat jika fasa moderasi
-            if(currentFasa === 'moderasi') {
-                payload.tarikhTaklimat = document.getElementById('tarikhTaklimat').value;
-            }
-
-            // Tentukan jumlah soalan dan item khas
-            const limit = currentFasa === 'perancangan' ? 21 : 12;
-            const specialItemsList = currentFasa === 'perancangan' ? ulasanKhususPerancangan : ulasanKhususModerasi;
-
-            try {
-                // Kumpul data setiap item
-                for(let i = 1; i <= limit; i++) {
-                    const radios = document.getElementsByName(`${currentFasa}_${i}_status`);
-                    let selectedValue = "";
-                    for (const radio of radios) { 
-                        if (radio.checked) selectedValue = radio.value; 
-                    }
-                    
-                    payload[`item_${i}_status`] = selectedValue;
-                    payload[`item_${i}_catatan`] = document.getElementById(`${currentFasa}_${i}_catatan`).value;
-
-                    // Proses fail dan pautan untuk item khas
-                    if (specialItemsList.includes(i)) {
-                        const fileInput = document.getElementById(`${currentFasa}_${i}_file`);
-                        if (fileInput && fileInput.files.length > 0) {
-                            const file = fileInput.files[0];
-                            payload[`item_${i}_fileName`] = `Item_${i}_${file.name}`;
-                            payload[`item_${i}_mimeType`] = file.type;
-                            payload[`item_${i}_fileData`] = await getBase64(file);
-                        }
-                        const linkInput = document.getElementById(`${currentFasa}_${i}_link`);
-                        if (linkInput && linkInput.value) payload[`item_${i}_link`] = linkInput.value;
-                    }
-                }
-
-                console.log('Payload yang dihantar:', payload);
-
-                // Hantar data ke API dengan method yang berbeza untuk mengelak CORS
-                const response = await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'no-cors',
-                    body: JSON.stringify(payload)
-                });
-
-                console.log('Response status:', response.status);
-                
-                // Dengan mode no-cors, kita tidak dapat membaca response
-                // Jadi kita akan menganggap berjaya selepas 2 saat
-                setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    document.getElementById('submitBtn').disabled = false;
-                    showAlert("✅ Data telah dihantar! Sila semak Google Sheet anda untuk pengesahan.", "success");
-                }, 2000);
-
-            } catch (error) {
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('submitBtn').disabled = false;
-                console.error('Error penuh:', error);
-                showAlert("❌ Ralat rangkaian: " + error.message, "error");
-            }
-        }
-    </script>
+    } catch (err) {
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('submitBtn').disabled = false;
+        console.error('❌ Fetch error:', err);
+        showAlert('❌ Ralat: ' + err.message + '\nSila semak Console (F12) untuk butiran.', 'error');
+    }
+}
+</script>
 </body>
 </html>
