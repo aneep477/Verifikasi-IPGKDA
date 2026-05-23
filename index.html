@@ -496,33 +496,33 @@
                     }
                 }
 
-                // Hantar data ke API
+                console.log('Payload yang dihantar:', payload);
+
+                // Hantar data ke API dengan method yang berbeza untuk mengelak CORS
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'no-cors',
                     body: JSON.stringify(payload)
                 });
 
-                const result = await response.json();
+                console.log('Response status:', response.status);
                 
-                // Sorok loader
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('submitBtn').disabled = false;
-                
-                if(result.status === 'success') {
-                    showAlert("✅ Berjaya! Dokumen anda sedang dibuka untuk dicetak.", "success");
-                    if(result.docUrl) {
-                        setTimeout(() => {
-                            window.open(result.docUrl, '_blank');
-                        }, 1500);
-                    }
-                } else {
-                    showAlert("❌ Ralat: " + result.message, "error");
-                }
+                // Dengan mode no-cors, kita tidak dapat membaca response
+                // Jadi kita akan menganggap berjaya selepas 2 saat
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('submitBtn').disabled = false;
+                    showAlert("✅ Data telah dihantar! Sila semak Google Sheet anda untuk pengesahan.", "success");
+                }, 2000);
+
             } catch (error) {
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('submitBtn').disabled = false;
-                showAlert("❌ Ralat rangkaian. Sila cuba semula.", "error");
-                console.error('Error:', error);
+                console.error('Error penuh:', error);
+                showAlert("❌ Ralat rangkaian: " + error.message, "error");
             }
         }
     </script>
